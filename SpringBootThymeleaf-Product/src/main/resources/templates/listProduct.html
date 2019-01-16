@@ -13,11 +13,13 @@
 		<th>Name</th>
 		<th>Made</th>
 		<th>Price</th>
+		<th>Date</th>
 	</tr>
 	<tr th:each="product : ${productList}">
 		<td th:text="${product.name}"></td>
 		<td th:text="${product.made}"></td>
 		<td th:text="${product.price}"></td>
+		<td th:text="${product.date}"></td>
 	</tr>	
 </table>
 </body>

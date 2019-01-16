@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert Customer</title>
+</head>
+<body>
+<h1 th:utext="${title}"></h1>
+<form th:action="@{/listProduct}" 
+		th:object="${productForm}" method="post">
+	<table>
+		<tr>
+			<td>Name:</td>
+			<td>
+				<input type="text" th:field="*{name}"/>
+			</td>			
+		</tr>
+		
+		<tr>
+		
+		<tr>	
+			<td>Made:</td>
+			<td>
+				<input type="text" th:field="*{made}"/>
+			</td>
+		</tr>
+		
+		<tr>			
+			<td>Price:</td>
+			<td>
+				<input type="text" th:field="*{price}"/>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>Date:</td>
+			<td>
+				<input type="date" th:field="*{date}"/>
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan=2>
+				<input type="submit" value="Insert"/>
+			</td>
+		</tr>
+	</table>
+	
+	
+	<div th:if="${error}" th:utext="${error}" style="color:red">...
+	</div>
+</body>
+</html>
