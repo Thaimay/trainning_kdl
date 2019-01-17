@@ -10,8 +10,8 @@ public class Student {
 	public Student() {
 		
 	}
-	public Student(int id, String name, String branch, int percentage, int phone, String email) {
-		this.id = id;
+	public Student(String name, String branch, int percentage, int phone, String email) {
+		super();
 		this.name = name;
 		this.branch = branch;
 		this.percentage = percentage;
