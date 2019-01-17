@@ -22,7 +22,7 @@ public class SelectAllTest {
 		List<Student> studentList = session.selectList("Student.selectAllStudent");
 		
 		for(Student student : studentList ) {
-			System.out.print(student);
+			System.out.println(student);
 		}
 		
 	}

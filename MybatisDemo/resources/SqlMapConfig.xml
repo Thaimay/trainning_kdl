@@ -12,8 +12,8 @@
 		<environment id="deverlopment">
 			<transactionManager type="JDBC"/>
 			<dataSource type="POOLED">
-				<property name="driver" value="com.mysql.jdbc.Driver"/>
-				<property name="url" value="jdbc:mysql://localhost:3306/details"/>
+				<property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+				<property name="url" value="jdbc:mysql://localhost:3306/details?autoReconnect=true&amp;useSSL=false"/>
 				<property name="username" value="root"/>
 				<property name="password" value="saisystem"/>
 			</dataSource>

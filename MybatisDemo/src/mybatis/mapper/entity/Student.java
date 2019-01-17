@@ -56,7 +56,7 @@ public class Student {
 	}
 	@Override
 	public String toString() {
-		return getClass().getName() + "[" + "id = " + id + ", name = " + name + ", branch = " + branch 
+		return "[" + "id = " + id + ", name = " + name + ", branch = " + branch 
                 + ", percentage = " + percentage  + ", phone = " + phone  + ", email = " + email + "]";
 	}
 }
