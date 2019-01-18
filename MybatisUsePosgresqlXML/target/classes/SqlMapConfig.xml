@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias alias="Product" type="mybatis.mapper.entity.Product"/>
+	</typeAliases>
+
+	<environments default="deverlopment">
+		<environment id="deverlopment">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="org.postgresql.Driver"/>
+				<property name="url" value="jdbc:postgresql://localhost:5432/productdb"/>
+				<property name="username" value="postgres"/>
+				<property name="password" value="saisystem"/>
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<mapper resource="mybatis/mapper/sql/Product.xml"/>
+	</mappers>
+
+</configuration>
