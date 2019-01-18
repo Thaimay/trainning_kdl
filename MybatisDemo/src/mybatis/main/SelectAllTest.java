@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import mybatis.mapper.StudentMapper;
 import mybatis.mapper.entity.Student;
 
 public class SelectAllTest {
@@ -18,6 +19,7 @@ public class SelectAllTest {
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		
 		SqlSession session = sqlSessionFactory.openSession();
+	
 		
 		List<Student> studentList = session.selectList("Student.selectAllStudent");
 		

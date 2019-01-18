@@ -17,8 +17,9 @@ public class SelectStudentById {
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		
 		SqlSession session = sqlSessionFactory.openSession();
+			
 		
-		Student student = session.selectOne("Student.selectStudentById", 3);
+		Student student = session.selectOne("Student.selectStudentById", 11);
 		System.out.println(student);
 		
 		session.close();
