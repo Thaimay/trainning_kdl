@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
- 
+  
  <mapper namespace="Product">
+ 	<insert id="insertProduct" parameterType="Product">
+ 		INSERT INTO product(id, fullname, price, producer)
+ 			VALUES(#{id}, #{name}, #{price}, #{producer});
+ 	</insert> 
+ 
  	<select id="selectAll" resultMap="result">
  		SELECT * FROM Product;
  	</select>

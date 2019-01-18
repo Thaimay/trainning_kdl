@@ -17,6 +17,12 @@ public class SelectAll {
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		SqlSession session = sqlSessionFactory.openSession();
 		
+		Product newProduct = new Product(5, "Passport", 200, "BlackBerry");
+		
+		session.insert("Product.insertProduct", newProduct);
+		session.commit();
+		System.out.println("Insert Sucess!");
+		
 		List<Product> productList = session.selectList("Product.selectAll");
 		for(Product product:productList) {
 			System.out.println(product.toString());
