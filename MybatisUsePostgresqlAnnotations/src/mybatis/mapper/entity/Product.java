@@ -42,6 +42,5 @@ public class Product {
 	public String toString() {
 		return "[ id = "+ this.getId()+ ", name = "+this.getName()+", price = "+this.getPrice() + ", producer = "+ this.getProducer()+"]";
 	}
-	
 
 }
