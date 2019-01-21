@@ -27,6 +27,6 @@ public interface ProductMapper {
 	@Delete("DELETE FROM product WHERE id = #{id}")
 	public void deleteProduct(int id);
 	
-	@Insert("INSERT INTO product(fullname, price, producer) VALUES ( #{fullname}, #{price}, #{producer}")
+	@Insert("INSERT INTO product(fullname, price, producer) VALUES ( #{fullname}, #{price}, #{producer})")
 	public void insertProduct(Product product);
 }

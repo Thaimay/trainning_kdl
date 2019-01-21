@@ -24,6 +24,9 @@ public class ProductController {
 	
 	@Value("${error.message}")
 	private String error;
+	
+	@Value("${sucess.message")
+	private String sucess;
 
 	private ProductMapper proMapper;
 	
@@ -86,7 +89,7 @@ public class ProductController {
 	
 	
 	
-	@RequestMapping(value="/", method = RequestMethod.POST)
+	@RequestMapping(value="/insertData", method = RequestMethod.POST)
 	public String insertData(Model model,
 			@ModelAttribute("productInsert") Product productInsert) {
 		
@@ -94,11 +97,11 @@ public class ProductController {
 		float price = productInsert.getPrice();
 		String producer = productInsert.getProducer();
 		
-		if(name != "" && price < 0 && producer != "") {
+		if(name != "" && price >= 0 && producer != "") {
 			Product newProduct = new Product(name, price, producer);
 			proMapper.insertProduct(newProduct);
-		
-			return "redirect:/";
+			
+			return "redirect:/index";
 		}
 		
 		model.addAttribute("error", error);
