@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert Product - Spring Boot</title>
+</head>
+<body>
+<h1 th:text="${header}"></h1>
+<h2 th:text="${welcome}"></h2>
+<h3>Insert Product</h3>
+<form th:action="@{/}" method="post" th:object="${productInsert}">
+	<table>
+		<tr>
+			<td>Name:</td>
+			<td>
+				<input type="text" th:field="*{fullname}"/>
+			</td>
+		</tr>
+		<tr>
+			<td>Price:</td>
+			<td>
+				<input type="text" th:field="*{price}"/>
+			</td>
+		</tr>
+		<tr>
+			<td>Producer:</td>
+			<td>
+				<input type="text" th:field="*{producer}"/>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" > 
+				<input type="submit" value="Insert"/>
+			</td>
+		</tr>
+	</table>
+
+
+
+</form>
+</body>
+</html>
