@@ -1,16 +1,23 @@
-package com.saisystem.springboot.model;
+package com.saisystem.springboot.Model;
 
 public class Product {
 	private int id;
-	private String name;
+	private String fullname;
 	private float price;
 	private String producer;
 	public Product() {
 		
 	}
-	public Product(int id, String name, float price, String producer) {
+	
+	public Product(int id, String fullname, float price, String producer) {
 		this.id = id;
-		this.name = name;
+		this.fullname = fullname;
+		this.price = price;
+		this.producer = producer;
+	}
+	
+	public Product(String fullname, float price, String producer) {
+		this.fullname = fullname;
 		this.price = price;
 		this.producer = producer;
 	}
@@ -20,11 +27,11 @@ public class Product {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getFullname() {
+		return fullname;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
 	}
 	public float getPrice() {
 		return price;
@@ -40,6 +47,6 @@ public class Product {
 	}
 	@Override
 	public String toString() {
-		return "[ id = "+ this.getId()+ ", name = "+this.getName()+", price = "+this.getPrice() + ", producer = "+ this.getProducer()+"]";
+		return "Product [id=" + id + ", fullname=" + fullname + ", price=" + price + ", producer=" + producer + "]";
 	}
 }
