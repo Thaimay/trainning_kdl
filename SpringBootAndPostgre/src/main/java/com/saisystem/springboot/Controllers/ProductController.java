@@ -67,7 +67,7 @@ public class ProductController {
 		float price = product.getPrice();
 		String producer = product.getProducer();
 		
-		if(name != "" && price < 0 && producer != "") {
+		if(name != "" && price >= 0 && producer != "") {
 			Product upProduct = new Product(id, name, price, producer);
 			proMapper.updateProduct(upProduct);
 		
@@ -87,8 +87,6 @@ public class ProductController {
 		return "insertProduct";
 	}
 	
-	
-	
 	@RequestMapping(value="/insertData", method = RequestMethod.POST)
 	public String insertData(Model model,
 			@ModelAttribute("productInsert") Product productInsert) {
@@ -100,11 +98,25 @@ public class ProductController {
 		if(name != "" && price >= 0 && producer != "") {
 			Product newProduct = new Product(name, price, producer);
 			proMapper.insertProduct(newProduct);
-			
+			model.addAttribute("sucess", sucess);
 			return "redirect:/index";
 		}
 		
 		model.addAttribute("error", error);
 		return "insertProduct";
 	}
+
+	@RequestMapping(value="/delete", method = RequestMethod.GET)
+	public String deleteProduct(Model model,
+				@RequestParam int id){
+		model.addAttribute("header", header);
+		model.addAttribute("welcome", welcome);
+		Product getProduct = new Product();
+		getProduct = this.proMapper.getProductById(id);
+
+		model.addAttribute("product", getProduct);
+
+		return "deleteProduct";
+	}
+
 }
