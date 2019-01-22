@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.saisystem.kdldb.Mapper.ProjectMap">
+  <resultMap type="ProjectInfo" id="ProjectResult">
+    <result property="id" column="id"/>
+    <result property="buildingName" column="buildingname"/>
+    <result property="shopName" column="shopname"/>
+  </resultMap>
+</mapper>
