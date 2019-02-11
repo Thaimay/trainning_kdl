@@ -1,0 +1,2 @@
+UPDATE negotiation AS n SET interview_account_free = array_to_string(array(select unmanaged_name from NEGOTIATION_INTERVIEW_ACCOUNT AS nia where nia.negotiation_id = n.id AND account_id IS NULL), ',');
+UPDATE negotiation AS n SET business_card_free = array_to_string(array(select unmanaged_name from NEGOTIATION_INTERVIEW_BUSINESS_CARD AS nibc where nibc.negotiation_id = n.id AND business_card_id IS NULL), ',');

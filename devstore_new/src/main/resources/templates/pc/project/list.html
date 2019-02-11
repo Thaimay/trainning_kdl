@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="/pc/project_layout">
+<head>
+<title>進捗一覧</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<style type="text/css">
+.fixed-table-container thead th .th-inner {
+    text-overflow: ellipsis;
+}
+.fixed-table-body-columns tbody tr{
+	/* text-overflow: ellipsis; */
+	text-overflow: inherit;
+    white-space: inherit;
+}
+.result_table_col_th,
+.result_table_col {
+	/* height: 50px; */
+	/* 
+	height: auto;
+	width: 100px;
+	min-width: 50px !important;
+    max-width: 200px !important; */
+    text-overflow: ellipsis;
+}
+
+.check-list .checkbox-inline {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+</style>
+<script type="text/javascript">
+	$(function() {
+		$(window).keydown(function(event){
+		    if(event.keyCode == 13 && !$('#keyWordSearch').is(':focus')) {
+		      event.preventDefault();
+		      return false;
+		    }
+		});
+		
+		$("#project-list-move").click(function() {
+			$("#project-body").css({
+				"overflow-y": "hidden",
+			});
+		});
+		
+		$("#project-list-search-move").click(function() {
+			$("#project-body").css({
+				"overflow-y": "auto",
+			});
+		});
+	});
+	var stickyHeaderOffsetY = 0;
+	if ( $('.navbar-fixed-top').css('height') ) {
+        stickyHeaderOffsetY = +$('.navbar-fixed-top').css('height').replace('px','');
+    }
+    if ( $('.navbar-fixed-top').css('margin-bottom') ) {
+        stickyHeaderOffsetY += +$('.navbar-fixed-top').css('margin-bottom').replace('px','');
+    }
+    
+    $(window).resize(function () {
+    	if ($("[data-toggle]").length) {
+    		$("[data-toggle]").bootstrapTable('resetView');
+    	}
+   	});
+    
+	$.extend($.fn.bootstrapTable.columnDefaults, {
+	    valign: 'top',
+	    stickyHeader: true,
+        stickyHeaderOffsetY: stickyHeaderOffsetY + 'px'
+	});
+	
+	$.extend($.fn.bootstrapTable.defaults, {
+		formatNoMatches: function () {
+            return '検索条件にあう案件がありません。条件を変更して再度検索してください。';
+        },
+	});
+</script>
+<script th:src="@{/js/project/project-list.js} + '?v=' + ${session.version}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div>
+					<!-- Nav tabs-->
+					<ul class="nav nav-tabs" role="tablist" id="j-project-tabs">
+						<li class="active" role="presentation"><a id="project-list-move" href="#list"
+							style="padding-top: 5px" aria-controls="list" role="tab" data-toggle="tab">一覧</a></li>
+						<li role="presentation"><a id="project-list-search-move" href="#search"
+							style="padding-top: 5px" aria-controls="search" role="tab" data-toggle="tab">検索</a></li>
+					</ul>
+					<!-- Tab panes-->
+					<div class="tab-content">
+						<div class="tab-pane fade in active" id="list" role="tabpanel" th:insert="/pc/project/list_content.html"></div>
+						<div class="tab-pane fade" id="search" role="tabpanel" th:insert="/pc/project/list_find_form.html"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

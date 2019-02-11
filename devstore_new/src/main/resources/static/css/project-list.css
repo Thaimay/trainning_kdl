@@ -1,0 +1,188 @@
+.project-list-content {
+	font-size: 12px;
+}
+
+.project-list-content .fixed-table-container thead th .th-inner, .fixed-table-container tbody td .th-inner {
+	padding: 0px;
+	text-align: center;
+}
+
+.result_table_col span {
+	height: 2.8em;
+	display: inline-block;
+	overflow: hidden;
+}
+
+.result_table_col a {
+	height: 2.8em;
+	/*display: inline-block;*/
+	overflow: hidden;
+}
+
+.project-list-content .detail-table .bootstrap-table .th-inner {
+	height: 2.7em;
+}
+
+.project-list-content .detail-table .bootstrap-table tr:nth-of-type(1) .th-inner {
+	height: 1.3em;
+}
+
+.project-list-content .project-list-num {
+	width: 40px;
+	min-width: 40px !important;
+}
+
+
+/*
+案件一覧のテーブルカラム幅
+*/
+.project-list-content .col1 {
+  width: 2.5em;
+}
+
+.project-list-content .col1-5 {
+  width: 3em;
+}
+
+.project-list-content .col2 {
+  width: 3.5em;
+}
+
+.project-list-content .col2-5 {
+  width: 4em;
+}
+
+.project-list-content .col3 {
+  width: 4.5em;
+}
+
+.project-list-content .col4 {
+  width: 5.5em;
+}
+
+.project-list-content .col5 {
+  width: 6.5em;
+}
+
+.project-list-content .col5-5 {
+  width: 7em;
+}
+
+.project-list-content .col6 {
+  width: 7.5em;
+}
+
+.project-list-content .col7 {
+  width: 8.5em;
+}
+
+.project-list-content .col8 {
+  width: 9.5em;
+}
+
+.project-list-content .col9 {
+  width: 10.5em;
+}
+
+.project-list-content .col10 {
+  width: 11.5em;
+}
+
+.project-list-content .col11 {
+  width: 12.5em;
+}
+
+.project-list-content .col12 {
+  width: 13.5em;
+}
+
+.project-list-content .col13 {
+  width: 14.5em;
+}
+
+.project-list-content .col14 {
+  width: 15.5em;
+}
+
+.project-list-content .col15 {
+  width: 16.5em;
+}
+
+
+.project-area-block-item,
+.project-corporation-name-item,
+.project-landing-category-memo-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-list-content .project-area-item .th-inner {
+	width: 40px;
+}
+
+.project-list-footer {
+	position: relative;
+	padding-left: 8em;
+}
+
+.project-list-footer .pagination {
+	margin: 10px 0;
+}
+
+.project-list-footer .pagination-area a {
+	cursor: pointer;
+}
+
+.detail-table .connect-col {
+	vertical-align: middle !important;
+}
+
+.total-projects {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 8em;
+	margin-top: 15px;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+.project-list-content .project-landing-category-percent-item .th-inner {
+	width: 60px;
+	white-space: normal;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: clip;
+}
+
+
+.project-list-content .currentContractRentStartDate .th-inner,
+.project-list-content .currentContractRentStartDate .th-inner {
+	width: 85px;
+	white-space: normal;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: clip;	
+}
+
+.project-list-content .tenancyPeriod .th-inner {
+	width: 50px;
+	white-space: normal;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: clip;
+}
+
+
+.project-list-content .displayExternalReleaseConfirm .th-inner {
+	white-space: normal;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: clip;
+}
+
+.project-list-content .table-hover>tbody>tr:hover,
+.bootstrap-table .table-hover > tbody > tr.hover > td {
+	background-color: #deeef3; 
+}

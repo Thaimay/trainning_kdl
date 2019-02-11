@@ -1,0 +1,2 @@
+alter table project_switing_item_control add column basic_negotiation_store_frontage boolean;
+alter table project_switing_item_control add column schedule_person_leader boolean;

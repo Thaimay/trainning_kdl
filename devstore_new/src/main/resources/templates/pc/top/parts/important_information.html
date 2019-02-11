@@ -1,0 +1,67 @@
+<header class="panel-header information">
+	<div class="row">
+		<div class="col-md-6">
+			<h2 class="title">重要情報</h2>
+		</div>
+		<div class="col-md-6">
+			<a class="btn btn-info pull-right" th:href=@{information/create}>追加</a>
+		</div>
+	</div>
+</header>
+<div class="panel-body">
+	<div class="panel-body-inner">
+		<ul class="list-group information-list">
+			
+				<li
+					class="list-group-item information-list-item"
+					th:each="information : ${top.ImportantInformationList}"
+					ng-controller="ImportantInformationController as controller"
+					th:if="${information.canView}">
+
+					<span th:if="${information.division} == ''" class="information-border-left-blank division" ></span>
+					<span th:if="${information.division} == 'building'" class="information-border-left-building division" ></span>
+					<span th:if="${information.division == 'other'}" class="information-border-left-other division"></span>
+					<span th:if="${information.division} == 'corporation' " class="information-border-left-corporation division" ></span>
+
+					<div style="margin-left: 10px; height: auto" th:attr="data-information-id=${information.id}" ng-click="controller.toRead($event)">
+						<header class="information-header">
+							<div class="information-meta">
+						
+							</div>
+						</header>
+						<div class="information-content">
+							<span class="label panel-utility"
+									th:if="${!information.isRead}" style="background-color:#FF0000">未読</span>
+							<span style="float:right"><i class="fa fa-trash" style="color: red;font-size: 22px;"
+								ng-click="controller.toDelete($event)"
+								th:attr="data-information-id=${information.id}" th:classappend="${information.canDelete} ? '' : 'fa-trash-permission'"></i></span>
+						</div >
+						<div class="information-content">
+							
+							<div th:if="${information.buildingNames.size() != 0}">
+								<span class="account-name" >館 :</span> <span class="account-name" th:text="${information.buildingName}"></span>
+							</div>
+							<div th:if="${information.corporationNames.size() != 0}">
+								<span class="account-name">法人 :</span> <span class="account-name" th:text="${information.corporationName}"></span>
+							</div>
+							<p
+								th:classappend="${information.isRead} ? 'isRead' : ''"
+								th:text="${information.content}"></p>
+							<span class="account-name">実施時期 :</span> <span class="account-name" th:text="${information.actionDate}"></span>
+							<br>
+							<span class="account-name" th:text="${information.account.name}"></span> <span class="account-name" th:text="${information.createdDatetime}"></span>
+						</div>
+						<footer class="information-footer">
+							<div
+								class="information-good"
+								ng-click="controller.toNice($event)"
+								th:attr="data-information-id=${information.id}">
+								<img class="img-rounded" th:src="@{'/img/nice.png'}" alt="">いいね  <span th:text="${information.niceNumber}"></span> 人
+							</div>
+		
+						</footer>
+					</div>
+				</li>
+		</ul>
+	</div>
+</div>

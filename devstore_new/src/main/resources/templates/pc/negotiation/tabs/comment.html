@@ -1,0 +1,33 @@
+<div class="tab-content-body">
+  <div class="list-group commment-list">
+    <div ng-repeat="comment in commentList" class="append-comment-area">
+      <a class="list-group-item has-trash" href="#">
+        <div
+          class="trash"
+          data-j-comment-trash=""
+          ng-if="comment.isOwn"
+          ng-click="negotiationController.deleteComment(comment.id)">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </div>
+        <p class="list-group-item-heading">{{ comment.content }}</p>
+        <div class="list-group-item-text">
+          <div class="registered-data">
+            <span class="name">{{ comment.accountName }}</span>
+            <span class="created-date">{{ comment.createdDatetime }}</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <form>
+    <div class="row">
+      <div class="col-md-11">
+        <input class="form-control comment-text-input" type="text">
+      </div>
+      <div class="col-md-1">
+        <button ng-click="negotiationController.sendComment()" class="btn btn-primary" type="button">送信</button>
+      </div>
+    </div>
+  </form>
+</div>

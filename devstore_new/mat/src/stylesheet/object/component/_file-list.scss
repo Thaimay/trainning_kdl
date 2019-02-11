@@ -1,0 +1,7 @@
+.file-list > * {
+  margin-top: 1em;
+
+  & + & {
+    border-top: 1px solid grey;
+  }
+}

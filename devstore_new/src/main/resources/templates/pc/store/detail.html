@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>店舗詳細</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script th:src="@{/js/store/store-detail.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="content-detail store">
+					<header class="content-detail-header">
+						<div class="row">
+							<div class="col-md-6">
+								<h2 class="title">
+									<span class="shop_cd" th:text="${iShop.shopCd}"></span> <span
+										class="name" th:text="${iShop.shopNameZenkaku}"></span>
+								</h2>
+								<div class="registered-data">
+									登録者:<span class="id"
+										th:text="${iShop.shop!=null}? ${iShop.shop.updateAccountCode}:''"></span>
+									<span class="name"
+										th:text="${iShop.shop!=null}? ${iShop.shop.updateAccountName}:''"></span>
+									<time class="date"
+										th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+										th:text="${iShop.shop!=null && iShop.shop.updateDatetime!=null}? ${iShop.shop.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></time>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<form class="form-horizontal" id="store-revision"
+										th:action="@{'/pc/store/revision/' + ${iShop.id}}"
+										method="post" accept-charset="UTF-8">
+										<select class="form-control" id="j-form-history"
+											name="idHistory">
+											<option value="0" selected>最新</option>
+											<option th:each="history : ${historyList}"
+												th:value="${history.id}" th:text="${history.name}">
+											</option>
+										</select>
+									</form>
+								</div>
+							</div>
+							<div class="col-md-2 ta-r">
+								<a class="btn btn-primary" id="j-detail-edit"
+									th:href="@{/pc/store/showUpdate/} + ${iShop.id}"> <i
+									class="fa fa-pencil" aria-hidden="true"></i>編集
+								</a> <br />
+								<div style="margin-top: 5px"></div>
+								<a class="btn btn-default btn-back2list">戻る</a>
+							</div>
+						</div>
+					</header>
+					<div class="content-detail-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="store-detail-body">
+									<div>
+										<!-- Nav tabs-->
+										<ul class="nav nav-tabs basic-detail-tabs" role="tablist">
+											<li role="presentation"><a href="#basic"
+												aria-controls="home" role="tab" data-toggle="tab">基本情報</a></li>
+											<li th:if="${iShop.isDisplayEconomy()}" role="presentation"><a
+												href="#economy" aria-controls="settings" role="tab"
+												data-toggle="tab">経済条件</a></li>
+											<li role="presentation"><a href="#related-document"
+												aria-controls="settings" role="tab" data-toggle="tab">関連資料</a></li>
+											<li role="presentation"><a href="#image"
+												aria-controls="settings" role="tab" data-toggle="tab">画像</a></li>
+										</ul>
+										<!-- Tab panes-->
+										<div class="tab-content">
+											<div class="tab-pane fade in active" id="basic"
+												role="tabpanel">
+												<div class="tab-content-body">
+													<ul class="store-basic-list">
+														<li class="store-basic-list-item">
+															<div class="store-basic-info j-dropdown">
+																<header
+																	class="store-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">館基本情報</h3>
+																</header>
+																<div class="store-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>会社</th>
+																				<td
+																					th:text="${iShop.iShopCompany!=null}? ${iShop.iShopCompany.companyCd + ' ' + iShop.iShopCompany.companyName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>館</th>
+																				<td
+																					th:text="${iShop.building!=null}? ${iShop.building.id + ' ' + iShop.building.name}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>区画</th>
+																				<td
+																					th:text="${iShop.shop!=null}? ${iShop.shop.section}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>坪数</th>
+																				<td th:text="${iShop.contractTsubo}"></td>
+																			</tr>
+																			<tr>
+																				<th>間口</th>
+																				<td
+																					th:text="${iShop.shop!=null}? ${iShop.shop.frontage}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>販売代行先</th>
+																				<td
+																					th:text="${iShop.shop!=null && iShop.shop.iSalesAgencyTarget!=null}? ${iShop.shop.iSalesAgencyTarget.salesAgencyTargetName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>加盟店（FCのみ）</th>
+																				<td
+																					th:text="${iShop.shop!=null && iShop.shop.participatingStoreCorporation!=null}? ${iShop.shop.participatingStoreCorporation.corporationName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>エリア</th>
+																				<td
+																					th:text="${iShop?.building?.iArea?.areaCd!=null && iShop?.building?.iArea?.areaName!=null}? ${iShop?.building?.iArea?.areaCd + ' ' + iShop?.building?.iArea?.areaName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>利益単位CD</th>
+																				<td
+																					th:text="${iShop.iIncomeUnit!=null}? ${iShop.iIncomeUnit.incomeUnitCd}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>利益単位名</th>
+																				<td
+																					th:text="${iShop.iIncomeUnit!=null}? ${iShop.iIncomeUnit.incomeUnitName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>オープン日</th>
+																				<td
+																					th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																					th:text="${iShop.openDate!=null}? ${iShop.openDate.format(formatter.ofPattern('yyyy/MM/dd'))}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>クローズ日</th>
+																				<td
+																					th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																					th:text="${iShop.closeDate!=null}? ${iShop.closeDate.format(formatter.ofPattern('yyyy/MM/dd'))}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>館期待値(月坪売上)</th>
+																				<td
+																					th:text="${iShop.shop!=null}? ${#numbers.formatDecimal(iShop.shop.buildingExpectedValue, 1, 'COMMA', 0, 'DEFAULT')}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>営業時間</th>
+																				<td th:text="${iShop.shop!=null}? ${iShop.shop.businessHours}">
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="store-basic-list-item">
+															<div class="store-basic-info j-dropdown">
+																<header
+																	class="store-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">備考</h3>
+																</header>
+																<div class="store-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>備考</th>
+																				<td
+																					th:text="${iShop.shop!=null}? ${iShop.shop.remarks}:''"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="economy" role="tabpanel">
+												<div class="tab-content-body">
+													<ul class="store-basic-list">
+														<li class="store-basic-list-item">
+															<div class="store-basic-info j-dropdown">
+																<header
+																	class="store-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">館基本情報</h3>
+																</header>
+																<div class="store-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>現行情報-計画</th>
+																				<td></td>
+																			</tr>
+																			<tr>
+																				<th>契約形態</th>
+																				<td
+																					th:text="${iShop.iRentContract!=null && iShop.iRentContract.iContractType!=null}? ${iShop.iRentContract.iContractType.contractTypeName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>契約期間</th>
+																				<td
+																					th:text="${iShop.iRentContract!=null}? ${iShop.iRentContract.period}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>契約開始日</th>
+																				<td
+																					th:text="${iShop.iRentContract!=null}? ${iShop.iRentContract.startDateString}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>定借満了期</th>
+																				<td
+																					th:text="${iShop.iRentContract!=null}? ${iShop.iRentContract.term}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>定借満了日</th>
+																				<td
+																					th:text="${iShop.iRentContract!=null}? ${iShop.iRentContract.endDateString}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>館期待値(月坪売上)</th>
+																				<td
+																					th:text="${iShop.shop!=null}? ${#numbers.formatDecimal(iShop.shop.buildingExpectedValue, 1, 'COMMA', 0, 'DEFAULT')}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>賃料低減開始日</th>
+																				<td th:text="${iShop.shop?.rentStartDateString}"></td>
+																			</tr>
+																			<tr>
+																				<th>賃料低減終了日</th>
+																				<td th:text="${iShop.shop?.rentEndDateString}"></td>
+																			</tr>
+																			<tr>
+																				<th>賃料低減年数</th>
+																				<td>
+																					<span th:if="${iShop.shop?.rentYear != null}" th:text="${#numbers.formatDecimal(iShop.shop?.rentYear, 1, 'COMMA', 2, 'POINT') + '年'}"></span>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="related-document"
+												role="tabpanel">
+												<div class="tab-content-body">
+													<div class="media-list">
+														<div class="media-list-item"
+															th:each="file : ${iShop.shop.shopFiles}">
+															<div class="row">
+																<div class="col-md-12">
+																	<h4 class="media-heading" th:text="${file.displayName}"></h4>
+																	<p class="comment" th:text="${file.comment}"></p>
+																	<div class="registered-data">
+																		<span class="name"
+																			th:text="${file.getCreatedAccountName()}"></span> <span
+																			class="file-size"
+																			th:text="${#numbers.formatDecimal(file.size/1024, 0, 0)} + 'KB'"></span>
+																		<span class="created-date"
+																			th:text="${file.getDiffirentFromNow()}"></span>
+																	</div>
+																	<div class="download j-download-item" th:path="@{pc/building/} + ${file.path}">
+																		<i class="fa fa-download"></i>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="image" role="tabpanel">
+												<div class="tab-content-body">
+													<div class="masonry-grid" th:if="${iShop.shop!=null}">
+														<div class="grid-sizer"></div>
+														<div class="masonry-item thumbnail"
+															th:each="image : ${iShop.shop.shopImages}">
+															<div class="img-view">
+																<a th:if="${image.path} != null" target="_blank"
+																	th:href="@{/pc/building/} + ${image.path}"> <img
+																	class="media-object img-rounded store_detail_image_lazy"
+																	th:attr="data-src=@{/pc/building/} + ${image.path}"
+																	alt="">
+
+																</a> <a th:if="${image.path} == null" target="_blank"
+																	th:href="@{/pc/building/} + 'img/no_img.jpg'"> <img
+																	class="media-object img-rounded store_detail_image_lazy"
+																	th:attr="data-src=@{/pc/building/} + img/no_img.jpg"
+																	alt="no_img">
+																</a>
+															</div>
+															<div class="img-content">
+																<h4 class="media-heading" th:text="${image.name} + ' (' + ${#numbers.formatDecimal(image.size/1024, 0, 0)} + 'KB)'"></h4>
+																<p class="comment" th:text="${image.comment}"></p>
+																<p class="name" th:text="${image.createdAccountName}"></p>
+																<p  class="created-date"
+																		th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																		th:text="${image.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></p>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

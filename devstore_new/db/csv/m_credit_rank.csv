@@ -1,0 +1,4 @@
+id,corporation_group,corporation_cd,credit_rank,created_datetime,update_datetime,created_account_code,update_account_code,is_deleted
+1,001,5892,信用ランク１,2018-04-03 13:07:39,2018-04-03 13:07:39,000000,000000,FALSE
+2,001,5892,信用ランク２,2018-04-03 13:07:39,2018-04-03 13:07:39,000000,000000,FALSE
+99,001,5892,信用ランク未設定,2018-04-03 13:07:39,2018-04-03 13:07:39,000000,000000,FALSE

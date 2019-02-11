@@ -1,0 +1,14 @@
+.table-wrapper {
+  overflow-x: scroll;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  -webkit-overflow-scrolling: touch;
+
+  .table {
+    width: 200%;
+    max-width: inherit;
+  }
+}
+
+.table-pre-area {
+  max-width: 300px;
+}

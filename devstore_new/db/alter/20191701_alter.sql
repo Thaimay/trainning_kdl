@@ -1,0 +1,38 @@
+ALTER TABLE public.project_category_classification ADD disp_order int4;
+
+update project_classification set name = '50%未満' where id = 24;
+update project_classification set name = '50%～70%' where id = 25;
+update project_classification set name = '70%以上' where id = 26;
+update project_classification set name = '100%' where id = 27;
+
+UPDATE public.project_category_classification SET disp_order=1 WHERE id=8;
+UPDATE public.project_category_classification SET disp_order=2 WHERE id=9;
+UPDATE public.project_category_classification SET disp_order=3 WHERE id=10;
+UPDATE public.project_category_classification SET disp_order=4 WHERE id=11;
+UPDATE public.project_category_classification SET disp_order=1 WHERE id=17;
+UPDATE public.project_category_classification SET disp_order=2 WHERE id=18;
+UPDATE public.project_category_classification SET disp_order=3 WHERE id=19;
+UPDATE public.project_category_classification SET disp_order=4 WHERE id=20;
+UPDATE public.project_category_classification SET disp_order=1 WHERE id=26;
+UPDATE public.project_category_classification SET disp_order=2 WHERE id=27;
+UPDATE public.project_category_classification SET disp_order=3 WHERE id=28;
+UPDATE public.project_category_classification SET disp_order=4 WHERE id=29;
+UPDATE public.project_category_classification SET disp_order=1 WHERE id=35;
+UPDATE public.project_category_classification SET disp_order=2 WHERE id=36;
+UPDATE public.project_category_classification SET disp_order=3 WHERE id=37;
+UPDATE public.project_category_classification SET disp_order=4 WHERE id=38;
+UPDATE public.project_category_classification SET disp_order=1 WHERE id=42;
+UPDATE public.project_category_classification SET disp_order=2 WHERE id=43;
+UPDATE public.project_category_classification SET disp_order=3 WHERE id=44;
+UPDATE public.project_category_classification SET disp_order=4 WHERE id=45;
+UPDATE public.project_category_classification SET disp_order=1 WHERE id=58;
+UPDATE public.project_category_classification SET disp_order=2 WHERE id=59;
+UPDATE public.project_category_classification SET disp_order=3 WHERE id=60;
+UPDATE public.project_category_classification SET disp_order=1 WHERE id=63;
+UPDATE public.project_category_classification SET disp_order=2 WHERE id=64;
+UPDATE public.project_category_classification SET disp_order=3 WHERE id=65;
+UPDATE public.project_category_classification SET disp_order=4 WHERE id=66;
+UPDATE public.project_category_classification SET disp_order=1 WHERE id=74;
+UPDATE public.project_category_classification SET disp_order=2 WHERE id=75;
+UPDATE public.project_category_classification SET disp_order=3 WHERE id=76;
+UPDATE public.project_category_classification SET disp_order=4 WHERE id=77;

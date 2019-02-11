@@ -1,0 +1,718 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>館新規作成</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script th:src="@{/js/building/building-create.js}"></script>
+<script th:src="@{/js/building/validation/create.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<form id="building-form">
+					<div class="content-detail negotiation">
+						<header class="content-detail-header">
+							<div class="row">
+								<div class="col-md-2 col-md-offset-10 ta-r">
+									<button class="btn btn-primary" type="button" id="j-detail-create">
+										<i class="fa fa-pencil" aria-hidden="true"></i> 登録
+									</button>
+									<br />
+									<div style="margin-top:5px"></div>
+									<a class="btn btn-default" th:href="@{/pc/building/list}">一覧に戻る</a>
+								</div>
+							</div>
+						</header>
+						<div class="content-detail-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="building-detail-body">
+										<div>
+											<!-- Nav tabs-->
+											<ul class="nav nav-tabs basic-detail-tabs" role="tablist">
+												<li class="active" role="presentation"><a href="#basic"
+													aria-controls="home" role="tab" data-toggle="tab">館基本</a></li>
+												<li role="presentation"><a href="#keyman"
+													aria-controls="profile" role="tab" data-toggle="tab">キーマン</a></li>
+												<li role="presentation"><a href="#activate"
+													aria-controls="messages" role="tab" data-toggle="tab">活性化</a></li>
+												<li role="presentation"><a href="#building-sales"
+													aria-controls="settings" role="tab" data-toggle="tab">館売上</a></li>
+												<!-- <li role="presentation"><a href="#shop-case"
+													aria-controls="settings" role="tab" data-toggle="tab">店・案件</a></li>
+												<li role="presentation"><a href="#competition"
+													aria-controls="settings" role="tab" data-toggle="tab">コンペチ</a></li> -->
+												<li role="presentation"><a href="#related-document"
+													aria-controls="settings" role="tab" data-toggle="tab">関連資料</a></li>
+												<li role="presentation"><a href="#image"
+													aria-controls="settings" role="tab" data-toggle="tab">画像</a></li>
+												<li role="presentation"><a href="#general-meeting"
+													aria-controls="settings" role="tab" data-toggle="tab">総会情報</a></li>
+											</ul>
+											<!-- Tab panes-->
+											<div class="tab-content">
+												<div class="tab-pane fade in active" id="basic"
+													role="tabpanel">
+													<div class="tab-content-body">
+														<ul class="building-basic-list">
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">館企業情報</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>館ID(場所マスタ館ID)</th>
+																				<td><input class="form-control" type="number"
+																					placeholder="館ID(場所マスタ館ID)" name="originBuildingId"></td>
+																			</tr>
+																			<tr>
+																				<th>館名CD</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="館名CD" name="buildingCd"></td>
+																			</tr>
+																			<tr>
+																				<th>館名</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="館名" name="name"></td>
+																			</tr>
+																			<tr>
+																				<th>企業G</th>
+																				<td><input class="form-control" type="text"
+																					id="j-form-corporationGrId" placeholder="企業G"></td>
+																			</tr>
+																			<tr>
+																				<th>法人</th>
+																				<td><input class="form-control"
+																					id="j-form-corporation" placeholder="法人"></td>
+																			</tr>
+																			<tr>
+																				<th>館長</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="館長" name="owner"></td>
+																			</tr>
+																			<tr>
+																				<th>PM運営会社</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="PM運営会社" id="j-form-pmCorporation">
+																				</td>
+																			</tr>
+																			<!--<tr>
+																				<th>与信ランク</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="与信ランク" id="j-form-creditRankId"></td>
+																			</tr>-->
+																			<tr>
+																				<th>館区分</th>
+																				<td>
+																					<div class="radio">
+																						<label><input type="radio"
+																							name="buildingType" value="1" checked="true">改装
+																						</label>
+																					</div>
+																					<div class="radio">
+																						<label><input type="radio"
+																							name="buildingType" value="2">既存 </label>
+																					</div>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">館基本情報</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>OPEN</th>
+																				<td class="j-open-date-start"><input
+																					class="form-control" id="form-open-date"
+																					type="text" placeholder="OPEN" name="openDate"></td>
+																			</tr>
+																			<tr>
+																				<th>CLOSE</th>
+																				<td class="j-close-date-start"><input
+																					class="form-control" id="form-close-date"
+																					type="text" placeholder="CLOSE" name="closeDate"></td>
+																			</tr>
+																			<tr>
+																				<th>住所</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="住所" name="address"></td>
+																			</tr>
+																			<tr>
+																				<th>HP</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="HP" name="homepageUrl"></td>
+																			</tr>
+																			<tr>
+																				<th>都道府県</th>
+																				<td><input class="form-control" type="text"
+																					id="j-form-iPrefecturesId" placeholder="都道府県">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>JISCD</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="JISCD" name="jiscd"></td>
+																			</tr>
+																			<tr>
+																				<th>グランドフロア</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="グランドフロア" name="groundFloor"></td>
+																			</tr>
+																			<tr>
+																				<th>集客コンテンツ</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="集客コンテンツ" name="attractingContent">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>核テナント</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="核テナント" name="coreTenant"></td>
+																			</tr>
+																			<tr>
+																				<th>サブ核テナント</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="サブ核テナント" name="subCoreTenant"></td>
+																			</tr>
+																			<tr>
+																				<th>テナント数</th>
+																				<td><input class="form-control" type="number"
+																					placeholder="テナント数" name="tenantNumber"></td>
+																			</tr>
+																			<tr>
+																				<th>建物構造</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="建物構造" name="structure"></td>
+																			</tr>
+																			<tr>
+																				<th>駐車場台数</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="駐車場台数" name="parkingNumber"></td>
+																			</tr>
+																			<tr>
+																				<th>営業時間</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="営業時間" name="businessHours"></td>
+																			</tr>
+																			<tr>
+																				<th>テナント</th>
+																				<td class="j-tenant"><input
+																					class="form-control" id="j-form-tenant" type="text"
+																					placeholder="テナント">
+																			</tr>
+																			<tr>
+																				<th>最寄り駅名</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="最寄り駅名" name="nearestStation"></td>
+																			</tr>
+																			<tr>
+																				<th>緯度</th>
+																				<td><input class="form-control" type="number"
+																					placeholder="緯度" name="longitude"></td>
+																			</tr>
+																			<tr>
+																				<th>経度</th>
+																				<td><input class="form-control" type="number"
+																					placeholder="経度" name="latitude"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">担当者</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>店舗開発</th>
+																				<td><input class="form-control"
+																					id="j-form-store-development" type="text" value=""
+																					placeholder="店舗開発追加"></td>
+																			</tr>
+																			<tr>
+																				<th>支店営業</th>
+																				<td><input class="form-control"
+																					id="j-form-branch-sales" type="text" value=""
+																					placeholder="支店営業追加"></td>
+																			</tr>
+																			<tr>
+																				<th>人事リーダー</th>
+																				<td><input class="form-control"
+																					id="j-form-hr-leader" type="text" value=""
+																					placeholder="人事リーダー追加"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">立地環境</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>販売チャンネル</th>
+																				<td><input class="form-control"
+																					placeholder="販売チャンネル" id="j-form-salesChannel">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>SC分類</th>
+																				<td><input class="form-control"
+																					placeholder="SC分類" id="j-form-salesChannelCd2">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>ブロック</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="ブロック" id="j-form-iBlockId"></td>
+																			</tr>
+																			<tr>
+																				<th>エリア</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="エリア" id="j-form-iAreaId"></td>
+																			</tr>
+																			<tr>
+																				<th>立地①</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="立地①" name="locationFirst"></td>
+																			</tr>
+																			<tr>
+																				<th>立地②</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="立地②" name="locationSecond"></td>
+																			</tr>
+																			<tr>
+																				<th>小商圏</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="商圏" name="smallMarketArea"></td>
+																			</tr>
+																			<tr>
+																				<th>採用難易度</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="採用難易度" name="adoptDifficulty"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item hidden">
+																<div class="building-basic-info j-dropdown">
+																	<header
+																		class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">商圏情報</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<div class="j-dropdown-body-inner">
+																			<table class="table">
+																				<tr class="salesChannel NSC 駅FB 百貨店">
+																					<th>1Km商圏人口</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.tradeAreaPopulation1Km"></td>
+																				</tr>
+																				<tr class="salesChannel 駅FB 百貨店">
+																					<th>1Km女性</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.female1km"></td>
+																				</tr>
+																				<tr class="salesChannel 駅FB 百貨店">
+																					<th>1Km昼間人口</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.daytimePopulation1Km"></td>
+																				</tr>
+																				<tr class="salesChannel 駅FB 百貨店">
+																					<th>1Km夜間人口</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.nighttimePopulation1Km"></td>
+																				</tr>
+																				<tr class="salesChannel 駅FB 百貨店">
+																					<th>1Km小売販売額</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.retailSales1Km"></td>
+																				</tr>
+																				<tr class="salesChannel NSC">
+																					<th>1Km売場占有率</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.departmentOccupancy1Km"></td>
+																				</tr>
+																				<tr class="salesChannel NSC">
+																					<th>1Km人口パワー</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.populationPower1Km"></td>
+																				</tr>
+																				<tr class="salesChannel NSC">
+																					<th>1Km商圏パワー(百万円)</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.tradeAreaPower1Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>3Km商圏人口</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.tradeAreaPopulation3Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>3Km売場占有率</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.departmentOccupancy3Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>3Km人口パワー</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.populationPower3Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>3Km商圏パワー(百万円)</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.tradeAreaPower3Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>5Km商圏人口</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.tradeAreaPopulation5Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>5Km売場占有率</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.departmentOccupancy5Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>5Km人口パワー</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.populationPower5Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>5Km商圏パワー(百万円)</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.tradeAreaPower5Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC">
+																					<th>10Km商圏人口</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.tradeAreaPopulation10Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC">
+																					<th>10Km売場占有率</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.departmentOccupancy10Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC">
+																					<th>10Km人口パワー</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.populationPower10Km"></td>
+																				</tr>
+																				<tr class="salesChannel SC">
+																					<th>10Km商圏パワー(百万円)</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.tradeAreaPower10Km"></td>
+																				</tr>
+																				<tr class="salesChannel NSC">
+																					<th>5分</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.drivePopulationWithin5Minutes"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>15分</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.drivePopulationWithin15Minutes"></td>
+																				</tr>
+																				<tr class="salesChannel NSC">
+																					<th>20分</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.drivePopulationWithin20Minutes"></td>
+																				</tr>
+																				<tr class="salesChannel SC">
+																					<th>30分</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.drivePopulationWithin30Minutes"></td>
+																				</tr>
+																				<tr class="salesChannel SC NSC">
+																					<th>年間1人当所得</th>
+																					<td><input class="form-control" type="text"
+																						placeholder=""
+																						name="buildingTradeAreaDto.incomePerPeople"></td>
+																				</tr>
+																			</table>
+																		</div>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header
+																		class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">備考</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>備考</th>
+																				<td><textarea class="form-control" name="note"
+																						placeholder="備考" rows="10"></textarea></td>
+																			</tr>
+																			<tr>
+																				<th>大館フラグ</th>
+																				<td><div class="btn-group"
+																						data-toggle="buttons">
+																						<label class="btn btn-primary active"><input
+																							type="radio" name="isBuildingGroup" value="true"
+																							autocomplete="off" checked><span
+																							class="fa fa-check"></span> <lable>はい</lable> </label> <label
+																							class="btn btn-primary"><input
+																							type="radio" name="isBuildingGroup" value="false"
+																							autocomplete="off"><span
+																							class="fa fa-check"></span> <lable>いいえ</lable></label>
+																					</div></td>
+																			</tr>
+																			<tr id="trbuildingGroupId" style="display: none">
+																				<th>大館</th>
+																				<td><input class="form-control"
+																					placeholder="大館" id="j-form-buildingGroupId">
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="keyman" role="tabpanel">
+													<div class="tab-content-body">
+														<div class="form-group">
+															<div class="row">
+																<div class="col-md-10">
+																	<input class="form-control" type="text"
+																		id="j-form-keyman" value="" placeholder="キーマン追加">
+																</div>
+																<div class="col-md-2">
+																	<a class="btn btn-primary" id="addKeyman">追加</a>
+																</div>
+															</div>
+														</div>
+														<ul class="media-list" id="keymanList">
+
+														</ul>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="activate" role="tabpanel">
+													<div class="tab-content-body">
+														<div class="media-list"></div>
+														<div class="row">
+															<div class="col-md-12">
+																<input class="btn btn-primary" type="button"
+																	id="addActivate" value="追加">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="building-sales"
+													role="tabpanel">
+													<div class="row tab-content-body">
+														<div class="col-md-12">
+															<!-- Button trigger modal -->
+															<button type="button" class="btn btn-primary"
+																data-toggle="modal" data-target="#addSalesGroup">
+																売上追加</button>
+														</div>
+													</div>
+													<div class="row tab-content-body">
+														<div class="col-md-10 radio">
+															<label class="col-form-label col-md-3" th:each="buildingsalestype, iter : ${buildingSalesTypes}"> <input type="radio" name="sales-type" th:value="${buildingsalestype.id}" th:checked="${iter.index == 0}? 'true' : 'false'">[[${buildingsalestype.value}]]</label>
+														</div>
+													</div>
+													<div class="tab-content-body">
+														<ul class="media-list" id="buildingSales">
+															<li class="media-list-item hide"></li>
+														</ul>
+													</div>													
+												</div>
+												<!-- <div class="tab-pane fade" id="shop-case" role="tabpanel">
+													<div class="tab-content-body">
+														<div class="media-list">
+															<div class="media-list-item">
+																<div class="row" id="shop-search">
+																	<div class="col-md-12">
+																		<div class="form-group">
+																			<input class="form-control j-form-shop-case"
+																				type="text" placeholder="">
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div> -->
+												<!-- <div class="tab-pane fade" id="competition" role="tabpanel">
+													<div class="tab-content-body">
+														<ul class="basic-list competision-list">
+															<li class="basic-list-item competision-list-item">
+																<div class="competision-info">
+																	<header class="competision-info-header">
+																		<div class="form-group">
+																			<div class="row">
+																				<label class="col-sm-2 control-label"
+																					for="conpetision-name">コンペチ名</label>
+																				<div class="col-sm-10">
+																					<input class="form-control" id="conpetision-name"
+																						type="text" placeholder="">
+																				</div>
+																			</div>
+																		</div>
+																	</header>
+																	<div class="competision-info-body">
+																		<div class="form-group">
+																			<div class="row">
+																				<label class="col-sm-2 control-label"
+																					for="basis-number">坪数</label>
+																				<div class="col-sm-10">
+																					<input class="form-control" id="basis-number"
+																						type="text" placeholder="" value="80坪">
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div> -->
+												<div class="tab-pane fade" id="related-document"
+													role="tabpanel">
+													<div class="tab-content-body">
+														<div class="media-list"></div>
+														<div class="row">
+															<div class="col-md-12">
+																<input class="btn btn-primary" type="button"
+																	id="addrelatedDocument" value="追加">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="image" role="tabpanel">
+													<div class="tab-content-body">
+														<div class="media-list"></div>
+														<div class="row">
+															<div class="col-md-12">
+																<input class="btn btn-primary" type="button"
+																	id="addImage" value="追加">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="general-meeting"
+													role="tabpanel">
+													<div class="tab-content-body">
+														<div class="media-list"></div>
+														<div class="row">
+															<div class="col-md-12">
+																<input class="btn btn-primary" type="button"
+																	id="addMeetingHistory" value="追加">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="modal fade" id="addSalesGroup" tabindex="-1"
+					role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">ファイル追加</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form id="add-building-sales-form">
+									<div class="form-group">
+										<label class="col-form-label">決算年度</label> <input type="number"
+											placeholder="決算年度 (YYYY)" class="form-control" name="add-f-month" maxlength="4">
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">データ種別</label>
+										<select class="form-control" name="add-type">
+											<option th:each="salesType : ${buildingSalesTypes}" th:value="${salesType.id}" th:text="${salesType.value}"></option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">データ区分</label>
+										<select class="form-control" name="add-division">
+											<option th:each="salesClassification : ${buildingSalesClassifications}" th:value="${salesClassification.id}" th:text="${salesClassification.value}"></option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">売上(百万)</label> <input type="number"
+											placeholder="売上(百万)" class="form-control" name="add-sales">
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">面積(㎡)</label> <input type="number"
+											placeholder="面積(㎡)" class="form-control" name="add-area">
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">月坪(千円)</label> <input type="number"
+											placeholder="月坪(千円)" class="form-control" name="add-month-basis">
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary"
+									id="add-building-sales">Save</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

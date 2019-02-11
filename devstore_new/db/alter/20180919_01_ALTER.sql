@@ -1,0 +1,1 @@
+update project set conclusion_possibility_percent = '30％以下';

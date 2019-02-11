@@ -1,0 +1,14 @@
+.sidebar {
+  position: absolute;
+  top: 54px;  /* header's height */
+  left: 0;
+  transform: translate3D(-100%, 0, 0);
+  width: 14%;
+  height: 100%;
+  background-color: #222;
+  transition: 0.2s ease 0s;
+}
+
+.sidebar.is-show {
+  transform: translate3D(0, 0, 0);
+}

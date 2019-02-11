@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_SEGMENT_DIVISION(segment_division_id,segment_division_cd,segment_division_name,generation,traffic_quantity,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action) FROM 'db/csv/I_SEGMENT_DIVISION.csv' WITH CSV;

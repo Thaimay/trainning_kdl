@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_STEPS_RATE_CALCULATION_DIVISION (steps_rate_calculation_division_id,steps_rate_calculation_division_cd,steps_rate_calculation_division_name,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action) FROM 'db/csv/I_STEPS_RATE_CALCULATION_DIVISION.csv' WITH CSV;

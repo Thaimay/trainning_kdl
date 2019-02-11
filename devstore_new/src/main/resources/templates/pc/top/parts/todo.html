@@ -1,0 +1,29 @@
+<header class="panel-header task">
+	<div class="row">
+		<div class="col-md-12">
+			<h2 class="title">TODO</h2>
+		</div>
+</header>
+<div class="panel-body">
+	<div class="panel-body-inner">
+		<section class="task">
+			<div class="task-body">
+				<ul class="list-group top-task-list">
+					<li class="list-group-item" th:each="todo : ${top.todoDeaLineList}">
+						<span th:if="${todo.negotiationId != 0}">
+							<a th:href="@{/pc/negotiation/showUpdate/} + ${todo.negotiationId}" class="btn btn-primary">商談報告</a>
+							<a class="schedule-info" th:href="@{/pc/negotiation/detail/} + ${todo.negotiationId}">
+								<div class="todo-content" th:text="${todo.content}"></div>
+							</a>
+						</span>
+						<span th:if="${todo.projectId != 0}">
+							<a class="schedule-info" th:href="@{/pc/project/showUpdate/} + ${todo.projectId} + '#task'">
+								<div class="todo-content" th:text="${todo.content}"></div>
+							</a>
+						</span>
+					</li>
+				</ul>
+			</div>
+		</section>
+	</div>
+</div>

@@ -1,0 +1,150 @@
+<div class="tab-pane fade in active" id="list" role="tabpanel">
+	<div class="row">
+		<div class="col-md-7">
+			<form class="btn-sort" action="GET" id="j-sortbtn" accept-charset="UTF-8">
+				<div class="btns-sort-item">
+					<div class="radio">
+						<label><input type="radio" name="sort-category"
+							checked="true" id="radioBuilding" value="BUILDING">é¤¨
+						</label>
+					</div>
+				</div>
+				<div class="btns-sort-item">
+					<div class="radio">
+						<label><input type="radio" name="sort-category" 
+							id="radioStore" value="STORE">åº—èˆ—
+						</label>
+					</div>
+				</div>
+				<div class="btns-sort-item">
+					<div class="checkbox">
+						<label> <input type="checkbox" id="chkOwner"
+							th:checked="${findKeywordDTO!=null && findKeywordDTO.accountId!=null && findKeywordDTO.accountId>0}">æ‹…å½“
+						</label>
+					</div>
+				</div>
+			</form>
+			<div class="refine-by-text">
+				<input class="form-control" type="text"
+					th:value="${findKeywordDTO!=null && findKeywordDTO.keyWord!=null && findKeywordDTO.keyWord!=''}? ${findKeywordDTO.keyWord}:''"
+					placeholder="é¤¨ æ¤œç´¢" id="keyWordSearch">
+			</div>
+		</div>
+		<div class="col-md-4 col-md-offset-1">
+			<div class="inline-list create-buttons">
+				<a class="btn btn-info pull-right" href="/pc/building/showCreate" th:href="@{/pc/building/showCreate}">æ–°è¦�é¤¨ä½œæˆ�</a>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="detail-table">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="table-wrapper">
+							<table class="table">
+								<colgroup span="5"></colgroup>
+								<colgroup span="3"></colgroup>
+								<colgroup span="2"></colgroup>
+								<colgroup span="1"></colgroup>
+								<colgroup span="7"></colgroup>
+								<colgroup span="3"></colgroup>
+								<colgroup span="4"></colgroup>
+								<colgroup span="5"></colgroup>
+								<colgroup span="1"></colgroup>
+								<thead>
+									<tr>
+										<th>é¤¨å��</th>
+										<th>ä¼�æ¥­ã‚°ãƒ«ãƒ¼ãƒ—</th>
+										<th>æ³•äºº</th>
+										<th>é¤¨é•·</th>
+										<th>é¤¨åŒºåˆ†</th>
+										<th>OPEN</th>
+										<th>CLOSE</th>
+										<th>éƒ½é�“åºœçœŒ</th>
+										<th>åº—èˆ—é–‹ç™º</th>
+										<th>æ”¯åº—å–¶æ¥­</th>
+										<th>äººäº‹ãƒªãƒ¼ãƒ€ãƒ¼</th>
+										<th>æ´»æ€§åŒ–äºˆå®šæ—¥</th>
+										<th>è²©å£²ãƒ�ãƒ£ãƒ³ãƒ�ãƒ«</th>
+										<th>è²©å£²ãƒ�ãƒ£ãƒ³ãƒ�ãƒ«2(SCåˆ†é¡ž)</th>
+										<th>ãƒ–ãƒ­ãƒƒã‚¯</th>
+										<th>ã‚¨ãƒªã‚¢</th>
+										<th>ç«‹åœ°â‘ </th>
+										<th>ç«‹åœ°â‘¡</th>
+										<th>å°�å•†åœ�</th>
+										<th>å£²ä¸Š</th>
+										<th>é–¢é€£è³‡æ–™</th>
+										<th>å†™çœŸãƒ»ç”»åƒ�</th>
+										<th>ãƒ¡ãƒ¢</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="building : ${buildingKeywords}">
+										<td><a
+											th:href="@{/pc/building/detail/} + ${building.id}"
+											th:text="${building.name}"></a></td>
+										<td
+											th:text="${building.iCorporationGroup!=null}? ${building.iCorporationGroup.corporationGpName}:''"></td>
+										<td
+											th:text="${building.iCorporation!=null}? ${building.iCorporation.corporationName}:''"></td>
+										<td th:text="${building.owner}"></td>
+										<td th:text="${building.buildingType}"></td>
+										<td th:text="${building.openDateString}"></td>
+										<td th:text="${building.closeDateString}"></td>
+										<td
+											th:text="${building.iPrefectures!=null}? ${building.iPrefectures.prefecturesName}:''"></td>
+										<td th:text="${building.storeDeveloperNames}">
+										</td>
+										<td th:text="${building.branchsSalesNames}"></td>
+										<td th:text="${building.humanResourceLeaderNames}"></td>
+										<td th:text="${building.nearestExpectedDay}"></td>
+										<td
+											th:text="${building.iSalesChannel!=null}? ${building.iSalesChannel.salesChannelName}:''"></td>
+										<td
+											th:text="${building.iSalesChannel2!=null}? ${building.iSalesChannel2.salesChannelName}:''"></td>
+										<td th:text="${building.iBlock!=null}? ${building.iBlock.blockName}:''"></td>
+										<td th:text="${building.iArea!=null}? ${building.iArea.areaName}:''"></td>
+										<td th:text="${building.locationFirst}"></td>
+										<td th:text="${building.locationSecond}"></td>
+										<td th:text="${building.smallMarketArea}"></td>
+										<td th:text="${building.formatBuildingSales}"></td>
+										<td th:text="${building.existRelatedDocument}"></td>
+										<td th:if="${building.imagePath} != null">
+											<a target="_blank" th:href="@{/pc/building/} + ${building.imagePath}">
+												<img class="img-responsive" height="50" width="50" alt="" th:src="@{/pc/building/} + ${building.imagePath}">
+											</a>
+										</td> 
+										<td th:if="${building.imagePath} == null">
+											<a target="_blank" th:href="@{/pc/building/} + 'img/no_img.jpg'">
+												<img class="img-responsive" height="50" width="50" alt="no_image" th:src="@{/pc/building/} + 'img/no_img.jpg'">
+											</a>
+										</td>
+										<td th:text="${building.note}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<nav class="pagination-area is-centered"
+						aria-label="Page navigation">
+						<ul id="paginationKeyword" class="pagination">
+						</ul>
+						<input type="hidden" id="currentPageKeyword"
+							th:value="${findKeywordDTO.numberOfPage}" /> <input type="hidden"
+							id="pageCountKeyword" th:value="${pageCountKeyword}" />
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+		let accountId = /*[[${session.LOGIN_ACCOUNT.id}]]*/'';
+	/*]]>*/
+</script>

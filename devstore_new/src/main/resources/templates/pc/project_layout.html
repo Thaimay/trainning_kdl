@@ -1,0 +1,104 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<head th:with="number=${T(Math).random()}">
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags-->
+<meta name="description" content="">
+<meta name="author" content="">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">店舗開発</title>
+<!-- Bootstrap core CSS-->
+
+<link href="./bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+<link href="./js/lib/bootstrap-table/bootstrap-table.css" th:href="@{/js/lib/bootstrap-table/bootstrap-table.css}" rel="stylesheet">
+<link href="./css/mycss.css" th:href="@{/css/mycss.css}" rel="stylesheet">
+<link href="./css/jquery-ui.css" th:href="@{/css/jquery-ui.css}" rel="stylesheet">
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug-->
+<link href="./bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css" th:href="@{/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css}" rel="stylesheet">
+<link href="./font-awesome/css/font-awesome.min.css" th:href="@{/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+<link href="./star-rating/min/rating.css" th:href="@{/star-rating/min/rating.css}" rel="stylesheet">
+
+<link href="./css/ie10-viewport-bug-workaround.css" th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
+<link href="./css/jquery.timepicker.min.css" th:href="@{/css/jquery.timepicker.min.css}" rel="stylesheet">
+<link href="./css/magicsuggest-min.css" th:href="@{/css/magicsuggest-min.css}" rel="stylesheet">
+<link href="./js/lib/table-fixed-columns/bootstrap-table-fixed-columns.css" th:href="@{/js/lib/table-fixed-columns/bootstrap-table-fixed-columns.css}" rel="stylesheet">
+<link href="./css/project-list.css" th:href="@{/css/project-list.css}" rel="stylesheet">
+<link href="./js/lib/table-fixed-columns/bootstrap-table-sticky-header.css" th:href="@{/js/lib/table-fixed-columns/bootstrap-table-sticky-header.css}" rel="stylesheet">
+
+<script src="./js/jquery-1.12.4.js" th:src="@{/js/jquery-1.12.4.js}"></script>
+<script src="./js/jquery-ui.min.js" th:src="@{/js/jquery-ui.min.js}"></script>
+<script src="./js/angular.min.js" th:src="@{/js/angular.min.js}"></script>
+<script src="/js/lib/jquery-validation.js" th:src="@{/js/lib/jquery-validation.js}"></script>
+
+<script src="./bootstrap/js/bootstrap.min.js" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script src="./js/lib/bootstrap-table/bootstrap-table.js" th:src="@{/js/lib/bootstrap-table/bootstrap-table.js}"></script>
+<script src="./js/lib/star-rating/rating.js" th:src="@{/js/lib/star-rating/rating.js}"></script>
+<script src="./bootstrap-switch/js/bootstrap-switch.min.js" th:src="@{/bootstrap-switch/js/bootstrap-switch.min.js}"></script>
+
+<script src="./js/jquery.timepicker.min.js" th:src="@{/js/jquery.timepicker.min.js}"></script>
+<script src="./js/lib/magic-suggest.js" th:src="@{/js/lib/magic-suggest.js}"></script>
+<script src="./js/datetime-picker.js" th:src="@{/js/datetime-picker.js}"></script>
+<script src="./js/lib/jquery-validation.js" th:src="@{/js/lib/jquery-validation.js}"></script>
+<script src="./js/lib/jmasonry.pkgd.min.js" th:src="@{/js/lib/masonry.pkgd.min.js}"></script>
+<script src="./js/lib/table-fixed-columns/bootstrap-table-fixed-columns.js" th:src="@{/js/lib/table-fixed-columns/bootstrap-table-fixed-columns.js}"></script>
+<script src="./js/lib/table-fixed-columns/bootstrap-table-sticky-header.js" th:src="@{/js/lib/table-fixed-columns/bootstrap-table-sticky-header.js}"></script>
+
+<script src="./js/script.js" th:src="@{/js/script.js}"></script>
+<script src="./js/suggest.js" th:src="@{/js/suggest.js}"></script>
+<script src="./js/baseUrl.js" th:src="@{/js/baseUrl.js}"></script>
+<script src="./js/zenkaku.js" th:src="@{/js/zenkaku.js}"></script>
+
+<script src="./js/negotiation/file.js" th:src="@{/js/negotiation/file.js} + '?v=' + ${session.version}"></script>
+
+<script src="./js/validation/negotiation.js" th:src="@{/js/validation/negotiation.js} + '?v=' + ${session.version}"></script>
+<script src="./js/app.core.js" th:src="@{/js/app.core.js} + '?v=' + ${session.version}"></script>
+<script src="./js/app.services.js" th:src="@{/js/app.services.js} + '?v=' + ${session.version}"></script>
+<script src="./js/app.upload.js" th:src="@{/js/app.upload.js} + '?v=' + ${session.version}"></script>
+<script src="./js/app.js" th:src="@{/js/app.js} + '?v=' + ${session.version}"></script>
+
+<script src="./js/controllers/top/list.js" th:src="@{/js/controllers/top/list.js} + '?v=' + ${session.version}"></script>
+<script src="./js/controllers/negotiation/list.js" th:src="@{/js/controllers/negotiation/list.js} + '?v=' + ${session.version}"></script>
+<script src="./js/controllers/negotiation/create.js" th:src="@{/js/controllers/negotiation/create.js} + '?v=' + ${session.version}"></script>
+<script src="./js/controllers/negotiation/create.js" th:src="@{/js/controllers/negotiation/update.js} + '?v=' + ${session.version}"></script>
+<script src="./js/controllers/negotiation/detail.js" th:src="@{/js/controllers/negotiation/detail.js} + '?v=' + ${session.version}"></script>
+<script src="./js/controllers/information/list.js" th:src="@{/js/controllers/information/list.js}"></script>
+
+<script src="./js/services/base.fct.js" th:src="@{/js/services/base.fct.js} + '?v=' + ${session.version}"></script>
+<script src="./js/services/negotiation/base.js" th:src="@{/js/negotiation/base.js} + '?v=' + ${session.version}"></script>
+<script src="./js/services/negotiation/list.js" th:src="@{/js/negotiation/list.js} + '?v=' + ${session.version}"></script>
+<script src="./js/services/negotiation/create.js" th:src="@{/js/services/negotiation/create.js} + '?v=' + ${session.version}"></script>
+<script src="./js/services/negotiation/detail.js" th:src="@{/js/services/negotiation/detail.js} + '?v=' + ${session.version}"></script>
+
+<script src="./js/services/common/Spinner.js" th:src="@{/js/services/common/Spinner.js}"></script>
+<script src="./js/services/top/list.js" th:src="@{/js/services/top/list.js} + '?v=' + ${session.version}"></script>
+<script src="./js/services/negotiation/list.js" th:src="@{/js/services/negotiation/list.js} + '?v=' + ${session.version}"></script>
+<script src="./js/services/information/list.js" th:src="@{/js/services/information/list.js} + '?v=' + ${session.version}"></script>
+<script src="./js/jquery.lazy.min.js" th:src="@{/js/jquery.lazy.min.js}"></script>
+
+</head>
+<body id="project-body" style="overflow-y:hidden" th:with="ACCOUNT=${session.LOGIN_ACCOUNT}, ROLE=${ACCOUNT.role}" onload="hideSpinner()">
+	<div id="spinner" class="spinner">
+	    <div class="spinner-content">
+	      <div class="spinner-content-inner">
+	        <div class="spinner-icon">
+	          <div class="loader">Loading...</div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	<header class="global-header" id="global-header" th:insert="pc/header"> ヘッダー </header>
+
+	<div class="wrapper">
+		<aside class="sidebar"  id="j-sidebar" th:insert="pc/sidebar">サイドバー</aside>
+		<main class="main-contents"  id="mainContents">
+		<div class="container-fluid" layout:fragment="content">コンテンツ</div>
+		</main>
+	</div>
+</body>
+</html>

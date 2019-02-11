@@ -1,0 +1,14 @@
+ALTER TABLE public.project_contract_progress ADD column rent_start_date date;
+ALTER TABLE public.project_contract_progress ADD column rent_end_date date;
+ALTER TABLE public.project_contract_progress ADD column rent_year double precision;
+
+ALTER TABLE public.project_contract_progress_history ADD column rent_start_date date;
+ALTER TABLE public.project_contract_progress_history ADD column rent_end_date date;
+ALTER TABLE public.project_contract_progress_history ADD column rent_year double precision;
+
+ALTER TABLE public.project_switing_item_control ADD column basic_current_contract_rent_reduce_year bool;
+ALTER TABLE public.project_switing_item_control ADD column basic_negotiation_contract_rent_reduce_start_date bool;
+ALTER TABLE public.project_switing_item_control ADD column basic_negotiation_contract_rent_reduce_end_date bool;
+ALTER TABLE public.project_switing_item_control ADD column basic_negotiation_contract_rent_reduce_year bool;
+ALTER TABLE public.project_switing_item_control ADD column basic_current_related_corporation_period bool;
+ALTER TABLE public.project_switing_item_control ADD column basic_negotiation_related_corporation_period bool;

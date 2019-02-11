@@ -1,0 +1,750 @@
+<div class="tab-pane fade in active" id="list" role="tabpanel">
+	<div class="row">
+		<div class="col-md-10">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="btns-sort">
+						<div class="btns-sort-item">
+							<div class="checkbox">
+								<label> <input type="checkbox" id="chkOwner" th:checked="${findKeywordDTO!=null && findKeywordDTO.isOwn!=null && findKeywordDTO.isOwn}">担当
+								</label>
+							</div>
+						</div>
+						<div class="btns-sort-item">
+							<div class="checkbox">
+								<label> <input type="checkbox" id="chkReadLater" th:checked="${findKeywordDTO!=null && findKeywordDTO.isReadLater!=null && findKeywordDTO.isReadLater}">ウォッチ
+								</label>
+							</div>
+						</div>
+						<div class="btns-sort-item">
+							<div class="checkbox">
+								<label> <input type="checkbox" id="chkMonBefore" th:checked="${findKeywordDTO!=null && findKeywordDTO.isMonBefore!=null && findKeywordDTO.isMonBefore}">前週以降更新
+								</label>
+							</div>
+						</div>
+						<div class="btns-sort-item">
+							<div class="checkbox">
+								<label> <input type="checkbox" id="chkRunOnly" th:checked="${findKeywordDTO!=null && findKeywordDTO.isRunOnly!=null && findKeywordDTO.isRunOnly}">稼働中のみ
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-9">
+					<div class="refine-by-text">
+						<input class="form-control" type="text" th:value="${findKeywordDTO!=null && findKeywordDTO.keyWord!=null && findKeywordDTO.keyWord!=''}? ${findKeywordDTO.keyWord}:''"
+						placeholder="進捗DB 検索" id="keyWordSearch">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="building-basic-info j-dropdown" style="display: none;">
+						<header style="padding-top: 5px; padding-bottom: 5px" class="building-basic-info-header j-dropdown-header">
+							<span>絞り込み </span>
+							<span th:if="${findKeywordDTO!=null && findKeywordDTO.isNewShop!=null && findKeywordDTO.isNewShop}">新店</span>
+							<span th:if="${findKeywordDTO!=null && findKeywordDTO.isNewShop!=null && findKeywordDTO.isNewShop && findKeywordDTO.isExistsShop}">/</span>
+							<span th:if="${findKeywordDTO!=null && findKeywordDTO.isExistsShop!=null && findKeywordDTO.isExistsShop}">既存店</span>
+							<span th:if="${findKeywordDTO!=null && findKeywordDTO.isExistsShop!=null && findKeywordDTO.isOtherShop
+																&& (findKeywordDTO.isNewShop || findKeywordDTO.isExistsShop)}">/</span>
+							<span th:if="${findKeywordDTO!=null && findKeywordDTO.isExistsShop!=null && findKeywordDTO.isOtherShop}">その他</span>
+							<span class="project-show-checkbox-landing"></span>
+						</header>
+						<div class="building-basic-info-body j-dropdown-body">
+							<div class="j-dropdown-body-inner">
+								<table class="table">
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label><input type="checkbox" id="chkNewShop" th:checked="${findKeywordDTO!=null && findKeywordDTO.isNewShop!=null && findKeywordDTO.isNewShop}">
+													新店</label>
+												<label><input type="checkbox" id="chkExistsShop" th:checked="${findKeywordDTO!=null && findKeywordDTO.isExistsShop!=null && findKeywordDTO.isExistsShop}">
+													既存店</label>
+												<label><input type="checkbox" id="chkOtherShop" th:checked="${findKeywordDTO!=null && findKeywordDTO.isOtherShop!=null && findKeywordDTO.isOtherShop}">
+													その他</label>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label><input type="checkbox" id="isLandingNothing" name="isLandingNothing" th:checked="${findKeywordDTO!=null && findKeywordDTO.isLandingNothing}"
+													value="true"><span style="margin-right:5px">無し</span></label>
+												<label th:each="landing : ${landingPossibilityClassification}">
+													<input type="checkbox" name="landingIds" th:value="${landing.id}">
+													<span th:text="${landing.name}" style="margin-right:5px"></span></label>
+											</div>
+											</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span style="float: right; margin-right: 2%">
+												<button id="project-find-checkbox" class="btn btn-primary">設定</button>
+											</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkBasicPrint" th:checked="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">基本情報
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkCurrentContractPrint" th:checked="${findKeywordDTO ==null || findKeywordDTO.isCurrentContractNotPrint}">契約(現在)
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkProgressContractPrint" th:checked="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}">契約(交渉中)
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkPlanPrint" th:checked="${findKeywordDTO ==null || findKeywordDTO.isPlanNotPrint}">計画
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkLandingPrint" th:checked="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">方向性
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkStatusPrint" th:checked="${findKeywordDTO ==null || findKeywordDTO.isStatusNotPrint}">ステータス
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkCurrentSectionPrint" th:checked="${findKeywordDTO ==null || findKeywordDTO.isCurrentSectionNotPrint}">区画(現在)
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkProgressSectionPrint" th:checked="${findKeywordDTO ==null || findKeywordDTO.isProgressSectionNotPrint}">区画(交渉中)
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkCorporationPrint" th:checked="${findKeywordDTO ==null || findKeywordDTO.isCorporationNotPrint}">関連法人情報
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<button id="print-update-button" class="btn btn-primary">表示反映</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="create-buttons text-right">
+				<a class="btn btn-info" href="/pc/project/showCreate" th:href="@{/pc/project/showCreate}">新規進捗DB作成</a>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row project-list-content">
+		<div class="col-md-12">
+			<div class="detail-table">
+				<div class="row">
+					<div class="col-md-12 project-list-content-table">
+						<table class="project-list-content-table-main" data-height="516" data-toggle="table" data-fixed-columns="true"
+						 data-fixed-number="8" style="width: 100px">
+							<thead>
+								<tr>
+									<th class="joincolumn master project-list-num first-detail-col connect-col col6" rowspan="2">稼働区分</th>
+									<th class="joincolumn project master project-list-column-category col5">案件情報</th>
+									<th class="joincolumn project master project-list-name col12"></th>
+
+									<th class="joincolumn basic master project-list-area col4">基本情報</th>
+									<th class="joincolumn basic master project-list-corporate col8"></th>
+									<th class="joincolumn basic master project-list-brand col5"></th>
+									<th class="joincolumn basic master project-list-company col1-5"></th>
+									<th class="joincolumn basic master project-list-shop col8"></th>
+									<th class="joincolumn basic master project-list-basis col2-5" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}"></th>
+									<th class="joincolumn basic master project-list-shop-start col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}"></th>
+									<th class="joincolumn basic master project-list-operation col5" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}"></th>
+									<th class="joincolumn basic master project-list-channnel col5" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}"></th>
+
+									<th class="joincolumn contract master agreement col5">現契約</th>
+									<th class="joincolumn contract master agreement col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}"></th>
+									<th class="joincolumn contract master agreement col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}"></th>
+									<th class="joincolumn contract master agreement col5-5"></th>
+									<th class="joincolumn contract master agreement col1-5"></th>
+									<th class="joincolumn contract master agreement lease col5"></th>
+									<th class="joincolumn contract master agreement col2" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}"></th>
+									<th class="joincolumn contract master agreement reduce col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}"></th>
+									<th class="joincolumn contract master agreement reduce col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}"></th>
+									<th class="joincolumn contract master agreement reduce col10" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}"></th>
+
+									<th class="joincolumn negotiation-progress negotiation agreement col5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">交渉契約</th>
+									<th class="joincolumn negotiation-progress negotiation agreement col8" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+									<th class="joincolumn negotiation-progress negotiation agreement col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+									<th class="joincolumn negotiation-progress negotiation agreement reduce col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+									<th class="joincolumn negotiation-progress negotiation agreement reduce col1-5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+									<th class="joincolumn negotiation-progress negotiation agreement reduce col3" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+
+									<th class="joincolumn negotiation-progress negotiation agreement col5">
+										<span th:if="${findKeywordDTO != null && findKeywordDTO.isProgressContractNotPrint == false}">交渉中</span>
+									</th>
+									<th class="joincolumn negotiation-progress negotiation agreement col5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+									<th class="joincolumn negotiation-progress negotiation agreement col5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+									<th class="joincolumn negotiation-progress negotiation agreement col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+									<th class="joincolumn negotiation-progress negotiation agreement col10" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}"></th>
+
+									<th class="joincolumn plan master underway col5">計画</th>
+									<th class="joincolumn plan master underway col3" th:if="${findKeywordDTO ==null || findKeywordDTO.isPlanNotPrint}"></th>
+									<th class="joincolumn plan master underway col4"></th>
+
+									<th class="joincolumn direction negotiation underway col5">方向性</th>
+									<th class="joincolumn direction negotiation underway col5"></th>
+									<th class="joincolumn direction negotiation underway supplement col13" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"></th>
+									<th class="joincolumn direction negotiation underway col2-5"></th>
+									<th class="joincolumn direction negotiation underway reason col5" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"></th>
+									<th class="joincolumn direction negotiation underway col6"></th>
+									<th class="joincolumn direction negotiation underway renovation col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"></th>
+									<th class="joincolumn direction negotiation underway col4" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"></th>
+									<th class="joincolumn direction negotiation underway col4"></th>
+									<th class="joincolumn direction negotiation underway col4" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"></th>
+									<th class="joincolumn direction negotiation underway col2-5" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"></th>
+									<th class="joincolumn direction negotiation underway col5" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"></th>
+
+									<th class="joincolumn status negotiation underway behavior col5" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}">ステータス</th>
+									<th class="joincolumn status negotiation underway col5" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}"></th>
+									<th class="joincolumn status negotiation underway col6">
+										<span th:if="${findKeywordDTO != null && findKeywordDTO.isStatusNotPrint == false}">ステータス</span>
+									</th>
+									<th class="joincolumn status negotiation underway publish col6"></th>
+									<th class="joincolumn status negotiation underway col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}"></th>
+									<th class="joincolumn status negotiation underway col4" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}"></th>
+									<th class="joincolumn status negotiation underway col5" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}"></th>
+									<th class="joincolumn status negotiation underway storedevelopteam col4" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}"></th>
+									<th class="joincolumn status negotiation underway col4"></th>
+
+									<th class="joincolumn current-section master parcel 1 col3" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}">現区画</th>
+									<th class="joincolumn current-section master parcel 2 col2-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}"></th>
+
+									<th class="joincolumn current-section master parcel 3 col5" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}">
+										<span th:if="${findKeywordDTO != null && findKeywordDTO.isCurrentSectionNotPrint == false}">現区画</span>
+									</th>
+									<th class="joincolumn current-section master parcel 4 col4" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}"></th>
+									<!-- <th class="joincolumn current-section master col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}"></th> -->
+
+									<th class="joincolumn negotiation-section negotiation parcel 5 col5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}">交渉中区画</th>
+									<th class="joincolumn negotiation-section negotiation parcel 6 col3" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}"></th>
+									<th class="joincolumn negotiation-section negotiation parcel basic-width 7 col5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}"></th>
+									<th class="joincolumn negotiation-section negotiation parcel 8 col5" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}"></th>
+									<th class="joincolumn negotiation-section negotiation parcel 9 col7" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}"></th>
+									<!-- <th class="joincolumn negotiation-section negotiation col7" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}"></th> -->
+
+									<th class="joincolumn current-relation-corporation master parcel 10 col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">現運営法人</th>
+									<th class="joincolumn current-relation-corporation master parcel sales-agency 11 col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"></th>
+									<th class="joincolumn current-relation-corporation master parcel sales-agency 12 col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"></th>
+									<th class="joincolumn current-relation-corporation master parcel 13 col4" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"></th>
+									<th class="joincolumn current-relation-corporation master parcel 14 col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"></th>
+
+									<th class="joincolumn negotiation-relation-corporation negotiation parcel 15 col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">交渉運営法人</th>
+									<th class="joincolumn negotiation-relation-corporation negotiation parcel sales-agency 16 col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"></th>
+									<th class="joincolumn negotiation-relation-corporation negotiation parcel sales-agency 17 col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"></th>
+									<th class="joincolumn negotiation-relation-corporation negotiation parcel 18 col4" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"></th>
+									<th class="joincolumn negotiation-relation-corporation negotiation parcel 19 col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"></th>
+								</tr>
+
+								<tr>
+									<th class="result_table_col_th master">案件種別</th>
+									<th class="result_table_col_th master">案件名</th>
+									<th class="result_table_col_th master">
+										<div>エリア</div>
+										<div>ブロック</div>
+									</th>
+									<th class="result_table_col_th master">
+										<div>法人名</div>
+										<div>館名</div>
+									</th>
+									<th class="result_table_col_th master">
+										<div>屋号名</div>
+									</th>
+									<th class="result_table_col_th master">会社</th>
+									<th class="result_table_col_th project-shop-code-item project-shop-name-item master">
+										<div>店舗CD</div>
+										<div>店舗</div>
+									</th>
+
+									<th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">坪数</th>
+									<th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">出店日</th>
+									<th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">運営形態</th>
+									<th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">チャネル</th>
+									<!-- Current progress -->
+									<th class="result_table_col_th master">契約形態</th>
+									<th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">契約先名</th>
+									<th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">契約開始日</th>
+									<th class="result_table_col_th master">契約終了日</th>
+									<th class="result_table_col_th master">契約<br>年数</th>
+									<th class="result_table_col_th master">定借<br>満了期</th>
+									<th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">自動<br>更新</th>
+									<!-- End Current progress -->
+									<!-- confirm -->
+									<th class="result_table_col_th currentContractRentStartDate master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">賃料低減<br>開始日</th>
+									<th class="result_table_col_th currentContractRentStartDate master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">賃料低減<br>終了日</th>
+									<th class="result_table_col_th currentContractMemo master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">現契約メモ</th>
+									<!-- confirm -->
+
+									<!-- Progress Progress -->
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">契約形態</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">契約先名</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">契約開始日</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">契約終了日</th>
+									<th class="result_table_col_th negotiation">契約<br>年数</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">賃料<br>増減</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">定借満了期</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">自動<br>更新</th>
+									<!-- End Progress Progress -->
+									<!-- confirm -->
+									<th class="result_table_col_th currentContractRentStartDate negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">賃料低減<br>開始日</th>
+									<th class="result_table_col_th currentContractRentStartDate negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">賃料低減<br>終了日</th>
+									<th class="result_table_col_th progressProjectContractProgress negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressContractNotPrint}">交渉中契約メモ</th>
+									<!-- confirm -->
+									<th class="result_table_col_th master">
+										<div>ステータス</div>
+									</th>
+									<th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isPlanNotPrint}">
+										<div>実施年月</div>
+									</th>
+									<th class="result_table_col_th master">
+										<div>計画期</div>
+									</th>
+
+									<th class="result_table_col_th project-landing-category-name-item negotiation">
+										着地<br>方向性
+									</th>
+									<th class="result_table_col_th project-landing-category-percent-item negotiation">
+										着地<br>可能性
+									</th>
+									<th class="result_table_col_th project-landing-category-memo-item negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">
+										着地補足事項
+									</th>
+									<th class="result_table_col_th negotiation">要望先</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">先方理由</th>
+									<th class="result_table_col_th negotiation">実施<br>年月日</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">改装時営業<br>終了日</th>
+									<th class="result_table_col_th negotiation">実施期</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">売上予測<br>(千円)</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">店舗利益<br>(千円)</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">利益率<br>(%)</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">運営形態</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}">稼動区分</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}">行動<br>ステータス</th>
+									<th class="result_table_col_th negotiation">社内<br>進捗</th>
+									<th class="result_table_col_th negotiation">交渉<br>進捗</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}">外部公開<br>予定日</th>
+									<th class="result_table_col_th displayExternalReleaseConfirm negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}">外部公開<br>可能確定</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}">中止理由</th>
+									<th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}">店舗開発<br>チーム</th>
+									<th class="result_table_col_th negotiation">店舗開発<br>担当</th>
+									<!-- current section -->
+									<th class="result_table_col_th 1 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}">フロア</th>
+									<th class="result_table_col_th 2 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}">坪数</th>
+									<th class="result_table_col_th 3 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}">館期待値<br>(千円)</th>
+									<th class="result_table_col_th 4 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}">営業時間</th>
+									<!-- <th class="result_table_col_th master" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentSectionNotPrint}">現状件メモ</th> -->
+									<!-- end current section -->
+
+									<!-- negotiation section -->
+									<th class="result_table_col_th 5 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}">フロア</th>
+									<th class="result_table_col_th 6 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}">坪数</th>
+									<th class="result_table_col_th 7 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}">坪数増減</th>
+									<th class="result_table_col_th 8 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}">館期待値<br>(千円)</th>
+									<th class="result_table_col_th 9 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}">営業時間</th>
+									<!-- <th class="result_table_col_th negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isProgressSectionNotPrint}">交渉中条件メモ</th> -->
+									<!-- end negotiation section -->
+
+									<th class="result_table_col_th 10 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">販売代行先</th>
+									<th class="result_table_col_th 11 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">販売代行<br>契約開始</th>
+									<th class="result_table_col_th 12 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">販売代行<br>契約終了</th>
+									<th class="result_table_col_th 13 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">契約年数</th>
+									<th class="result_table_col_th 14 master" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">FC加盟店</th>
+									<th class="result_table_col_th 15 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">販売代行先</th>
+									<th class="result_table_col_th 16 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">販売代行<br>契約開始</th>
+									<th class="result_table_col_th 17 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">販売代行<br>契約終了</th>
+									<th class="result_table_col_th 18 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">契約年数</th>
+									<th class="result_table_col_th 19 negotiation" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}">FC加盟店</th>
+
+								</tr>
+							</thead>
+							<tbody class="project-list-table-body">
+								<tr th:each="project : ${projectKeywords}">
+									<td class="result_table_col project-list-num col6" th:text="${project.operationDivision}"></td>
+									<td class="result_table_col project-list-column-category col5">
+										<span th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.projectCategory?.name)}"></span>
+									</td>
+									<td class="result_table_col project-list-name col12">
+										<a th:href="@{/pc/project/detail/} + ${project.id}" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.title)}">
+										</a>
+									</td>
+									<td class="result_table_col project-list-area col4">
+										<div class="project-area-block-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iArea?.areaName)}"></div>
+										<div class="project-area-block-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iBlock?.blockName)}"></div>
+									</td>
+									<td class="result_table_col project-list-corporate col8">
+										<div class="project-corporation-name-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iCorporation?.corporationName)}"></div>
+										<div class="project-corporation-name-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.building?.name)}"></div>
+									</td>
+									<td class="result_table_col project-list-brand col5">
+										<span class="project-brand-income-unit-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iBrand?.brandIncomeUnitName)}"></span>
+									</td>
+									<td class="result_table_col project-list-company col1-5">
+										<span class="project-i-company-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iBussinessName)}"></span>
+									</td>
+									<td class="result_table_col project-list-shop col8">
+										<div class="expansion">
+											<div class="project-shop-name-code-item" th:text="${project.iShop?.shopCd}"></div>
+											<div class="project-shop-name-code-item" th:if="${project.iShop?.shopNameZenkaku != null && !project.iShop?.shopNameZenkaku.isEmpty()}"
+											 th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iShop?.shopNameZenkaku)}"></div>
+											<div class="project-shop-name-code-item" th:if="${project.iShop?.shopNameZenkaku == null || project.iShop?.shopNameZenkaku.isEmpty()}"
+											 th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.shopNameTemporary)}"></div>
+											<div class="expansion-panel" style="right: 0; left: inherit">
+												<div>
+													<div class="project-shop-name-code-item" th:text="${project.iShop?.shopCd}"></div>
+													<div class="project-shop-name-code-item" th:if="${project.iShop?.shopNameZenkaku != null && !project.iShop?.shopNameZenkaku.isEmpty()}"
+													 th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iShop?.shopNameZenkaku)}"></div>
+													<div class="project-shop-name-code-item" th:if="${project.iShop?.shopNameZenkaku == null || project.iShop?.shopNameZenkaku.isEmpty()}"
+													 th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.shopNameTemporary)}"></div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="result_table_col project-list-basis col2-5" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">
+										<span class="project-contract-tsubo-item" th:if="${project.iShop?.contractTsubo != null}" th:text="${new java.text.DecimalFormat('#,##0.##').format(project.iShop?.contractTsubo)}"></span>
+									</td>
+									<td class="result_table_col project-list-shop-start col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">
+										<span class="" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}" th:text="${project.iShop?.openDate}"></span>
+									</td>
+									<td class="result_table_col col5" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">
+										<span class="project-management-form-item" th:if="${project.progressProjectContractProgress != null}" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.progressProjectContractProgress.operationForm)}"></span>
+									</td>
+									<td class="result_table_col col5" th:if="${findKeywordDTO == null || findKeywordDTO.isBasicNotPrint}">
+										<span class="project-sales-channel-name-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iSalesChannel?.salesChannelName)}"></span>
+									</td>
+
+									<!-- Current progress -->
+									<td class="result_table_col col5">
+										<span class="project-current-project-contract-name-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.currentProjectContractProgress?.form)}"></span>
+									</td>
+									<td class="result_table_col col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">
+										<span class="currentProjectContractProgressTargetName" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.currentProjectContractProgress?.contractTargetName)}"></span>
+									</td>
+									<td class="result_table_col col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">
+										<span class="currentProjectContractProgressStartDate" th:text="${project.currentProjectContractProgress?.contractStartDate}"></span>
+									</td>
+									<td class="result_table_col col5-5">
+										<span class="currentProjectContractProgressContractEndDate" th:if="${project.currentProjectContractProgress?.contractEndDate != null && !project.currentProjectContractProgress?.contractEndDate.toString().equals('9999-12-31')}"
+										 th:text="${project.currentProjectContractProgress?.contractEndDate}"></span>
+									</td>
+									<td class="result_table_col col1-5">
+										<span class="currentProjectContractProgressContractNumberOfYear" th:if="${project.currentProjectContractProgress?.contractNumberOfYear != null}"
+										 th:text="${new java.text.DecimalFormat('#,##0.##').format(project.currentProjectContractProgress?.contractNumberOfYear)}"></span>
+									</td>
+									<td class="result_table_col col5">
+										<span class="currentProjectContractProgressTerm" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.currentProjectContractProgress?.term)}"></span>
+									</td>
+									<td class="result_table_col col2" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">
+										<span class="currentProjectContractProgressAutoUpdate" th:if="${project.currentProjectContractProgress?.autoUpdate != null}"
+										 th:text="${project.currentProjectContractProgress?.autoUpdate == true ? T(com.world.storedevelopment.utils.HankakuConverter).toHankaku('あり') : T(com.world.storedevelopment.utils.HankakuConverter).toHankaku('なし')}"></span>
+									</td>
+									<!-- End Current progress -->
+									<!-- Confirm -->
+									<td class="result_table_col col10" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">
+										<span th:text="${project.currentProjectContractProgress?.rentStartDate}"></span>
+									</td>
+									<td class="result_table_col col10" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">
+										<span th:text="${project.currentProjectContractProgress?.rentEndDate}"></span>
+									</td>
+									<td class="result_table_col col10" th:if="${findKeywordDTO == null || findKeywordDTO.isCurrentContractNotPrint}">
+										<span th:text="${project.currentProjectContractProgress?.memo}"></span>
+									</td>
+									<!-- End Confirm -->
+									<!-- Progress progress -->
+									<td class="result_table_col col5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}"
+									 th:classappend="${project.isChangedNegotiationContractForm == true ? 'project_diff_strong_text': ''}">
+										<span class="progressProjectContractProgressForm" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.progressProjectContractProgress?.form)}"></span>
+									</td>
+									<td class="result_table_col col8" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}"
+									 th:classappend="${project.isChangedNegotiationContractName == true ? 'project_diff_strong_text': ''}">
+										<span class="progressProjectContractProgressTargetName" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.progressProjectContractProgress?.contractTargetName)}">
+										</span></td>
+									<td class="result_table_col col15-5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}"
+									 th:classappend="${project.isChangedNegotiationContractStartDate == true ? 'project_diff_strong_text': ''}">
+										<span class="progressProjectContractProgressStartDate" th:text="${project.progressProjectContractProgress?.contractStartDate}"></span>
+									</td>
+									<td class="result_table_col col5-5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}"
+									 th:classappend="${project.isChangedNegotiationContractEndDate == true ? 'project_diff_strong_text': ''}">
+										<span class="progressProjectContractProgressEndDate" th:text="${project.progressProjectContractProgress?.contractEndDate}"></span>
+									</td>
+									<td class="result_table_col col1-5" th:classappend="${project.isChangedNegotiationContractYear == true ? 'project_diff_strong_text': ''}">
+										<span class="progressProjectContractProgressNumberOfYear" th:if="${project.progressProjectContractProgress?.contractNumberOfYear != null}"
+										 th:text="${new java.text.DecimalFormat('#,##0.##').format(project.progressProjectContractProgress?.contractNumberOfYear)}"></span>
+									</td>
+									<td class="result_table_col col2-5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}"
+									 th:classappend="${project.isChangedRentIncreaseDecrease == true ? 'project_diff_strong_text': ''}"><span
+										 class="rentIncreaseDecrease" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.rentIncreaseDecrease)}"></span></td>
+									<td class="result_table_col col5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}"
+									 th:classappend="${project.isChangedNegotiationContractTenancyPeriod == true ? 'project_diff_strong_text': ''}">
+										<span class="progressProjectContractProgressTerm" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.progressProjectContractProgress?.term)}"></span>
+									</td>
+									<td class="result_table_col col2" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}"><span
+										 class="autoUpdate" th:if="${project.progressProjectContractProgress?.autoUpdate != null}" th:text="${project.progressProjectContractProgress?.autoUpdate == true ? T(com.world.storedevelopment.utils.HankakuConverter).toHankaku('あり') : T(com.world.storedevelopment.utils.HankakuConverter).toHankaku('なし')}"></span></td>
+									<!-- end project progress -->
+									<!-- Confirm -->
+									<td class="result_table_col col5-5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}">
+										<span th:text="${project.progressProjectContractProgress?.rentStartDate}"></span>
+									</td>
+									<td class="result_table_col col5-5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}">
+										<span th:text="${project.progressProjectContractProgress?.rentEndDate}"></span>
+									</td>
+									<td class="result_table_col col5-5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressContractNotPrint}">
+										<span th:text="${project.progressProjectContractProgress?.memo}"></span>
+									</td>
+									<!-- End Confirm -->
+									<!-- Plan -->
+									<td class="result_table_col col5"><span class="projectLandingCategory" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.planStatus)}"></span></td>
+									<td class="result_table_col col3" th:if="${findKeywordDTO ==null || findKeywordDTO.isPlanNotPrint}"><span
+										 class="implementationPeriod" th:with="formatter=${T(java.time.format.DateTimeFormatter)}" th:text="${project?.planDate!=null? project?.planDate.format(formatter.ofPattern('yyyyMM')): ''}"></span></td>
+									<td class="result_table_col col4"><span class="mPeriod" th:if="${project.planPeriod != null}" th:text="${project.planPeriod + T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(' ' + project.planPeriodHalf)}"></span></td>
+									<!-- End Plan -->
+									<!-- Landing -->
+									<td class="result_table_col col5" th:classappend="${project.isChangedLandingProjectCategoryId == true ? 'project_diff_strong_text': ''}">
+										<span class="project-landing-category-name-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.projectLandingCategory?.name)}"></span>
+									</td>
+									<td class="result_table_col col5" th:classappend="${project.isChangedConclusionPossibilityPercentId == true ? 'project_diff_strong_text': ''}">
+										<span class="project-landing-category-percent-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.projectLandingPercent?.name)}"></span>
+									</td>
+									<td class="result_table_col col13" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"
+									 th:classappend="${project.isChangedLandingMemo == true ? 'project_diff_strong_text': ''}">
+										<div class="expansion">
+											<div class="project-landing-category-memo-item" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.landingMemo)}"></div>
+											<div class="expansion-panel">
+												<div th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.landingMemo)}"></div>
+											</div>
+										</div>
+									</td>
+									<td class="result_table_col col2"><span class="requestorName" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.requestorName)}"></span></td>
+									<td class="result_table_col col5" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"><span
+										 class="otherRequest" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.requestorStatus)}"></span></td>
+									<td class="result_table_col col6" th:classappend="${(project?.isChangedImplementationDatetime == true || ((project?.implementationDatetime == null || project?.implementationDatetime == '') && project?.isChangedImplementationScheduleDatetime == true)) ? 'project_diff_strong_text': ''}">
+										<span class="implementationDatetime" th:text="${project.implementationDateValue}"></span>
+									</td>
+									<td class="result_table_col col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"
+									 th:classappend="${project.isChangedSalesEndDate == true ? 'project_diff_strong_text': ''}">
+										<span class="salesEndDate" th:text="${project.salesEndDate}"></span>
+									</td>
+									<td class="result_table_col col4" th:classappend="${project.isChangedImplementationPeriod == true ? 'project_diff_strong_text': ''}">
+										<span class="period" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.implementationPeriod)}"></span>
+									</td>
+									<td class="result_table_col col2-5" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">
+										<span class="profitForecast" th:if="${project.salesPrediction != null}" th:text="${#numbers.formatDecimal(project.salesPrediction/1000, 1, 'COMMA', 0, 'POINT') }"></span>
+									</td>
+									<td class="result_table_col col6" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}">
+										<span class="salesPrediction" th:if="${project?.profitExpectation != null}" th:text="${#numbers.formatDecimal(project.profitExpectation/1000, 1, 'COMMA', 0, 'POINT') }"></span>
+									</td>
+									<td class="result_table_col col4" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"><span
+										 class="profitRate" th:if="${project.profitRate != null}" th:text="${new java.text.DecimalFormat('#,##0.##').format(project.profitRate)}"></span></td>
+									<td class="result_table_col col5" th:if="${findKeywordDTO == null || findKeywordDTO.isLandingNotPrint}"><span
+										 class="operationForm" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.currentProjectContractProgress?.operationForm)}"></span></td>
+									<td class="result_table_col col5" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}"
+									 th:classappend="${project.isChangedOperationDivision == true ? 'project_diff_strong_text': ''}"><span class="operationDivision"
+										 th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.operationDivision)}"></span></td>
+									<td class="result_table_col col5" th:if="${findKeywordDTO ==null || findKeywordDTO.isStatusNotPrint}"
+									 th:classappend="${project.isChangedMProjectActionStatusId == true ? 'project_diff_strong_text': ''}">
+										<span class="projectActionStatus" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.projectActionStatus)}"></span>
+									</td>
+									<td class="result_table_col col6" th:classappend="${project.isChangedOfficeProjectProgressId == true ? 'project_diff_strong_text': ''}">
+										<span class="officeProjectProgress" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.officeProjectProgress?.name)}"></span>
+									</td>
+									<td class="result_table_col col6" th:classappend="${project.isChangedNegotiationProjectProgressId == true ? 'project_diff_strong_text': ''}">
+										<span class="negotiationProjectProgress" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.negotiationProjectProgress?.name)}"></span>
+									</td>
+									<td class="result_table_col col5-5" th:if="${findKeywordDTO ==null || findKeywordDTO.isStatusNotPrint}"
+									 th:classappend="${project.isChangedExternalReleaseStartDate == true ? 'project_diff_strong_text': ''}">
+										<span class="externalReleaseStartDate" th:text="${project.externalReleaseStartDate}"></span>
+									</td>
+									<td class="result_table_col col4" th:if="${findKeywordDTO ==null || findKeywordDTO.isStatusNotPrint}"
+									 th:classappend="${project.isChangedExternalReleaseConfirm == true ? 'project_diff_strong_text': ''}">
+										<!-- <span class="displayExternalReleaseConfirm" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.displayExternalReleaseConfirm)}"></span> -->
+										<span th:if="${project.externalReleaseConfirm == true}" th:text="'確定'"></span>
+										<span th:if="${project.externalReleaseConfirm == false}" th:text="'未確定'"></span>
+									</td>
+									<td class="result_table_col col5" th:if="${findKeywordDTO ==null || findKeywordDTO.isStatusNotPrint}"
+									 th:classappend="${project.isChangedStopReasonId == true ? 'project_diff_strong_text': ''}">
+										<!-- <span class="operationDivision" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.operationDivision)}"></span> -->
+										<span class="operationDivision" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.stopReasonValue)}"></span>
+									</td>
+									<td class="result_table_col col4" th:if="${findKeywordDTO == null || findKeywordDTO.isStatusNotPrint}"><span
+										 th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.deptName)}"></span></td>
+									<td class="result_table_col col4"><span class="iAccount" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.iAccount)}"></span></td>
+
+									<!-- current section -->
+									<td class="result_table_col 1 col3" th:if="${findKeywordDTO ==null || findKeywordDTO.isCurrentSectionNotPrint}">
+										<span class="currentProjectSectionProgressFloor" th:text="${project.currentProjectSectionProgress?.floor}"></span>
+									</td>
+									<td class="result_table_col 2 col7" th:if="${findKeywordDTO ==null || findKeywordDTO.isCurrentSectionNotPrint}">
+										<span class="currentProjectSectionProgressContractTsubo" th:if="${project.currentProjectSectionProgress?.contractTsubo != null}"
+										 th:text="${new java.text.DecimalFormat('#,##0.##').format(project.currentProjectSectionProgress?.contractTsubo)}"></span>
+									</td>
+									<td class="result_table_col 3 col5" th:if="${findKeywordDTO ==null || findKeywordDTO.isCurrentSectionNotPrint}">
+										<span class="buildingExpectedValue" th:if="${project.currentProjectSectionProgress?.buildingExpectedValue != null}"
+										 th:text="${#numbers.formatDecimal(project.currentProjectSectionProgress?.buildingExpectedValue / 1000, 1, 'COMMA', 0, 'POINT')}"></span></td>
+									</td>
+									<td class="result_table_col 4 col4" th:if="${findKeywordDTO ==null || findKeywordDTO.isCurrentSectionNotPrint}"><span
+										 class="currentProjectSectionProgressBusinessHour" th:text="${project.currentProjectSectionProgress?.businessHours}"></span></td>
+									<!-- <td class="result_table_col" th:if="${findKeywordDTO ==null || findKeywordDTO.isCurrentSectionNotPrint}">
+										<div class="expansion">
+											<span class="currentProjectSectionProgressMemo" th:text="${project.currentProjectSectionProgress?.memo}"></span>
+											<div class="expansion-panel" th:if="${project.currentProjectSectionProgress?.memo != null}">
+												<div>
+													<div class="currentProjectSectionProgressMemo" th:text="${project.currentProjectSectionProgress?.memo}"></div>
+												</div>
+											</div>
+										</div>
+									</td> -->
+									<!-- end current section -->
+
+									<!-- negotiation section -->
+									<td class="result_table_col 5 col5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressSectionNotPrint}"
+									 th:classappend="${project.isChangedNegotiationSectionFloor == true ? 'project_diff_strong_text': ''}" th:text="${project.negotiationProjectSectionProgress?.floor}"><span
+										 class="currentProjectSectionProgressFloor"></span></td>
+									<td class="result_table_col 6 col7" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressSectionNotPrint}"
+									 th:classappend="${project.isChangedNegotiationSectionContractTsubo == true ? 'project_diff_strong_text': ''}"><span
+										 class="currentProjectSectionProgressContractTsubo" th:if="${project.negotiationProjectSectionProgress?.contractTsubo != null}"
+										 th:text="${new java.text.DecimalFormat('#,##0.##').format(project.negotiationProjectSectionProgress?.contractTsubo)}"></span></td>
+									<td class="result_table_col 7 col3" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressSectionNotPrint}"
+									 th:classappend="${project.isChangedNegotiationSectionTsuboIncreaseDecrease == true ? 'project_diff_strong_text': ''}"><span
+										 class="" th:text="${project.contractTsuboSectionChange}"></span></td>
+									<td class="result_table_col 8 col5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressSectionNotPrint}"><span
+										 class="buildingExpectedValue" th:if="${project.negotiationProjectSectionProgress?.buildingExpectedValue != null}"
+										 th:text="${#numbers.formatDecimal(project.negotiationProjectSectionProgress?.buildingExpectedValue / 1000, 1, 'COMMA', 0, 'POINT')}"></span></td>
+									<td class="result_table_col 9 col5" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressSectionNotPrint}"
+									 th:classappend="${project.isChangedNegotiationSectionBusinessHours == true ? 'project_diff_strong_text': ''}"><span
+										 class="currentProjectSectionProgressBusinessHour" th:text="${project.negotiationProjectSectionProgress?.businessHours}"></span></td>
+									<!-- <td class="result_table_col" th:if="${findKeywordDTO ==null || findKeywordDTO.isProgressSectionNotPrint}" th:classappend="${project.isChangedNegotiationSectionMemo == true ? 'project_diff_strong_text': ''}">
+										<div class="expansion" th:if="${project.negotiationProjectSectionProgress?.memo != null}">
+											<span class="currentProjectSectionProgressMemo" th:text="${project.negotiationProjectSectionProgress?.memo}"></span>
+											<div class="expansion-panel">
+												<div>
+													<div class="currentProjectSectionProgressMemo" th:text="${project.negotiationProjectSectionProgress?.memo}"></div>
+												</div>
+											</div>
+										</div>
+									</td> -->
+									<!-- end negotiation section -->
+
+									<td class="result_table_col 10 col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"><span
+										 class="saleAgencyTarget" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.salesAgencyCurrent?.salesAgencyCurrent?.name)}"></span></td>
+									<td class="result_table_col 11 col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"><span
+										 class="projectPlanStartDate" th:if="${project.salesAgencyCurrent != null}" th:text="${project.salesAgencyCurrent?.startDate}"></span></td>
+									<td class="result_table_col 12 col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"><span
+										 class="projectPlanEndDate" th:if="${project.salesAgencyCurrent != null && project.salesAgencyCurrent?.endDate != null && !project.salesAgencyCurrent?.endDate.toString().equals('9999-12-31')}"
+										 th:text="${project.salesAgencyCurrent?.endDate}"></span></td>
+									<td class="result_table_col 13 col4" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"><span
+										 class="numberOfYear" th:if="${project.numberOfYearSalesAgencyCurrent != null}" th:text="${project.numberOfYearSalesAgencyCurrent}"></span></td>
+									<td class="result_table_col 14 col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"><span
+										 class="participatingStoreCorporation" th:if="${project.salesAgencyCurrent != null && project.salesAgencyCurrent?.participatingStoreCurrent != null}"
+										 th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.salesAgencyCurrent?.participatingStoreCurrent?.name)}"></span></td>
+
+									<td class="result_table_col 15 col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"
+									 th:classappend="${project.isChangedNegotiationRelatedAgency == true ? 'project_diff_strong_text': ''}"><span
+										 class="saleAgencyTarget" th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.salesAgencyProgress?.salesAgencyProgress?.name)}"></span></td>
+									<td class="result_table_col 16 col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"
+									 th:classappend="${project.isChangedNegotiationRelatedAgencyStartDate == true ? 'project_diff_strong_text': ''}"><span
+										 class="projectPlanStartDate" th:if="${project.salesAgencyProgress != null}" th:text="${project.salesAgencyProgress?.startDate}"></span></td>
+									<td class="result_table_col 17 col5-5" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"
+									 th:classappend="${project.isChangedNegotiationRelatedAgencyEndDate == true ? 'project_diff_strong_text': ''}"><span
+										 class="projectPlanEndDate" th:if="${project.salesAgencyProgress != null}" th:text="${project.salesAgencyProgress?.endDate}"></span></td>
+									<td class="result_table_col 18 col4" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"
+									 th:classappend="${project.isChangedNegotiationRelatedAgencyYear == true ? 'project_diff_strong_text': ''}"><span
+										 class="numberOfYear" th:if="${project.salesAgencyProgress != null}" th:text="${project.numberOfYearSalesAgencyProgress}"></span></td>
+									<td class="result_table_col 19 col8" th:if="${findKeywordDTO == null || findKeywordDTO.isCorporationNotPrint}"
+									 th:classappend="${project.isChangedNegotiationRelatedAffiliateShop == true ? 'project_diff_strong_text': ''}"><span
+										 class="participatingStoreCorporation" th:if="${project.salesAgencyProgress != null && project.salesAgencyProgress?.participatingStoreProgress != null}"
+										 th:text="${T(com.world.storedevelopment.utils.HankakuConverter).toHankaku(project.salesAgencyProgress?.participatingStoreProgress?.name)}"></span></td>
+
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="project-list-footer">
+						<div class="total-projects" th:text="${countKeyword}+件"></div>
+						<nav class="pagination-area is-centered" aria-label="Page navigation">
+							<ul id="paginationKeyword" class="pagination">
+							</ul>
+							<input type="hidden" id="currentPageKeyword" th:value="${findKeywordDTO.numberOfPage}" /> <input type="hidden"
+							 id="pageCountKeyword" th:value="${pageCountKeyword}" />
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	let _landingPossibilityClassification = /*[[${landingPossibilityClassification}]]*/'';
+	let _findKeywordDTO = /*[[${findKeywordDTO}]]*/'';
+	/*]]>*/
+	let landingIds = _findKeywordDTO.landingIds;
+	let isNewShop = _findKeywordDTO.isNewShop;
+	let isExistsShop = _findKeywordDTO.isExistsShop;
+	let isOtherShop = _findKeywordDTO.isOtherShop;
+	if (landingIds != null && _landingPossibilityClassification != null) {
+		landingIds.forEach(function (e) {
+			$('input[name=landingIds]').each(function (index, i) {
+				if (i.value == e.toString()) {
+					$(this).prop('checked', true);
+				}
+			});
+		});
+		let showLandingCheck = "";
+		_landingPossibilityClassification.forEach(function (l) {
+			landingIds.forEach(function (e) {
+				if (l.id == e) {
+					showLandingCheck += " / " + l.name;
+				}
+			});
+		});
+		if (!isNewShop && !isExistsShop && !isOtherShop) {
+			showLandingCheck = showLandingCheck.substr(3);
+		}
+		$('span.project-show-checkbox-landing').append(showLandingCheck);
+	}
+</script>

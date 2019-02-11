@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_MARKET(market_id,market_cd,market_name,management_dividion_cd,management_dividion_name,dept_type_dividion_cd,dept_type_name,shop_type,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action) FROM 'db/csv/I_MARKET.csv' WITH CSV;

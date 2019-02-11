@@ -1,0 +1,92 @@
+<div class="tab-content-body">
+	<ul class="building-basic-list">
+		<li class="building-basic-list-item">
+			<div class="building-basic-info j-dropdown">
+				<header class="building-basic-info-header j-dropdown-header isOpen">
+					<h3 class="title">基本情報</h3>
+				</header>
+				<div class="building-basic-info-body j-dropdown-body">
+					<div class="j-dropdown-body-inner">
+						<header>
+							<table class="table">
+								<tbody>
+									<tr>
+										<th>予定</th>
+										<td th:text="${negotiation.scheduleDate}"></td>
+									</tr>
+									<tr th:if="${!negotiation.implemetentionDate.isEmpty()}">
+										<th>実施</th>
+										<td th:text="${negotiation.implemetentionDate}"></td>
+									</tr>
+									<tr>
+										<th>公開区分</th>
+										<td th:text="${negotiation.releaseLevelValue}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</header>
+
+						<hr>
+
+						<div class="tab-content-body" th:if="${negotiation.purpose.isEmpty() == false}">
+							<p class="negotiation-content-title">目的</p>
+							<p class="negotiation-content" th:text="${negotiation.purpose}"></p>
+						</div>
+
+						<hr th:if="${negotiation.purpose.isEmpty() == false}">
+
+						<div class="tab-content-body" th:if="${negotiation.content.isEmpty() == false}">
+							<p class="negotiation-content-title">内容</p>
+							<p class="negotiation-content" th:text="${negotiation.content}"></p>
+						</div>
+
+						<hr th:if="${negotiation.content.isEmpty() == false}">
+
+						<div class="tab-content-body" th:if="${negotiation.nextAction.isEmpty() == false}">
+							<p class="negotiation-content-title">ネクストアクション</p>
+							<p class="negotiation-content" th:text="${negotiation.nextAction}"></p>
+						</div>
+
+						<hr th:if="${negotiation.nextAction.isEmpty() == false}">
+
+						<footer class="tab-content-footer">
+							<table class="table">
+								<tbody>
+									<tr>
+										<th>案件</th>
+										<td th:text="${negotiation.projectTitle}"></td>
+									</tr>
+									<tr>
+										<th>面談先法人</th>
+										<td th:text="${negotiation.corporationName}"></td>
+									</tr>
+									<tr>
+										<th>面談先館</th>
+										<td th:text="${negotiation.buildingName}"></td>
+									</tr>
+									<tr>
+										<th>面談者</th>
+										<td th:text="${negotiation.bussinessCardName} + ' ' + ${negotiation.businessCardFree}"></td>
+									</tr>
+									<tr>
+										<th>訪問者</th>
+										<td th:text="${negotiation.accountName} + ' ' + ${negotiation.interviewAccountFree}"></td>
+									</tr>
+									<tr>
+										<th>屋号</th>
+										<td th:text="${negotiation.brandName}"></td>
+									</tr>
+									<tr>
+										<th>会議場所</th>
+										<td th:text="${negotiation.place}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</footer>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li th:if="${negotiation.isPrintImportant}" class="building-basic-list-item" th:insert="pc/negotiation/tabs/key-information"></li>
+	</ul>
+</div>

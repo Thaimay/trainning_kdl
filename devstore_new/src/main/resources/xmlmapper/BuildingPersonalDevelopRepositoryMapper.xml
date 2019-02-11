@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.world.storedevelopment.model.mapper.BuildingPersonalDevelopRepositoryMapper">
+	<select id="getListStoreDevAccountId" resultType="java.lang.Long">
+			select
+				distinct
+				bpd.account_id
+			from
+				building_personal_develop bpd
+			where is_deleted is false
+				and category = 'storeDeveloper'
+				<if test="buildingCd != null and buildingCd > 0">
+					and building_cd = '${buildingCd}'
+				</if>
+				and
+					bpd.account_id in (select ia.id from i_account ia)
+	</select>
+</mapper>

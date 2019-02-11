@@ -1,0 +1,34 @@
+.building-basic-info {
+  .building-basic-info-header {
+    border-bottom: 1px solid #dddddd;
+    border-collapse: collapse;
+
+    .title {
+      font-weight: 500;
+      font-size: 2rem;
+      color: #333333;
+    }
+  }
+
+  .building-basic-info-body {
+    .table {
+      tr:first-of-type th,
+      tr:first-of-type td {
+        border-top: none;  // Override
+      }
+
+      th {
+        width: 24%;
+        font-weight: 400;
+      }
+
+      td {
+        width: 76%;
+      }
+    }
+  }
+}
+
+.building-shop-sales-list .building-basic-info-body .table td {
+  width: 20%;
+}

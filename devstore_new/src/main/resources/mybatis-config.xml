@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting
+            name="mapUnderscoreToCamelCase"
+            value="true" />
+        <setting
+            name="useColumnLabel"
+            value="true" />
+        <setting
+            name="jdbcTypeForNull"
+            value="NULL" />
+    </settings>
+    <typeAliases>
+        <typeAlias
+            alias="Building"
+            type="jp.co.world.storedevelopment.model.Building" />
+        <typeAlias
+            alias="BuildingDetailDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.BuildingDetailDTO" />
+        <typeAlias
+            alias="BuildingPersonalDevelop"
+            type="jp.co.world.storedevelopment.model.BuildingPersonalDevelop" />
+        <typeAlias
+            alias="ICorporation"
+            type="jp.co.world.storedevelopment.model.ICorporation" />
+        <typeAlias
+            alias="ICorporationGroup"
+            type="jp.co.world.storedevelopment.model.ICorporationGroup" />
+        <typeAlias
+            alias="Personal"
+            type="jp.co.world.storedevelopment.model.Personal" />
+        <typeAlias
+            alias="BuildingSales"
+            type="jp.co.world.storedevelopment.model.BuildingSales" />
+        <typeAlias
+            alias="BuildingFindFormDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.BuildingFindFormDTO" />
+        <typeAlias
+            alias="BuildingUpdateDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.BuildingUpdateDTO" />
+        <typeAlias
+            alias="Account"
+            type="jp.co.world.storedevelopment.model.Account" />
+        <typeAlias
+            alias="Activation"
+            type="jp.co.world.storedevelopment.model.Activation" />
+        <typeAlias
+            alias="BuildingFile"
+            type="jp.co.world.storedevelopment.model.BuildingFile" />
+        <typeAlias
+            alias="BuildingImage"
+            type="jp.co.world.storedevelopment.model.BuildingImage" />
+        <typeAlias
+            alias="BuildingKeyman"
+            type="jp.co.world.storedevelopment.model.BuildingKeyman" />
+        <typeAlias
+            alias="BuildingMeetingHistory"
+            type="jp.co.world.storedevelopment.model.BuildingMeetingHistory" />
+        <typeAlias
+            alias="BuildingTenant"
+            type="jp.co.world.storedevelopment.model.BuildingTenant" />
+        <typeAlias
+            alias="Competition"
+            type="jp.co.world.storedevelopment.model.Competition" />
+        <typeAlias
+            alias="Keyman"
+            type="jp.co.world.storedevelopment.model.Keyman" />
+        <typeAlias
+            alias="Negotiation"
+            type="jp.co.world.storedevelopment.model.Negotiation" />
+        <typeAlias
+            alias="PmCorporation"
+            type="jp.co.world.storedevelopment.model.PmCorporation" />
+        <typeAlias
+            alias="SalesTrend"
+            type="jp.co.world.storedevelopment.model.SalesTrend" />
+        <typeAlias
+            alias="Shop"
+            type="jp.co.world.storedevelopment.model.Shop" />
+        <typeAlias
+            alias="Tenant"
+            type="jp.co.world.storedevelopment.model.Tenant" />
+        <typeAlias
+            alias="ISalesAgencyTarget"
+            type="jp.co.world.storedevelopment.model.ISalesAgencyTarget" />
+        <typeAlias
+            alias="ShopImage"
+            type="jp.co.world.storedevelopment.model.ShopImage" />
+        <typeAlias
+            alias="ICompetitionSales"
+            type="jp.co.world.storedevelopment.model.ICompetitionSales" />
+        <typeAlias
+            alias="IShopSalesLatestOneYear"
+            type="jp.co.world.storedevelopment.model.IShopSalesLatestOneYear" />
+        <typeAlias
+            alias="IShopSalesTrend"
+            type="jp.co.world.storedevelopment.model.IShopSalesTrend" />
+        <typeAlias
+            alias="ShopDetailDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.ShopDetailDTO" />
+        <typeAlias
+            alias="ShopListDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.ShopListDTO" />
+        <typeAlias
+            alias="IIncomeUnit"
+            type="jp.co.world.storedevelopment.model.IIncomeUnit" />
+        <typeAlias
+            alias="ISalesAgencyTarget"
+            type="jp.co.world.storedevelopment.model.ISalesAgencyTarget" />
+        <typeAlias
+            alias="ISalesChannel"
+            type="jp.co.world.storedevelopment.model.ISalesChannel" />
+        <typeAlias
+            alias="ParticipatingStoreCorporation"
+            type="jp.co.world.storedevelopment.model.ParticipatingStoreCorporation" />
+        <typeAlias
+            alias="MCreditRank"
+            type="jp.co.world.storedevelopment.model.MCreditRank" />
+        <typeAlias
+            alias="IArea"
+            type="jp.co.world.storedevelopment.model.IArea" />
+        <typeAlias
+            alias="IBlock"
+            type="jp.co.world.storedevelopment.model.IBlock" />
+        <typeAlias
+            alias="IPrefectures"
+            type="jp.co.world.storedevelopment.model.IPrefectures" />
+        <typeAlias
+            alias="BuildingListDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.BuildingListDTO" />
+        <typeAlias
+            alias="ShopHistory"
+            type="jp.co.world.storedevelopment.model.ShopHistory" />
+        <typeAlias
+            alias="IShop"
+            type="jp.co.world.storedevelopment.model.IShop" />
+        <typeAlias
+            alias="IShopRelationShopListDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.IShopRelationShopListDTO" />
+        <typeAlias
+            alias="IShopRelationShopDetailDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.IShopRelationShopDetailDTO" />
+        <typeAlias
+            alias="Project"
+            type="jp.co.world.storedevelopment.model.Project" />
+   		<typeAlias
+            alias="ProjectListDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.ProjectListDTO" />
+     	<typeAlias
+            alias="ProjectDetailDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.ProjectDetailDTO" />
+       	<typeAlias
+            alias="ProjectUpdateDTO"
+            type="jp.co.world.storedevelopment.sp.controller.dto.ProjectUpdateDTO" />
+        <typeAlias
+            alias="ProjectHistory"
+            type="jp.co.world.storedevelopment.model.ProjectHistory" />
+        <typeAlias 
+        	alias="ProjectDocument"
+        	type="jp.co.world.storedevelopment.model.ProjectDocument"/>    
+
+    </typeAliases>
+    <typeHandlers>
+        <typeHandler handler="org.apache.ibatis.type.InstantTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.LocalDateTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.LocalTimeTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.OffsetDateTimeTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.OffsetTimeTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.ZonedDateTimeTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.YearTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.MonthTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.YearMonthTypeHandler" />
+        <typeHandler handler="org.apache.ibatis.type.JapaneseDateTypeHandler" />
+    </typeHandlers>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property
+                    name="driver"
+                    value="org.postgresql.Driver" />
+                <property
+                    name="url"
+                    value="jdbc:postgresql://localhost:5432/kdl" />
+                <property
+                    name="username"
+                    value="postgres" />
+                <property
+                    name="password"
+                    value="saisystem" />
+            </dataSource>
+        </environment>
+        <environment id="local_test">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property
+                    name="driver"
+                    value="org.postgresql.Driver" />
+                <property
+                    name="url"
+                    value="jdbc:postgresql://localhost:5432/store_development_dev" />
+                <property
+                    name="username"
+                    value="develop" />
+                <property
+                    name="password"
+                    value="1234" />
+            </dataSource>
+        </environment>
+        <environment id="kdl_staging">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property
+                    name="driver"
+                    value="org.postgresql.Driver" />
+                <property
+                    name="url"
+                    value="jdbc:postgresql://storedev.cjdi3ddptz9u.ap-northeast-1.rds.amazonaws.com:5432/stored_staging_step15" />
+                <property
+                    name="username"
+                    value="storedev" />
+                <property
+                    name="password"
+                    value="storedev" />
+            </dataSource>
+        </environment>
+        <environment id="staging">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property
+                    name="driver"
+                    value="org.postgresql.Driver" />
+                <property
+                    name="url"
+                    value="jdbc:postgresql://t8wsdd01.chdtx6vplytr.ap-northeast-1.rds.amazonaws.com:5432/stored_staging" />
+                <property
+                    name="username"
+                    value="wsdadmin" />
+                <property
+                    name="password"
+                    value="wsdwsdwsd" />
+            </dataSource>
+        </environment>
+        <environment id="production">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property
+                    name="driver"
+                    value="org.postgresql.Driver" />
+                <property
+                    name="url"
+                    value="jdbc:postgresql://w8wsdd01.chdtx6vplytr.ap-northeast-1.rds.amazonaws.com:5432/stored_production" />
+                <property
+                    name="username"
+                    value="wsdadmin" />
+                <property
+                    name="password"
+                    value="wsdwsdwsd" />
+            </dataSource>
+        </environment>
+        <environment id="world_auth_production">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property
+                    name="driver"
+                    value="com.mysql.jdbc.Driver" />
+                <property
+                    name="url"
+                    value="jdbc:mysql://W1HITOD1:3306/ninsyo_account?useSSL=false" />
+                <property
+                    name="username"
+                    value="kdlreader" />
+                <property
+                    name="password"
+                    value="Pt2bVmhv" />
+            </dataSource>
+        </environment>
+
+        <environment id="world_auth_test">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property
+                    name="driver"
+                    value="com.mysql.jdbc.Driver" />
+                <property
+                    name="url"
+                    value="jdbc:mysql://localhost:3306/ninsyo_account?useSSL=false" />
+                <property
+                    name="username"
+                    value="openAM_user" />
+                <property
+                    name="password"
+                    value="R-8wAknZr|8D" />
+            </dataSource>
+        </environment>
+        <environment id="development-vietnam">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property
+                    name="driver"
+                    value="org.postgresql.Driver" />
+                <property
+                    name="url"
+                    value="jdbc:postgresql://192.168.10.4:5432/kdl_world_store" />
+                <property
+                    name="username"
+                    value="postgres" />
+                <property
+                    name="password"
+                    value="sqlSaPass" />
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="xmlmapper/DBToolMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationReadLaterAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationReadLaterAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationOpenAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationOpenAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationCommentModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationCommentRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationNoticeAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationNoticeAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewBuildingModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewBuildingRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewBrandModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewBrandRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewBusinessCardModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewBusinessCardRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationImageModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationImageRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationFileModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationFileRepositoryMapper.xml" />
+
+        <mapper resource="xmlmapper/AccountModelMapper.xml" />
+        <mapper resource="xmlmapper/AccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/SubAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/SubAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/DepartmentModelMapper.xml" />
+        <mapper resource="xmlmapper/DepartmentRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/RoleModelMapper.xml" />
+        <mapper resource="xmlmapper/RoleRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingImageModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingImageRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingFileModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingFileRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingDocumentModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingDocumentRepositoryMapper.xml" />
+
+        <mapper resource="xmlmapper/IBusinessCardBatchModelMapper.xml" />
+        <mapper resource="xmlmapper/IBusinessCardBatchRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IBusinessCardModelMapper.xml" />
+        <mapper resource="xmlmapper/IBusinessCardRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewCorporationModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationInterviewCorporationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/KeymanModelMapper.xml" />
+        <mapper resource="xmlmapper/KeymanRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ActivationModelMapper.xml" />
+        <mapper resource="xmlmapper/ActivationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/CompetitionModelMapper.xml" />
+        <mapper resource="xmlmapper/ICompetitionModelMapper.xml" />
+        <mapper resource="xmlmapper/ICompetitionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/TenantModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingMeetingHistoryModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingMeetingHistoryRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingKeymanModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingKeymanRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingPersonalDevelopModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingSalesModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingSalesRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingTenantModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingTenantRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingTradeAreaModelMapper.xml" />
+        <mapper resource="xmlmapper/BuildingTradeAreaRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/DivisionModelMapper.xml" />
+        <mapper resource="xmlmapper/DivisionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/PersonalModelMapper.xml" />
+        <mapper resource="xmlmapper/PmCorporationModelMapper.xml" />
+        <mapper resource="xmlmapper/BrandModelMapper.xml" />
+        <mapper resource="xmlmapper/BrandRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/AccountModelMapper.xml" />
+        <mapper resource="xmlmapper/AccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ShopImageModelMapper.xml" />
+        <mapper resource="xmlmapper/ShopImageRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyTargetModelMapper.xml" />
+        <mapper resource="xmlmapper/ShopModelMapper.xml" />
+        <mapper resource="xmlmapper/ShopRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IStatusModelMapper.xml" />
+        <mapper resource="xmlmapper/IStatusRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IShopModelMapper.xml" />
+        <mapper resource="xmlmapper/IShopRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISegmentDivisionModelMapper.xml" />
+        <mapper resource="xmlmapper/ISegmentDivisionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IPlaceModelMapper.xml" />
+        <mapper resource="xmlmapper/IPlaceRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyTargetRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ICompetitionSalesModelMapper.xml" />
+        <mapper resource="xmlmapper/ICompetitionSalesRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ICompetitionShopCorporationModelMapper.xml" />
+        <mapper resource="xmlmapper/ICompetitionShopCorporationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IShopSalesLatestOneYearModelMapper.xml" />
+        <mapper resource="xmlmapper/IShopSalesLatestOneYearRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IShopSalesTrendModelMapper.xml" />
+        <mapper resource="xmlmapper/TenantRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingPersonalDevelopRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BrandModelMapper.xml" />
+        <mapper resource="xmlmapper/FileRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/FileModelMapper.xml" />
+        <mapper resource="xmlmapper/TodoRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/TodoModelMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationModelMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationNegotiationModelMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationNegotiationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationBuildingModelMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationBuildingRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationCorporationModelMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationCorporationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/RelatedTaskModelMapper.xml" />
+        <mapper resource="xmlmapper/RelatedTaskRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/SalesFileModelMapper.xml" />
+        <mapper resource="xmlmapper/SalesFileRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/WorldAuthAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/WorldAuthAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ICorporationModelMapper.xml" />
+        <mapper resource="xmlmapper/ICorporationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ICorporationGroupModelMapper.xml" />
+        <mapper resource="xmlmapper/ICorporationGroupRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISalesChannelModelMapper.xml" />
+        <mapper resource="xmlmapper/ISalesChannelRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IBlockModelMapper.xml" />
+        <mapper resource="xmlmapper/IBlockRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IAreaModelMapper.xml" />
+        <mapper resource="xmlmapper/IAreaRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IPrefecturesModelMapper.xml" />
+        <mapper resource="xmlmapper/IPrefecturesRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingSalesRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/BuildingSalesRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/SalesTrendModelMapper.xml" />
+        <mapper resource="xmlmapper/SalesTrendRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/PmCorporationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IShopSalesTrendRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyModelMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyTargetModelMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyTargetRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ParticipatingStoreCorporationModelMapper.xml" />
+        <mapper resource="xmlmapper/ParticipatingStoreCorporationRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IIncomeUnitModelMapper.xml" />
+        <mapper resource="xmlmapper/IIncomeUnitRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/MCreditRankModelMapper.xml" />
+        <mapper resource="xmlmapper/MCreditRankRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/MailModelMapper.xml" />
+        <mapper resource="xmlmapper/MailRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/MTodoBatchSettingModelMapper.xml" />
+        <mapper resource="xmlmapper/MTodoBatchSettingRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/PushNotificationPermitModelMapper.xml" />
+        <mapper resource="xmlmapper/PushNotificationPermitRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/PushNotificationResultModelMapper.xml" />
+        <mapper resource="xmlmapper/PushNotificationResultRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/SendReserveModelMapper.xml" />
+        <mapper resource="xmlmapper/SendReserveRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/InvalidDeviceTokenModelMapper.xml" />
+        <mapper resource="xmlmapper/InvalidDeviceTokenRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/RecentChangeModelMapper.xml" />
+        <mapper resource="xmlmapper/RecentChangeRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IRentContractModelMapper.xml" />
+        <mapper resource="xmlmapper/IRentContractRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IContractTypeModelMapper.xml" />
+        <mapper resource="xmlmapper/IContractTypeRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationReadAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationReadAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationNiceAccountModelMapper.xml" />
+        <mapper resource="xmlmapper/ImportantInformationNiceAccountRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/MBuildingSalesTypesModelMapper.xml" />
+        <mapper resource="xmlmapper/MBuildingSalesTypesRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/MBuildingSalesClassificationsModelMapper.xml" />
+        <mapper resource="xmlmapper/MBuildingSalesClassificationsRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/MProjectActionStatusModelMapper.xml" />
+        <mapper resource="xmlmapper/MProjectActionStatusRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/MProjectProgressStatusModelMapper.xml" />
+        <mapper resource="xmlmapper/MProjectProgressStatusRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/MProjectMeetingResultModelMapper.xml" />
+        <mapper resource="xmlmapper/MProjectMeetingResultRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IShopCompanyModelMapper.xml" />
+        <mapper resource="xmlmapper/IShopCompanyRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ICompanyModelMapper.xml" />
+        <mapper resource="xmlmapper/ICompanyRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IIncomeUnitLayerModelMapper.xml" />
+        <mapper resource="xmlmapper/IIncomeUnitLayerRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IBrandModelMapper.xml" />
+        <mapper resource="xmlmapper/IBrandRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IMdCalendarModelMapper.xml" />
+        <mapper resource="xmlmapper/IMdCalendarRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IMdCalendarRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ICompetitionBrModelMapper.xml" />
+        <mapper resource="xmlmapper/ICompetitionBrRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ICompositeShopDivisionModelMapper.xml" />
+        <mapper resource="xmlmapper/ICompositeShopDivisionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IRentConditionModelMapper.xml" />
+        <mapper resource="xmlmapper/IRentConditionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IRemodelingHistoryModelMapper.xml" />
+        <mapper resource="xmlmapper/IRemodelingHistoryRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IMarketModelMapper.xml" />
+        <mapper resource="xmlmapper/IMarketRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IFixedAssetsDepreciationDivisionModelMapper.xml" />
+        <mapper resource="xmlmapper/IFixedAssetsDepreciationDivisionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IStepsRateCalculationDivisionModelMapper.xml" />
+        <mapper resource="xmlmapper/IStepsRateCalculationDivisionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISalesByTimeZoneModelMapper.xml" />
+        <mapper resource="xmlmapper/ISalesByTimeZoneRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IShopSalesBrModelMapper.xml" />
+        <mapper resource="xmlmapper/IShopSalesBrRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IWcpMemberModelMapper.xml" />
+        <mapper resource="xmlmapper/IWcpMemberRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IYakataModelMapper.xml" />
+        <mapper resource="xmlmapper/IYakataRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IShoppingStreetModelMapper.xml" />
+        <mapper resource="xmlmapper/IShoppingStreetRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IContractKindModelMapper.xml" />
+        <mapper resource="xmlmapper/IContractKindRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IRentTypeModelMapper.xml" />
+        <mapper resource="xmlmapper/IRentTypeRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IRentKindModelMapper.xml" />
+        <mapper resource="xmlmapper/IRentKindRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IRentPaymentModelMapper.xml" />
+        <mapper resource="xmlmapper/IRentPaymentRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISettlementStatusModelMapper.xml" />
+        <mapper resource="xmlmapper/ISettlementStatusRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyContractModelMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyContractRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyConditionModelMapper.xml" />
+        <mapper resource="xmlmapper/ISalesAgencyConditionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IFeeTypeDivisionModelMapper.xml" />
+        <mapper resource="xmlmapper/IFeeTypeDivisionRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IAreaBlockModelMapper.xml" />
+        <mapper resource="xmlmapper/IAreaBlockRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IBrandIncomeUnitModelMapper.xml" />
+        <mapper resource="xmlmapper/IBrandIncomeUnitRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationVideoModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationVideoRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/AccountDataModelMapper.xml" />
+        <mapper resource="xmlmapper/AccountDataRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationCommentUpdateHistoryModelMapper.xml" />
+        <mapper resource="xmlmapper/NegotiationCommentUpdateHistoryRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ProjectModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectHistoryModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectHistoryRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/OtherProjectAccountModelMapper.xml" />
+		<mapper resource="xmlmapper/OtherProjectAccountRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectOpinionModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectOpinionRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectCategoryModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectCategoryRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectProgressModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectProgressRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectSectionProgressModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectSectionProgressRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectPlanModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectPlanRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectContractProgressModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectContractProgressRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectPastConferenceModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectPastConferenceRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectNegotiationModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectNegotiationRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectTaskModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectTaskRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectTaskOwnerModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectTaskOwnerRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectTaskAccountModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectTaskAccountRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectReadLaterAccountModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectReadLaterAccountRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectPersonalDevelopModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectPersonalDevelopRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectScheduleModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectScheduleRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectSwitingItemControlModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectSwitingItemControlRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/FileDivisionModelMapper.xml" />
+		<mapper resource="xmlmapper/FileDivisionRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectImageModelMapper.xml" />
+        <mapper resource="xmlmapper/ProjectImageRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/ProjectFileModelMapper.xml" />
+        <mapper resource="xmlmapper/ProjectFileRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectVideoModelMapper.xml" />
+        <mapper resource="xmlmapper/ProjectVideoRepositoryMapper.xml" />
+        <mapper resource="xmlmapper/IAdoptDifficulyModelMapper.xml" />
+		<mapper resource="xmlmapper/IAdoptDifficulyRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectCategoryClassificationModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectCategoryClassificationRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectClassificationModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectClassificationRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ShopFileModelMapper.xml" />
+		<mapper resource="xmlmapper/ShopFileRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/MLocalityModelMapper.xml" />
+		<mapper resource="xmlmapper/MLocalityRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/MPeriodModelMapper.xml" />
+		<mapper resource="xmlmapper/MPeriodRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/MStoreDevelopTeamModelMapper.xml" />
+		<mapper resource="xmlmapper/MStoreDevelopTeamRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/OtherProjectTeamModelMapper.xml" />
+		<mapper resource="xmlmapper/OtherProjectTeamRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/MShopCompanyAbbreviationModelMapper.xml" />
+		<mapper resource="xmlmapper/MShopCompanyAbbreviationRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/IShopAdminModelMapper.xml" />
+		<mapper resource="xmlmapper/IShopAdminRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/IShopTypeModelMapper.xml" />
+		<mapper resource="xmlmapper/IShopTypeRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/MShopTypeModelMapper.xml" />
+		<mapper resource="xmlmapper/MShopTypeRepositoryMapper.xml" />
+		<mapper resource="xmlmapper/ProjectDocumentModelMapper.xml" />
+		<mapper resource="xmlmapper/ProjectDocumentRepositoryMapper.xml" />
+    </mappers>
+</configuration>

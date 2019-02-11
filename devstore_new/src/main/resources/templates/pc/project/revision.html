@@ -1,0 +1,915 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>進捗DB</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script th:src="@{/js/project/project-revision.js} + '?v=' + ${session.version}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="content-detail building">
+					<header class="content-detail-header">
+						<div class="row">
+							<div class="col-xs-12 col-md-6">
+								<h2 class="title">
+									<span th:text="${project?.title}"></span>
+								</h2>
+								<div>
+									<span th:if="${!project?.category.isEmpty()}" th:text="${project?.category}"></span>
+									<span th:if="${project?.open == false}">[公開]</span>
+									<span th:if="${project?.open == true}">[非公開]</span>
+									<!-- <span style="color: magenta;" th:if="${project.isLater == true}">
+										<i class="fa fa-star"></i>ウォッチ
+									</span>
+									<span th:if="${project.isLater == false}">
+										<i class="fa fa-star-o"></i>ウォッチ
+									</span> -->
+								</div>
+								<div class="registered-data">
+									<span th:if="${project?.createdAccountName != ''}">更新者:<span
+										class="name" th:text="${project?.updateAccountName}"></span></span>
+									<span class="date" th:text="${project?.updateDatetimeString}"></span>
+								</div>
+							</div>
+							<div class="col-xs-6 col-md-4">
+								<form class="form-horizontal" id="project-revision" th:action="@{'/pc/project/revision/' + ${project?.projectId}}" method="post" accept-charset="UTF-8">
+									<select class="form-control" id="j-form-history" name="idHistory">
+										<option value="0" selected>最新</option>
+										<option th:each="history : ${historyList}" 
+												th:value="${history.id}" 
+												th:text="${history.name}"
+												th:selected="${history.id == project.id} ? 'true':'false'">
+										</option>
+									</select>
+								</form>
+							</div>
+							<div class="col-xs-6 col-md-2 text-right">
+								<a class="btn btn-primary" disabled="disabled" id="j-detail-edit"
+									th:href="@{'/pc/project/showUpdate/' + ${project?.projectId}}"> <i
+									class="fa fa-pencil" aria-hidden="true"></i> 編集する
+								</a> <br />
+								<div style="margin-top: 5px"></div>
+								<a class="btn btn-default" th:href="@{/pc/project/list}">戻る</a>
+							</div>
+						</div>
+					</header>
+					<div class="content-detail-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="building-detail-body">
+									<div>
+										<!-- Nav tabs-->
+										<ul class="nav nav-tabs basic-detail-tabs" role="tablist">
+											<li class="active" role="presentation"><a href="#basic"
+												aria-controls="home" role="tab" data-toggle="tab">基本情報</a></li>
+											<li role="presentation"><a href="#schedule"
+												aria-controls="profile" role="tab" data-toggle="tab">担当・SDL</a></li>
+										</ul>
+										<!-- Tab panes-->
+										<div class="tab-content">
+											<div class="tab-pane fade in active" id="basic"
+												role="tabpanel">
+												<div class="tab-content-body">
+													<ul class="building-basic-list">
+														<li class="building-basic-list-item" th:if="${project?.projectSwitingItemControl?.basicDirectionalityGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">進捗状況</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.basicWorkDivision}">
+																				<th>ステータス</th>
+																				<td th:classappend="${project?.isChangedOperationDivision == true ? 'project_diff_strong_text': ''}" th:text="${project.operationDivision}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicActionStatus}">
+																				<th>行動</th>
+																				<td th:classappend="${project?.isChangedMProjectActionStatusId == true ? 'project_diff_strong_text': ''}" th:text="${project.projectActionStatus}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicWorkDivision && project.operationDivision == '中止'}">
+																				<th>中止理由</th>
+																				<td th:classappend="${project?.isChangedStopReasonId == true ? 'project_diff_strong_text': ''}" th:text="${project.stopDivision}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicInHouseProgress}">
+																				<th>社内進捗</th>
+																				<td th:classappend="${project?.isChangedOfficeProjectProgressId == true ? 'project_diff_strong_text': ''}" th:text="${project.officeProjectProgress?.name}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationProgress}">
+																				<th>交渉進捗</th>
+																				<td th:classappend="${project?.isChangedNegotiationProjectProgressId == true ? 'project_diff_strong_text': ''}" style="color: #0080FF" th:text="${project.negotiationProjectProgress?.name}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityLandingDirectionalityName}">
+																				<th>着地方向</th>
+																				<td th:classappend="${project?.isChangedLandingProjectCategoryId == true ? 'project_diff_strong_text': ''}" style="color: #0080FF" th:text="${project.landingProjectCategory}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityLandingDirectionalityPercent}">
+																				<th>可能性</th>
+																				<td th:classappend="${project?.isChangedConclusionPossibilityPercentId == true ? 'project_diff_strong_text': ''}" style="color: #0080FF" th:text="${project.conclusionPossibilityPercent}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityLandingDirectionalityMemo}">
+																				<th>着地補足</th>
+																				<td th:classappend="${project?.isChangedLandingMemo == true ? 'project_diff_strong_text': ''}" style="white-space: pre-line; word-break: break-word;" th:text="${project.landingMemo}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityTenancyPeriod}">
+																				<th>定借満了</th>
+																				<td th:text="${project.tenancyPeriod}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityRentIncreaseDecrease}">
+																				<th>賃料</th>
+																				<td th:classappend="${project?.isChangedRentIncreaseDecrease == true ? 'project_diff_strong_text': ''}" th:text="${project.rentIncreaseDecrease}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicExternalReleaseStartDate || project?.projectSwitingItemControl?.basicExternalReleaseConfirm}">
+																				<th>外部公開</th>
+																				<td>
+																					<span th:classappend="${project?.isChangedExternalReleaseStartDate == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicExternalReleaseStartDate}" th:text="${project.externalReleaseStartDate}"></span>
+																					<span th:classappend="${project?.isChangedExternalReleaseConfirm == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicExternalReleaseConfirm && project.externalReleaseConfirm != null && project.externalReleaseConfirm == true}">(確定)</span>
+																					<span th:classappend="${project?.isChangedExternalReleaseConfirm == true ? 'project_diff_strong_text': ''}" style="color: red" th:if="${project?.projectSwitingItemControl?.basicExternalReleaseConfirm && project.externalReleaseConfirm != null && project.externalReleaseConfirm == false}">(未確定)</span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityImplementationDatetime || project?.projectSwitingItemControl?.basicDirectionalityImplementationPeriod}">
+																				<th>実施日・期</th>
+																				<td>
+																					<span th:classappend="${(project?.isChangedImplementationDatetime == true || ((project?.implementationDatetime == null || project?.implementationDatetime == '') && project?.isChangedImplementationScheduleDatetime == true)) ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicDirectionalityImplementationDatetime}" th:text="${project.implementationDateValue}"></span>
+																					<span style="margin-left: 1em;" th:classappend="${project?.isChangedImplementationPeriod == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicDirectionalityImplementationPeriod}" th:text="${project.implementationPeriod}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityRedecorationLastSalesDate}">
+																				<th>営業終了日</th>
+																				<td th:classappend="${project?.isChangedSalesEndDate == true ? 'project_diff_strong_text': ''}" th:text="${project.salesEndDate}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityRequestorName || project?.projectSwitingItemControl?.basicDirectionalityRequestorStatus}">
+																				<th>要望先</th>
+																				<td>
+																					<span th:if="${project?.projectSwitingItemControl?.basicDirectionalityRequestorName}" th:text="${project.requestorName}"></span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicDirectionalityRequestorName && project.requestorName != null && !project.requestorName.isEmpty()
+																					&& project?.projectSwitingItemControl?.basicDirectionalityRequestorStatus && project.requestorStatus != null && !project.requestorStatus.isEmpty()}" th:text="'、'"></span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicDirectionalityRequestorStatus}" th:text="${project.requestorStatus}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalitySalesPrediction}">
+																				<th>売上予測</th>
+																				<td><span th:if="${project.salesPrediction != null}" th:text="${#numbers.formatDecimal(project.salesPrediction, 1, 'COMMA', 0, 'POINT') + '（千円）'}"></span></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicProfitExpectation}">
+																				<th>店舗利益</th>
+																				<td><span th:if="${project.profitExpectation != null}" th:text="${#numbers.formatDecimal(project.profitExpectation, 1, 'COMMA', 0, 'POINT') + '（千円）'}"></span></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicDirectionalityProfitRate}">
+																				<th>利益率</th>
+																				<td><span th:if="${project.profitRate != null}" th:text="${#numbers.formatDecimal(project.profitRate, 1, 'COMMA', 2, 'POINT')} + '％'"></span></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">案件基本情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.basicShop || project?.projectSwitingItemControl?.basicShopCd}">
+																				<th>
+																					<span>店舗</span>
+																					<span style="border: 1px solid; font-size: 15px; border-radius: 2px; padding: 1px; color: peru" th:if="${project.shop != null}">
+																						<a class="btn" style="color: peru" id="building-shop-detail-button">PL
+																					</span>
+																				</th>
+																				<td th:if="${project?.shop != null}">
+																					<span th:if="${project?.projectSwitingItemControl?.basicShopCd}" th:text="${project.shop?.shopCd}"></span>
+																					<span th:if="${project.shop?.shopCd != null && !project.shop?.shopCd.isEmpty() && project.shop?.shopNameZenkaku != null && !project.shop?.shopNameZenkaku.isEmpty()}">：</span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicShopName}" th:text="${project.shop?.shopNameZenkaku}"></span>
+																				</td>
+																				<td th:if="${project?.shop == null}">
+																					<span th:text="${project.shopNameTemporary}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicManagementForm}">
+																				<th>運営形態</th>
+																				<td th:text="${project.currentContract?.operationForm}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicTsubo}">
+																				<th>坪</th>
+																				<td><span th:if="${project.shop?.contractTsubo != null}" th:text="${new java.text.DecimalFormat('#,##0.##').format(project.shop?.contractTsubo) + '坪'}"></span></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicBrand}">
+																				<th>屋号</th>
+																				<td th:text="${project.brand?.name}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicBrand}">
+																				<th>事業名</th>
+																				<td th:text="${project.brand?.iBussinessName}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicBuilding}">
+																				<th>館</th>
+																				<td>
+																					<span th:text="${project.building?.name}"></span>
+																					<span style="font-size: 15px; border: 1px solid; border-radius: 2px; padding: 1px; color: peru" th:if="${project.building != null}">
+																						<a class="btn" style="color: peru" th:href="@{/pc/building/detail/} + ${project.building?.id} + '#project&project/list'">同館案件
+																					</span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCorporationGroup}">
+																				<th>法人G</th>
+																				<td th:text="${project.corporationGroup?.corporationGpName}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCorporation}">
+																				<th>法人</th>
+																				<td th:text="${project.corporation?.corporationName}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicChannel}">
+																				<th>チャネル</th>
+																				<td th:text="${project.salesChannel?.salesChannelName}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicArea}">
+																				<th>エリア</th>
+																				<td th:text="${project.area?.areaName}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicAdoptDifficulty}">
+																				<th>採用難易度</th>
+																				<td th:text="${project.building?.adoptDifficulty}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicBlock}">
+																				<th>ブロック</th>
+																				<td th:text="${project.block?.blockName}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicPrefectures}">
+																				<th>都道府県</th>
+																				<td th:text="${project.prefectures?.prefecturesName}"></td>
+																			</tr>
+																			<tr th:if="${project?.itemControl?.basicCurrentContractMemo}">
+																			<!-- <tr> -->
+																				<th>現契約メモ</th>
+																				<td th:text="${project?.currentContract?.memo}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">計画</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.basicPlan || project?.projectSwitingItemControl?.basicPlanImplementationDate || project?.projectSwitingItemControl?.basicPlanPeriod}">
+																				<th>計画</th>
+																				<td>
+																					<span th:if="${project?.projectSwitingItemControl?.basicPlan}" th:text="${project.planStatus}"></span>
+																					<span th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																					th:text="${project?.planDate}? ${project?.planDate.format(formatter.ofPattern('yyyyMM'))} :''" th:if="${project?.projectSwitingItemControl?.basicPlanImplementationDate}"></span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicPlanPeriod && (project.planPeriod != null && project.planPeriodHalf != null)}"
+																						  th:text="${project.planPeriod + ' ' + project.planPeriodHalf}"></span>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+															th:if="${project?.projectSwitingItemControl?.basicCurrentStoreGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">現在の店舗情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body background-gray-out">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentStoreContractTsubo || project?.projectSwitingItemControl?.basicCurrentStoreFloor}">
+																				<th>坪、フロア</th>
+																				<td>
+																					<span th:if="${project.currentSectionProgress?.contractTsubo != null}"
+																						th:text="${new java.text.DecimalFormat('#,##0.##').format(project.currentSectionProgress?.contractTsubo) + '坪'}"></span>
+																					<span th:if="${project.currentSectionProgress?.floor != null && project.currentSectionProgress?.floor != ''}" th:text="${project.currentSectionProgress?.floor + '階'}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentStoreBusinessHours}">
+																				<th>営業時間</th>
+																				<td style="white-space: pre-line; word-break: break-word;" rowspan="3" th:text="${project.currentSectionProgress?.businessHours}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentStoreBusinessHours}">
+																				<th style="border-top: 0;"></th>
+																				<td style="border-top: 0;"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentStoreBusinessHours}">
+																				<th style="border-top: 0;"></th>
+																				<td style="border-top: 0;"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentStoreBuildingExpectedValue}">
+																				<th>館期待値</th>
+																				<td th:text="${project.currentSectionProgress?.buildingExpectedValue == null ? '': #numbers.formatDecimal(project.currentSectionProgress?.buildingExpectedValue / 1000, 1, 'DEFAULT', 0, 'DEFAULT') + '（千円）'}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+															th:if="${project?.projectSwitingItemControl?.basicNegotiationStoreGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">交渉中店舗情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationStoreContractTsubo || project?.projectSwitingItemControl?.basicNegotiationStoreFloor}">
+																				<th>坪、フロア</th>
+																				<td>
+																					<span th:classappend="${project?.isChangedNegotiationSectionFloor == true ? 'project_diff_strong_text': ''}" th:if="${project.negotiationSectionProgress?.contractTsubo != null}"
+																						th:text="${new java.text.DecimalFormat('#,##0.##').format(project.negotiationSectionProgress?.contractTsubo) + '坪'}"></span>
+																					<span th:classappend="${project?.isChangedNegotiationSectionContractTsubo == true ? 'project_diff_strong_text': ''}" th:if="${project.currentSectionProgress?.contractTsubo != null}" th:text="${project.contractTsuboSectionChange}"></span>
+																					<span th:classappend="${project?.isChangedNegotiationSectionTsuboIncreaseDecrease == true ? 'project_diff_strong_text': ''}" th:if="${project.negotiationSectionProgress?.floor != null && project.negotiationSectionProgress?.floor != ''}" th:text="${project.negotiationSectionProgress?.floor + '階'}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationStoreBusinessHours}">
+																				<th>営業時間</th>
+																				<td th:classappend="${project?.isChangedNegotiationSectionBusinessHours == true ? 'project_diff_strong_text': ''}" style="white-space: pre-line; word-break: break-word;" rowspan="3" th:text="${project.negotiationSectionProgress?.businessHours}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationStoreBusinessHours}">
+																				<th style="border-top: 0;"></th>
+																				<td style="border-top: 0;"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationStoreBusinessHours}">
+																				<th style="border-top: 0;"></th>
+																				<td style="border-top: 0;"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationStoreExpectedValue}">
+																				<th>館期待値</th>
+																				<td th:text="${project.negotiationSectionProgress?.buildingExpectedValue == null ? '': #numbers.formatDecimal(project.negotiationSectionProgress?.buildingExpectedValue / 1000, 1, 'DEFAULT', 0, 'DEFAULT') + '（千円）'}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+															th:if="${project?.projectSwitingItemControl?.basicCurrentContractGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">現在の契約情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body background-gray-out">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentContractForm}">
+																				<th>契約形態</th>
+																				<td>
+																					<span th:text="${project.currentContract?.form}"></span>
+																					<span style="font-size: 15px; border: 1px solid; border-radius: 2px; padding: 1px; color: peru" th:if="${project.shop != null}">
+																						<a class="btn" style="color: peru" th:href="@{/pc/store/detail/} + ${project.shop?.id} + '#economy&project/detail/' + ${project.id}">経済条件を見る
+																					</span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentContractName}">
+																				<th>契約先名</th>
+																				<td
+																					th:text="${project.currentContract?.contractTargetName}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentContractStartDate || project?.projectSwitingItemControl?.basicCurrentContractEndDate || project?.projectSwitingItemControl?.basicCurrentContractYear}">
+																				<th>契約期間</th>
+																				<td>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentContractStartDate}" th:text="${project?.currentContract?.contractStartDate}"></span>
+																					<span th:if="${(project?.projectSwitingItemControl?.basicCurrentContractStartDate && project?.currentContract?.contractStartDate != null) || (project?.projectSwitingItemControl?.basicCurrentContractEndDate && project?.currentContract?.contractEndDate != null && !project?.currentContract?.contractEndDate.toString().equals('9999-12-31'))}">～</span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentContractEndDate && project?.currentContract?.contractEndDate != null && !project?.currentContract?.contractEndDate.toString().equals('9999-12-31')}" th:text="${project?.currentContract?.contractEndDate}"></span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentContractYear && project.currentContract?.contractNumberOfYear != null}" th:text="${'（' + #numbers.formatDecimal(project.currentContract?.contractNumberOfYear, 1, 'COMMA', 2, 'POINT') + '年）'}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentContractTenancyExpirationPeriod && project?.currentContract?.autoUpdate == false}">
+																				<th> 定借満了</th>
+																				<td><span th:text="${project.currentContract?.term}" ></span></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentContractAutoUpdate}">
+																				<th>自動更新</th>
+																				<td>
+																					<span th:if="${project.currentContract?.autoUpdate != null}" th:text="${project.currentContract?.autoUpdate == true? 'あり':'なし'}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentContractRentReduceStartDate || project?.projectSwitingItemControl?.basicCurrentContractRentReduceEndDate || project?.projectSwitingItemControl?.basicCurrentContractRentReduceYear}">
+																				<th>賃料低減</th>
+																				<td>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentContractRentReduceStartDate}" th:text="${project?.currentContract?.rentStartDate}"></span>
+																					<span th:if="${(project?.projectSwitingItemControl?.basicCurrentContractRentReduceStartDate && project?.currentContract?.rentStartDate != null) || (project?.projectSwitingItemControl?.basicCurrentContractRentReduceEndDate && project?.currentContract?.rentEndDate != null)}">～</span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentContractRentReduceEndDate}" th:text="${project?.currentContract?.rentEndDate}"></span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentContractRentReduceYear && project.currentContract?.rentYear != null}" th:text="${'（' + #numbers.formatDecimal(project.currentContract?.rentYear, 1, 'COMMA', 2, 'POINT') + '年）'}"></span>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+														 	th:if="${project?.projectSwitingItemControl?.basicNegotiationContractGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">交渉中契約情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																				<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationContractForm}">
+																					<th>運営形態</th>
+																					<td th:text="${project.progressContract?.operationForm}"></td>
+																				</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationContractForm}">
+																				<th>契約形態</th>
+																				<td th:classappend="${project?.isChangedNegotiationContractForm == true ? 'project_diff_strong_text': ''}" th:text="${project.progressContract?.form}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationContractName}">
+																				<th>契約先名</th>
+																				<td th:classappend="${project?.isChangedNegotiationContractName == true ? 'project_diff_strong_text': ''}"
+																					th:text="${project.progressContract?.contractTargetName}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationContractStartDate || project?.projectSwitingItemControl?.basicNegotiationContractEndDate || project?.projectSwitingItemControl?.basicNegotiationContractYear}">
+																				<th>契約期間</th>
+																				<td>
+																					<span th:classappend="${project?.isChangedNegotiationContractStartDate == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicNegotiationContractStartDate}" th:text="${project?.progressContract?.contractStartDate}"></span>
+																					<span th:if="${(project?.projectSwitingItemControl?.basicNegotiationContractStartDate && project?.progressContract?.contractStartDate != null) || (project?.projectSwitingItemControl?.basicNegotiationContractEndDate && project?.progressContract?.contractEndDate != null)}">～</span>
+																					<span th:classappend="${project?.isChangedNegotiationContractEndDate == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicNegotiationContractEndDate}" th:text="${project?.progressContract?.contractEndDate}"></span>
+																					<span th:classappend="${project?.isChangedNegotiationContractYear == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicNegotiationContractYear && project.progressContract?.contractNumberOfYear != null}" th:text="${'（' + #numbers.formatDecimal(project.progressContract?.contractNumberOfYear, 1, 'COMMA', 2, 'POINT') + '年）'}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationContractTenancyExpirationPeriod && project?.progressContract?.autoUpdate == false}">
+																				<th> 定借満了</th>
+																				<td th:classappend="${project?.isChangedNegotiationContractTenancyPeriod == true ? 'project_diff_strong_text': ''}"><span th:text="${project.progressContract?.term}"></span></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationContractAutoUpdate}">
+																				<th>自動更新</th>
+																				<td th:classappend="${project?.isChangedNegotiationContractAutoUpdate == true ? 'project_diff_strong_text': ''}">
+																					<span th:if="${project.progressContract?.autoUpdate != null}" th:text="${project.progressContract?.autoUpdate == true? 'あり':'なし'}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationContractRentReduceStartDate || project?.projectSwitingItemControl?.basicNegotiationContractRentReduceEndDate || project?.projectSwitingItemControl?.basicNegotiationContractRentReduceYear}">
+																				<th>賃料低減</th>
+																				<td>
+																					<span th:if="${project?.projectSwitingItemControl?.basicNegotiationContractRentReduceStartDate}" th:text="${project?.progressContract?.rentStartDate}"></span>
+																					<span th:if="${(project?.projectSwitingItemControl?.basicNegotiationContractRentReduceStartDate && project?.progressContract?.rentStartDate != null) || (project?.projectSwitingItemControl?.basicNegotiationContractRentReduceEndDate && project?.progressContract?.rentEndDate != null)}">～</span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicNegotiationContractRentReduceEndDate}" th:text="${project?.progressContract?.rentEndDate}"></span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicNegotiationContractRentReduceYear && project.progressContract?.rentYear != null}" th:text="${'（' + #numbers.formatDecimal(project.progressContract?.rentYear, 1, 'COMMA', 2, 'POINT') + '年）'}"></span>
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>交渉中契約メモ</th>
+																				<td th:text="${project.progressContract?.memo}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+														    th:if="${project?.projectSwitingItemControl?.basicCurrentRelatedCorporationGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">現在の関連法人情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body background-gray-out">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgency}">
+																				<th>販売代行先</th>
+																				<td>
+																					<span th:if="${project.salesAgencyCurrent?.salesAgencyCurrent != null}" th:text="${project.salesAgencyCurrent?.salesAgencyCurrent.name}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgencyStartDate || project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgencyEndDate || project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgencyYear}">
+																				<th>代行契約</th>
+																				<td>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgencyStartDate}" th:text="${project?.salesAgencyCurrent?.startDate}"></span>
+																					<span th:if="${(project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgencyStartDate && project?.salesAgencyCurrent?.startDate != null) || (project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgencyEndDate && project?.salesAgencyCurrent?.endDate != null && !project?.salesAgencyCurrent?.endDate.toString().equals('9999-12-31'))}">～</span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgencyEndDate && project?.salesAgencyCurrent?.endDate != null && !project?.salesAgencyCurrent?.endDate.toString().equals('9999-12-31')}" th:text="${project?.salesAgencyCurrent?.endDate}"></span>
+																					<span th:if="${project?.projectSwitingItemControl?.basicCurrentRelatedCorporationSalesAgencyYear && project?.salesAgencyCurrent?.numberOfYear != null}" th:text="${'（' + #numbers.formatDecimal(project.salesAgencyCurrent?.numberOfYear, 1, 'COMMA', 2, 'POINT') + '年）'}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentRelatedCorporationPeriod}">
+																				<th>期間</th>
+																				<td th:text="${project.salesAgencyCurrent?.term}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicCurrentRelatedCorporationAffiliateShop}">
+																				<th>FC加盟店</th>
+																				<td>
+																					<span th:if="${project.salesAgencyCurrent?.participatingStoreCurrent != null}" th:text="${project.salesAgencyCurrent?.participatingStoreCurrent.name}"></span>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+															th:if="${project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">交渉中関連法人情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgency}">
+																				<th>販売代行先</th>
+																				<td th:classappend="${project?.isChangedNegotiationRelatedAgency == true ? 'project_diff_strong_text': ''}">
+																					<span th:if="${project.salesAgencyProgress?.salesAgencyProgress != null}" th:text="${project.salesAgencyProgress?.salesAgencyProgress.name}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgencyStartDate || project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgencyEndDate || project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgencyYear}">
+																				<th>代行契約</th>
+																				<td>
+																					<span th:classappend="${project?.isChangedNegotiationRelatedAgencyStartDate == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgencyStartDate}" th:text="${project?.salesAgencyProgress?.startDate}"></span>
+																					<span th:if="${(project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgencyStartDate && project?.salesAgencyProgress?.startDate != null) || (project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgencyEndDate && project?.salesAgencyProgress?.endDate != null)}">～</span>
+																					<span th:classappend="${project?.isChangedNegotiationRelatedAgencyEndDate == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgencyEndDate}" th:text="${project?.salesAgencyProgress?.endDate}"></span>
+																					<span th:classappend="${project?.isChangedNegotiationRelatedAgencyYear == true ? 'project_diff_strong_text': ''}" th:if="${project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationSalesAgencyYear && project?.salesAgencyProgress?.numberOfYear != null}" th:text="${'（' + #numbers.formatDecimal(project?.salesAgencyProgress?.numberOfYear, 1, 'COMMA', 2, 'POINT') + '年）'}"></span>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationPeriod}">
+																				<th>期間</th>
+																				<td th:text="${project.salesAgencyProgress?.term}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicNegotiationRelatedCorporationAffiliateShop}">
+																				<th>FC加盟店</th>
+																				<td th:classappend="${project?.isChangedNegotiationRelatedAffiliateShop == true ? 'project_diff_strong_text': ''}">
+																					<span th:if="${project.salesAgencyProgress?.participatingStoreProgress != null}" th:text="${project.salesAgencyProgress?.participatingStoreProgress.name}"></span>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+														    th:if="${project?.projectSwitingItemControl?.basicBranchStoreStaffOpinion}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">支店見解</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<div class="row" th:classappend="${project?.isChangedBranchStoreStaffOpinion == true ? 'project_diff_strong_text': ''}">
+																			<div class="col-md-6">
+																				<p th:text="${project.branchOpinion?.comment}"></p>
+																			</div>
+																			<div class="col-md-2">
+																				<div class="img">
+																					<div th:if="${project.branchOpinion?.file?.type != null  && project.branchOpinion?.file?.type == 'IMAGE'}">
+																						<a target="_blank"
+																						th:if="${project.branchOpinion?.file?.path != null}"
+																						th:href="@{/pc/project/} + ${project.branchOpinion?.file?.path}"> <img
+																						class="media-object img-rounded project_detail_image_lazy"
+																						th:attr="data-src=@{/pc/project/} + ${project.branchOpinion?.file?.path}"
+																						alt="">
+																					</a>
+																					</div>
+																					<div th:if="${project.branchOpinion?.file?.type != null  && project.branchOpinion?.file?.type == 'DOCUMENT'}">
+																						<img
+																						class="media-object img-rounded project_detail_image_lazy"
+																						th:attr="data-src=@{/pc/project/} + ${project.branchOpinion?.file?.pathDocument}"
+																						alt="">
+																					</div>
+																				</div>
+																			</div>
+																			<div class="col-md-3">
+																				<div class="img">
+																					<div class="download j-download-item" th:if="${project.branchOpinion?.file?.type != null  && project.branchOpinion?.file?.type == 'DOCUMENT'}"
+																						th:path="@{/pc/project/} + ${project.branchOpinion?.file?.path}">
+																						<i class="fa fa-download"></i>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+														    th:if="${project?.projectSwitingItemControl?.basicBranchStoreOpinion}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">採用に関するコメント</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<div class="row" th:classappend="${project?.isChangedBranchStoreOpinion == true ? 'project_diff_strong_text': ''}">
+																			<div class="col-md-6">
+																				<p th:text="${project.viewOpinion?.comment}"></p>
+																			</div>
+																			<div class="col-md-2">
+																				<div class="img">
+																					<div th:if="${project.viewOpinion?.file?.type != null  && project.viewOpinion?.file?.type == 'IMAGE'}">
+																						<a target="_blank"
+																						th:if="${project.viewOpinion?.file?.path != null}"
+																						th:href="@{/pc/project/} + ${project.viewOpinion?.file?.path}"> <img
+																						class="media-object img-rounded project_detail_image_lazy"
+																						th:attr="data-src=@{/pc/project/} + ${project.viewOpinion?.file?.path}"
+																						alt="">
+																					</a>
+																					</div>
+																					<div th:if="${project.viewOpinion?.file?.type != null  && project.viewOpinion?.file?.type == 'DOCUMENT'}">
+																						<img
+																						class="media-object img-rounded project_detail_image_lazy"
+																						th:attr="data-src=@{/pc/project/} + ${project.viewOpinion?.file?.pathDocument}"
+																						alt="">
+																					</div>
+																				</div>
+																			</div>
+																			<div class="col-md-3">
+																				<div class="img">
+																					<div class="download j-download-item" th:if="${project.viewOpinion?.file?.type != null  && project.viewOpinion?.file?.type == 'DOCUMENT'}"
+																						th:path="@{/pc/project/} + ${project.viewOpinion?.file?.path}">
+																						<i class="fa fa-download"></i>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+														    th:if="${project?.projectSwitingItemControl?.basicBuOpinion}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header">
+																	<h3 class="title">事業見解</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<div class="row" th:classappend="${project?.isChangedBuOpinion == true ? 'project_diff_strong_text': ''}">
+																			<div class="col-md-6">
+																				<p th:text="${project.buOpinion?.comment}"></p>
+																			</div>
+																			<div class="col-md-2">
+																				<div class="img">
+																					<div th:if="${project.buOpinion?.file?.type != null  && project.buOpinion?.file?.type == 'IMAGE'}">
+																						<a target="_blank"
+																						th:if="${project.buOpinion?.file?.path != null}"
+																						th:href="@{/pc/project/} + ${project.buOpinion?.file?.path}"> <img
+																						class="media-object img-rounded project_detail_image_lazy"
+																						th:attr="data-src=@{/pc/project/} + ${project.buOpinion?.file?.path}"
+																						alt="">
+																					</a>
+																					</div>
+																					<div th:if="${project.buOpinion?.file?.type != null  && project.buOpinion?.file?.type == 'DOCUMENT'}">
+																						<img
+																						class="media-object img-rounded project_detail_image_lazy"
+																						th:attr="data-src=@{/pc/project/} + ${project.buOpinion?.file?.pathDocument}"
+																						alt="">
+																					</div>
+																				</div>
+																			</div>
+																			<div class="col-md-3">
+																				<div class="img">
+																					<div class="download j-download-item" th:if="${project.buOpinion?.file?.type != null  && project.buOpinion?.file?.type == 'DOCUMENT'}"
+																						th:path="@{/pc/project/} + ${project.buOpinion?.file?.path}">
+																						<i class="fa fa-download"></i>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="schedule" role="tabpanel">
+												<div class="tab-content-body">
+													<ul class="building-basic-list">
+														<li class="building-basic-list-item"
+														    th:if="${project?.projectSwitingItemControl?.scheduleActionScheduleGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">行動計画スケジュール</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr style="border: 1px solid #DCDCDC" th:if="${project.differenceWeeks >= 1}">
+																			<th>現在 <span th:inline="text" style="color:red">[[${project.differenceWeeks}]]週間</span> 遅延しています</th>
+																			  <td></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicActionStatus}">
+																				<th>行動ステータス</th>
+																				<td th:classappend="${project?.isChangedMProjectActionStatusId == true ? 'project_diff_strong_text': ''}" th:text="${project.projectActionStatus}"></td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.basicProjectStartDate}">
+																				<th>案件開始日</th>
+																				<td th:text="${project.startDate}"></td>
+																			</tr>
+																			<tr
+																				th:each="schedule : ${project.scheduleList}">
+																				<th th:text="${schedule.name}"></th>
+																				<td>
+																					<p>
+																						<span th:classappend="${schedule?.isChangedScheduleDate == true ? 'project_diff_strong_text': ''}" style="color: red" th:if="${schedule.isPastDay}" th:text="${schedule.targetSchedule}"></span>
+																						<span th:classappend="${schedule?.isChangedScheduleDate == true ? 'project_diff_strong_text': ''}" th:if="${!schedule.isPastDay}" th:text="${schedule.targetSchedule}"></span>
+																						<span class="schedule-delay-current-label" th:if="${schedule.projectStatusId == project.currentScheduleId}">現在</span>
+																						<span class="schedule-delay-goal-label" th:if="${schedule.projectStatusId == project.goalScheduleId && schedule.projectStatusId != project.currentScheduleId}">本来</span>
+																					</p>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-info j-dropdown" th:if="${project?.projectSwitingItemControl?.basicInvestmentDiscussion}">
+															<header
+																class="building-basic-info-header j-dropdown-header isOpen">
+																<h3 class="title">投資検討会</h3>
+															</header>
+
+															<div class="building-basic-info-body j-dropdown-body">
+																<div class="j-dropdown-body-inner">
+																	<table class="table">
+
+																	<tr>
+																		<th>投資検討会</th>
+																		<td>
+																			<span th:if="${project.investmentDiscussionTarget != null}" th:text="${project.investmentDiscussionTarget == true? '有':'無'}"></span>
+																		</td>
+																	</tr>
+																	</table>
+															    </div>
+														    </div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">直近スケジュール</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.scheduleArticleReviewDatetime || project?.projectSwitingItemControl?.scheduleArticleReviewResult || project?.projectSwitingItemControl?.scheduleArticleReviewResultComment}">
+																				<th>物件検討会</th>
+																				<td>
+																					<p th:with="formatter=${T(java.time.format.DateTimeFormatter)}">
+																						<span th:if="${project?.projectSwitingItemControl?.scheduleArticleReviewDatetime}"
+																							  th:text="${project.articleReviewDate}"></span>
+																						<span th:if="${project?.projectSwitingItemControl?.scheduleArticleReviewResult}"
+																							  th:text="${project.articleReviewResult?.name}"></span>
+																					</p>
+																					<p th:if="${project?.projectSwitingItemControl?.scheduleArticleReviewResultComment}"
+																					   th:text="${project.articleReviewResultComment}"></p>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.scheduleManagementDatetime || project?.projectSwitingItemControl?.scheduleManagementResult || project?.projectSwitingItemControl?.scheduleManagementResultComment}">
+																				<th>経営会議</th>
+																				<td>
+																					<p>
+																						<span th:if="${project?.projectSwitingItemControl?.scheduleManagementDatetime}"
+																							  th:text="${project.managementDate}"></span>
+																						<span th:if="${project?.projectSwitingItemControl?.scheduleManagementResult}"
+																							  th:text="${project.managementResult?.name}"></span>
+																					</p>
+																					<p th:if="${project?.projectSwitingItemControl?.scheduleManagementResultComment}"
+																					   th:text="${project.managementResultComment}"></p>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.scheduleInvestmentProcessDatetime || project?.projectSwitingItemControl?.scheduleInvestmentProcessResult || project?.projectSwitingItemControl?.scheduleInvestmentProcessResultComment}">
+																				<th>投資上程</th>
+																				<td>
+																					<p>
+																						<span th:if="${project?.projectSwitingItemControl?.scheduleInvestmentProcessDatetime}"
+																							  th:text="${project.investmentProcessDate}"></span>
+																						<span th:if="${project?.projectSwitingItemControl?.scheduleInvestmentProcessResult}"
+																							  th:text="${project.investmentProcessResult?.name}"></span>
+																					</p>
+																					<p th:if="${project?.projectSwitingItemControl?.scheduleInvestmentProcessResultComment}"
+																						th:text="${project.investmentProcessResultComment}"></p>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+														    th:if="${project?.projectSwitingItemControl?.schedulePastMeetingGroup}">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">過去会議</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr
+																				th:each="conference : ${project.projectPastConferences}">
+																				<th th:text="${conference.name}"></th>
+																				<td>
+																					<p>
+																						<span th:text="${conference.scheduleDate}"></span>
+																						<span th:text="${conference.result}"></span>
+																					</p>
+																					<p>出席者</p>
+																					<p th:text="${conference.comment}"></p>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">担当者</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr th:if="${project?.projectSwitingItemControl?.schedulePersonStoreDevelopmentTeam}">
+																				<th>店舗開発チーム</th>
+																				<td>
+																					<p th:each="team : ${project.otherProjectTeams}"
+																						th:text="${team.deptName}"></p>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.schedulePersonStoreDevelopment}">
+																				<th>店舗開発</th>
+																				<td>
+																					<p th:each="account : ${project.storeAccounts}"
+																						th:text="${account.name}"></p>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.schedulePersonBranchStoreSales}">
+																				<th>支店（営業）</th>
+																				<td>
+																					<p th:each="account : ${project.salesAccounts}"
+																						th:text="${account.name}"></p>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.schedulePersonBusiness}">
+																				<th>事業</th>
+																				<td>
+																					<p th:each="account : ${project.sectionAccounts}"
+																						th:text="${account.name}"></p>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.schedulePersonFranchise && project?.currentContract?.operationForm == 'FC'}">
+																				<th>FC</th>
+																				<td>
+																					<p th:each="account : ${project.fcAccounts}"
+																						th:text="${account.name}"></p>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.schedulePersonLeader && project?.leaderAccounts.size() > 0}">
+																				<th>人事リーダ</th>
+																				<td>
+																					<p th:each="account : ${project.leaderAccounts}"
+																						th:text="${account.name}"></p>
+																				</td>
+																			</tr>
+																			<tr th:if="${project?.projectSwitingItemControl?.schedulePersonOther && project?.otherAccounts.size() > 0}">
+																				<th>その他</th>
+																				<td>
+																					<p th:each="account : ${project.otherAccounts}"
+																						th:text="${account.name}"></p>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

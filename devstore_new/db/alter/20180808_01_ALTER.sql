@@ -1,0 +1,34 @@
+CREATE TABLE IF NOT EXISTS FILE_DIVISION(
+    "id" serial primary key,
+    "corporation_group" varchar(4) NOT NULL DEFAULT '001',
+    "file_division_code" varchar(128) NOT NULL,
+    "display_name" varchar(128) NOT NULL,
+    "negotiation_flag" boolean NOT NULL,
+    "building_flag" boolean NOT NULL,
+    "shop_flag" boolean NOT NULL,
+    "project_flag" boolean NOT NULL,
+    "list_order" int NOT NULL,
+    "select_order" int NOT NULL,
+    "created_datetime" timestamp NOT NULL,
+    "update_datetime" timestamp NOT NULL,
+    "created_account_code" varchar(64) NOT NULL,
+    "update_account_code" varchar(64) NOT NULL,
+    "is_deleted" boolean NOT NULL DEFAULT FALSE
+);
+
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'PROJECT_INFORMATION_SHEET', '案件情報ｼｰﾄ', false, false, false, true, 1, 1, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'MARKET_AREA_MAP', '商圏MAP', true, true, true, true, 2, 2, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'SHOP_INCOME_BLOCK', '店舗収支 ﾌﾞﾛｯｸ', false, false, false, true, 3, 3, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'SHOP_INCOME_YAKATA', '対象館のみ', false, false, false, true, 4, 4, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'SHOP_INCOME_MAIN_INCOME_UNIT', '店舗収支 主管利益単位', false, false, false, true, 5, 5, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'ECONOMY_CONDITION', '経済条件', false, false, false, true, 6, 6, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'ECONOMY_CONDITION_SALES_AGENCY', '経済条件(販売代行条件)', false, false, false, true, 7, 7, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'PROJECT_DESCRIPTION', '案件概要', false, false, false, true, 8, 8, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'BUSINESS_BRANCH_STORE_OPINION', '事業部・支店見解', false, false, false, true, 9, 9, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'FLOOR_MAP_REMODELING_BEFORE', 'ﾌﾛｱMAP(改装前)', true, true, true, true, 10, 10, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'FLOOR_MAP_REMODELING_AFTER', 'ﾌﾛｱMAP(改装後)', true, true, true, true, 11, 11, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'REVENUE_ACCOUNT', '収支試算', false, false, false, true, 12, 12, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'CONTENT_SALES', 'ｺﾝﾃﾝﾂ売上', false, false, false, true, 13, 13, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'NSC_ASSESSMENT', 'NSC評価', false, false, false, true, 14, 14, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'BU_REMODELING_RENT', 'BU改装資料', false, false, false, true, 15, 15, NOW(), NOW(), '', '', false);
+INSERT INTO public.file_division (corporation_group, file_division_code, display_name, negotiation_flag, building_flag, shop_flag, project_flag, list_order, select_order, created_datetime, update_datetime, created_account_code, update_account_code, is_deleted)  VALUES('001'::character varying,'OTHER', 'その他', true, true, true, true, 16, 16, NOW(), NOW(), '', '', false);

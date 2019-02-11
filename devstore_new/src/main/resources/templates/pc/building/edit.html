@@ -1,0 +1,971 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head th:with="number=${T(Math).random()}">
+<title>館編集</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script th:src="@{/js/building/building-edit.js} + '?' + ${number}"></script>
+<script th:src="@{/js/building/validation/edit.js} + '?' + ${number}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<form id="building-form">
+					<div class="content-detail negotiation">
+						<header class="content-detail-header">
+							<div class="row">
+								<div class="col-md-2 col-md-offset-10 ta-r">
+									<button class="btn btn-primary" type="button" id="j-update">
+									<i class="fa fa-edit"></i>登録
+									</button>
+									<br />
+									<div style="margin-top:5px"></div>
+									<a class="btn btn-default" th:href="@{/pc/building/detail/} + ${building.id}">詳細に戻る</a>
+								</div>
+							</div>
+						</header>
+						<div class="content-detail-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="building-detail-body">
+										<div>
+											<!-- Nav tabs-->
+											<ul class="nav nav-tabs basic-detail-tabs" role="tablist">
+												<li class="active" role="presentation"><a href="#basic"
+													aria-controls="home" role="tab" data-toggle="tab">館基本</a></li>
+												<li role="presentation"><a href="#keyman"
+													aria-controls="profile" role="tab" data-toggle="tab">キーマン</a></li>
+												<li role="presentation"><a href="#activation"
+													aria-controls="messages" role="tab" data-toggle="tab">活性化</a></li>
+												<li role="presentation"><a href="#building-sales"
+													aria-controls="settings" role="tab" data-toggle="tab">館売上</a></li>
+												<li role="presentation"><a href="#related-document"
+													aria-controls="settings" role="tab" data-toggle="tab">関連資料</a></li>
+												<li role="presentation"><a href="#image"
+													aria-controls="settings" role="tab" data-toggle="tab">画像</a></li>
+												<li role="presentation"><a href="#general-meeting"
+													aria-controls="settings" role="tab" data-toggle="tab">総会情報</a></li>
+											</ul>
+											<!-- Tab panes-->
+											<div class="tab-content">
+												<div class="tab-pane fade in active" id="basic"
+													role="tabpanel">
+													<div class="tab-content-body">
+														<ul class="building-basic-list">
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header
+																		class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">館企業情報</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<input type=hidden name="id" th:value="${building.id}">
+																		<input type=hidden name="buildingCd"
+																			th:value="${building.buildingCd}">
+																		<table class="table">
+																			<tr>
+																				<th>館名</th>
+																				<td><input class="form-control" type="text"
+																					th:value="${building.name}" placeholder="館名"
+																					name="name"></td>
+																			</tr>
+																			<tr>
+																				<th>企業G</th>
+																				<td><input class="form-control" type="text"
+																					id="j-form-corporationGrId" placeholder="企業G"></td>
+																			</tr>
+																			<tr>
+																				<th>法人</th>
+																				<td><input class="form-control"
+																					id="j-form-corporation" placeholder="法人"></td>
+																			</tr>
+																			<tr>
+																				<th>館長</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="owner"
+																					th:value="${building.owner}"></td>
+																			</tr>
+																			<tr>
+																				<th>PM運営会社</th>
+																				<td><input class="form-control" type="text"
+																					id="j-form-pmCorporation" placeholder="PM運営会社"></td>
+																			</tr>
+																			<!--<tr>
+																				<th>与信ランク</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="与信ランク" id="j-form-creditRankId"></td>
+																			</tr>-->
+																			<tr>
+																				<th>館区分</th>
+																				<td>
+																					<div class="radio">
+																						<label><input type="radio" value="1"
+																							name="buildingType" checked="true">改装 </label>
+																					</div>
+																					<div class="radio">
+																						<label><input type="radio" value="2"
+																							name="buildingType">既存 </label>
+																					</div>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header
+																		class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">館基本情報</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>OPEN</th>
+																				<td class="j-implementation-date"><input
+																					class="form-control" type="text" placeholder=""
+																					name="openDate" th:value="${building.openDate}">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>CLOSE</th>
+																				<td class="j-implementation-date"><input
+																					class="form-control" type="text" placeholder=""
+																					name="closeDate" th:value="${building.closeDate}">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>住所</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="address"
+																					th:value="${building.address}"></td>
+																			</tr>
+																			<tr>
+																				<th>HP</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="homepageUrl"
+																					th:value="${building.homepageUrl}"></td>
+																			</tr>
+																			<tr>
+																				<th>都道府県</th>
+																				<td><input class="form-control" type="text"
+																					id="j-form-iPrefecturesId" placeholder="都道府県"></td>
+																			</tr>
+																			<tr>
+																				<th>JISCD</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="jiscd"
+																					th:value="${building.jiscd}"></td>
+																			</tr>
+																			<tr>
+																				<th>グランドフロア</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="groundFloor"
+																					th:value="${building.groundFloor}"></td>
+																			</tr>
+																			<tr>
+																				<th>集客コンテンツ</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="attractingContent"
+																					th:value="${building.attractingContent}"></td>
+																			</tr>
+																			<tr>
+																				<th>核テナント</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="coreTenant"
+																					th:value="${building.coreTenant}"></td>
+																			</tr>
+																			<tr>
+																				<th>サブ核テナント</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="subCoreTenant"
+																					th:value="${building.subCoreTenant}"></td>
+																			</tr>
+																			<tr>
+																				<th>テナント数</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="tenantNumber"
+																					th:value="${building.tenantNumber}"></td>
+																			</tr>
+																			<tr>
+																				<th>建物構造</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="structure"
+																					th:value="${building.structure}"></td>
+																			</tr>
+																			<tr>
+																				<th>駐車場台数</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="parkingNumber"
+																					th:value="${building.parkingNumber}"></td>
+																			</tr>
+																			<tr>
+																				<th>営業時間</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="businessHours"
+																					th:value="${building.businessHours}"></td>
+																			</tr>
+																			<tr>
+																				<th>テナント</th>
+																				<td class="j-tenant"><input
+																					class="form-control" id="j-form-tenant" type="text"
+																					placeholder="テナント追加">
+																			</tr>
+																			<tr>
+																				<th>最寄り駅名</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="nearestStation"
+																					th:value="${building.nearestStation}"></td>
+																			</tr>
+																			<tr>
+																				<th>緯度</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="longitude"
+																					th:value="${building.longitude}"></td>
+																			</tr>
+																			<tr>
+																				<th>経度</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="latitude"
+																					th:value="${building.latitude}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header
+																		class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">担当者</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>店舗開発</th>
+																				<td><input class="form-control"
+																					id="j-form-store-development" type="text"
+																					placeholder="店舗開発追加"></td>
+																			</tr>
+																			<tr>
+																				<th>支店営業</th>
+																				<td><input class="form-control"
+																					id="j-form-branch-sales" type="text"
+																					placeholder="支店営業追加"></td>
+																			</tr>
+																			<tr>
+																				<th>人事リーダー</th>
+																				<td><input class="form-control" type="text"
+																					id="j-form-hr-leader" placeholder="人事リーダー追加"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header
+																		class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">立地環境</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>販売チャンネル</th>
+																				<td><input class="form-control"
+																					placeholder="販売チャンネル" id="j-form-salesChannel"></td>
+																			</tr>
+																			<tr>
+																				<th>SC分類</th>
+																				<td><input class="form-control"
+																					placeholder="SC分類" id="j-form-salesChannelCd2"></td>
+																			</tr>
+																			<tr>
+																				<th>ブロック</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="ブロック" id="j-form-iBlockId"></td>
+																			</tr>
+																			<tr>
+																				<th>エリア</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="エリア" id="j-form-iAreaId"></td>
+																			</tr>
+																			<tr>
+																				<th>立地①</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="locationFirst"
+																					th:value="${building.locationFirst}"></td>
+																			</tr>
+																			<tr>
+																				<th>立地②</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="locationSecond"
+																					th:value="${building.locationSecond}"></td>
+																			</tr>
+																			<tr>
+																				<th>小商圏</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="smallMarketArea"
+																					th:value="${building.smallMarketArea}"></td>
+																			</tr>
+																			<tr>
+																				<th>採用難易度</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="adoptDifficulty"
+																					th:value="${building.adoptDifficulty}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header
+																		class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">備考</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>備考</th>
+																				<td><textarea class="form-control" rows="10"
+																						name="note" th:text="${building.note}"></textarea></td>
+																			</tr>
+																			<tr th:if="${!building.isBuildingGroup}">
+																				<th>大館</th>
+																				<td><input class="form-control"
+																					placeholder="大館" id="j-form-buildingGroupId"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header
+																		class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">更新</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<div class="j-dropdown-body-inner">
+																			<table class="table">
+																				<tr>
+																					<th>更新アカウント</th>
+																					<td th:text="${building.updateAccountName}"></td>
+																				</tr>
+																				<tr>
+																					<th>更新日時</th>
+																					<td
+																						th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																						th:text="${building.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></td>
+																				</tr>
+																			</table>
+																		</div>
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="keyman" role="tabpanel">
+													<div class="tab-content-body">
+														<div class="form-group">
+															<div class="row">
+																<div class="col-md-10">
+																	<input class="form-control" type="text"
+																		id="j-form-keyman" value="" placeholder="キーマン追加">
+																</div>
+																<div class="col-md-2">
+																	<a class="btn btn-primary" id="addKeyman">追加</a>
+																</div>
+															</div>
+														</div>
+														<ul class="media-list" id="keymanList">
+															<li class="media-list-item has-trash new-item"
+																objectName="buildingKeymanDto"
+																th:each="buildingKeyman : ${building.buildingKeymans}">
+																<div class="keyman-info">
+																	<header class="keyman-info-header">
+																		<div class="form-group">
+																			<div class="row">
+																				<input type="hidden"
+																					th:value="${buildingKeyman.keyman != null} ? ${buildingKeyman.keyman.id} : 0"
+																					propertyName="keyman.id">
+																				<div class="col-md-9">
+																					<div class="inline-list">
+																						<div class="stars">
+																							<input type="hidden"
+																								th:value="${buildingKeyman.priority}"
+																								propertyName="priority">
+																							<div class="j-star-keyman-init"
+																								th:id="'j-star-keyman-container' + ${buildingKeyman.id}">
+																								<input class="rating" type="radio" value="1"
+																									style="display: none;"
+																									th:checked="${buildingKeyman.priority}=='1'? 'true':'false'">
+																								<input class="rating" type="radio" value="2"
+																									style="display: none;"
+																									th:checked="${buildingKeyman.priority}=='2'? 'true':'false'">
+																								<input class="rating" type="radio" value="3"
+																									style="display: none;"
+																									th:checked="${buildingKeyman.priority}=='3'? 'true':'false'">
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																				<div class="col-md-2">
+																					<select class="form-control" propertyName="role">
+																						<option value="HQ Leasing" th:selected="${buildingKeyman.role == 'HQ Leasing'}? 'true':'false'">本部リーシング</option>
+																						<option value="Building Leasing" th:selected="${buildingKeyman.role == 'Building Leasing'}? 'true':'false'">館リーシング</option>
+																						<option value="Building Promotion" th:selected="${buildingKeyman.role == 'Building Promotion'}? 'true':'false'">館販促</option>
+																						<option value="Interior Management" th:selected="${buildingKeyman.role == 'Interior Management'}? 'true':'false'">内装管理</option>
+																					</select>
+																				</div>
+																			</div>
+																		</div>
+																	</header>
+																	<div class="keyman-info-body">
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>名前</label>
+																				</div>
+																				<div class="col-md-9">
+																					<label class="form-control"
+																						propertyName="keyman.businessCard.name"
+																						th:text="${buildingKeyman.keyman != null && buildingKeyman.keyman.businessCard != null} ? ${buildingKeyman.keyman.businessCard.name} : ''"></label>
+																					<input type="hidden"
+																						propertyName="keyman.businessCardId"
+																						th:businessCardId="${buildingKeyman.keyman != null && buildingKeyman.keyman.businessCard != null} ? ${buildingKeyman.keyman.businessCard.id} : '0'"
+																						th:value="${buildingKeyman.keyman != null && buildingKeyman.keyman.businessCard != null} ? ${buildingKeyman.keyman.businessCard.id} : '0'">
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>部署</label>
+																				</div>
+																				<div class="col-md-9">
+																					<label class="form-control"
+																						th:text="${buildingKeyman.keyman != null && buildingKeyman.keyman.businessCard != null} ? ${buildingKeyman.keyman.businessCard.departmentName} : ''"></label>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>役職</label>
+																				</div>
+																				<div class="col-md-9">
+																					<label class="form-control"
+																						th:text="${buildingKeyman.keyman != null && buildingKeyman.keyman.businessCard != null} ? ${buildingKeyman.keyman.businessCard.positionName} : ''"></label>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>メモ</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="form-control building-keyman-note"
+																						propertyName="note" type="text"
+																						th:value="${buildingKeyman.note}" placeholder="メモ">
+																				</div>
+																				<div class="col-md-1">
+																					<div class="trash j-delete-item">
+																						<i class="fa fa-trash"></i>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>法人</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="form-control" type="text"
+																						placeholder="法人"
+																						th:id="'j-form-keyman-corporation-exits' + ${buildingKeyman.id}">
+																					<input class="form-control"
+																						propertyName="keyman.corporationId" type="hidden"
+																						th:id="'id-form-keyman-corporation-exits' + ${buildingKeyman.id}"
+																						th:value="${buildingKeyman.keyman.corporationId}"
+																						th:name="'name-form-keyman-corporation-exits' + ${buildingKeyman.id}">
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>更新日時:</label>
+																				</div>
+																				<div class="col-md-9">
+																					<p
+																						th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																						th:text="${buildingKeyman.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></p>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="activation" role="tabpanel">
+													<div class="tab-content-body">
+														<div class="media-list">
+															<div class="media-list-item has-trash present-item"
+																objectName="activationDto"
+																th:each="activation : ${building.activations}">
+																<div class="row">
+																	<input class="object-property" type="hidden"
+																		propertyName="id" th:value="${activation.id}">
+																	<div class="col-md-12">
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>フロア</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="form-control" type="text"
+																						placeholder="フロア" propertyName="floor"
+																						th:name="j-active-floor-exit + ${activation.id}"
+																						j-active="floor"
+																						th:value="${activation.floor}">
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>活性化予定日</label>
+																				</div>
+																				<div class="col-md-9 j-implementation-date">
+																					<input class="form-control" type="text"
+																						propertyName="expectedDay"
+																						th:name="j-active-expectedDay-exit + ${activation.id}"
+																						j-active="expectedDay"
+																						th:value="${activation.expectedDay}"
+																						placeholder="活性化予定日">
+																				</div>
+																				<div class="col-md-1">
+																					<div class="trash j-delete-item">
+																						<i class="fa fa-trash"></i>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>コメント</label>
+																				</div>
+																				<div class="col-md-9">
+																					<textarea class="form-control"
+																						propertyName="content" rows="3"
+																						th:name="j-active-content-exit + ${activation.id}"
+																						j-active="content"
+																						th:text="${activation.content}"
+																						placeholder="コメント"></textarea>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<input class="btn btn-primary" type="button"
+																	id="addActivation" value="追加">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="building-sales"
+													role="tabpanel">
+													<div class="row tab-content-body">
+														<div class="col-md-12">
+															<!-- Button trigger modal -->
+															<button type="button" class="btn btn-primary"
+																data-toggle="modal" data-target="#addSalesGroup">
+																売上追加</button>
+														</div>
+													</div>
+													<div class="row tab-content-body">
+														<div class="col-md-10 radio">
+															<label class="col-form-label col-md-3"
+																th:each="buildingsalestype, iter : ${buildingSalesTypes}">
+																<input type="radio" name="sales-type"
+																th:value="${buildingsalestype.id}"
+																th:checked="${iter.index == 0}? 'true' : 'false'">[[${buildingsalestype.value}]]
+															</label>
+														</div>
+													</div>
+													<div class="tab-content-body">
+														<ul class="media-list" id="buildingSales">
+															<li class="media-list-item hide"></li>
+														</ul>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="related-document"
+													role="tabpanel">
+													<div class="tab-content-body">
+														<div class="media-list">
+															<div class="media-list-item has-trash present-item"
+																objectName="buildingFileDto"
+																th:each="file : ${building.buildingFiles}">
+																<div class="row">
+																	<input class="object-property" type="hidden"
+																		propertyName="id" th:value="${file.id}">
+																	<div class="col-md-12">
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>ファイル</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="form-control"
+																						th:value="${file.displayName}"
+																						propertyName="displayName">
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>コメント</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="form-control" propertyName="comment"
+																						th:value="${file.comment}">
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>サイズ</label>
+																				</div>
+																				<div class="col-md-9">
+																					<span class="name"
+																						th:text="${file.getCreatedAccountName()}"></span>
+																					<span class="file-size"
+																						th:text="${#numbers.formatDecimal(file.size/1024, 0, 0)} + 'KB'"></span>
+																					<span class="created-date"
+																						th:text="${file.getDiffirentFromNow()}"></span>
+																				</div>
+																				<div class="col-md-1">
+																					<div class="trash j-delete-item">
+																						<i class="fa fa-trash"></i>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>区分</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="object-property" type="hidden"
+																						th:value="${file.division}"
+																						propertyName="division">
+																					<div class="btn-group" data-toggle="buttons">
+																						<label
+																							th:class="'btn btn-primary' + (${file.division}=='BUILDING'? ' active':'')">
+																							<input type="radio"
+																							th:name="divisionFile-exist + ${file.id}"
+																							name-control="division" value="BUILDING"
+																							autocomplete="off"
+																							th:checked="${file.division}=='BUILDING'? 'true':'false'">
+																							<span class="fa fa-check"></span> <lable>館</lable>
+																						</label> <label
+																							th:class="'btn btn-primary' + (${file.division}=='PROJECT'? ' active':'')">
+																							<input type="radio"
+																							th:name="divisionFile-exist + ${file.id}"
+																							name-control="division" value="PROJECT"
+																							autocomplete="off"
+																							th:checked="${file.division}=='PROJECT'? 'true':'false'">
+																							<span class="fa fa-check"></span> <lable>DB進捗</lable>
+																						</label>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<input class="btn btn-primary" type="button"
+																	id="addrelatedDocument" value="追加">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="image" role="tabpanel">
+													<div class="tab-content-body">
+														<div class="row">
+															<div class="col-md-12">
+																<div class="add-media-list">
+																<input class="btn btn-primary" type="button"
+																	id="addImage" value="追加">
+																</div>
+															</div>
+														</div>
+														<div class="media-list">
+															<div class="media-list-item has-trash present-item"
+																objectName="buildingImageDto"
+																th:each="image : ${building.buildingImages}">
+																<div class="row">
+																	<input class="object-property" type="hidden"
+																		propertyName="id" th:value="${image.id}">
+																	<div class="col-md-2">
+																		<div class="img">
+																			<a th:if="${image.path} != null" target="_blank" th:href="@{/pc/building/} + ${image.path}">
+																				<img class="media-object img-rounded" th:src="@{/pc/building/} + ${image.path}" alt="">
+																			</a>
+																			<a th:if="${image.path} == null" target="_blank" th:href="@{/pc/building/} + 'img/no_img.jpg'">
+																				<img class="media-object img-rounded" th:src="@{/pc/building/} + 'img/no_img.jpg'" alt="no_img">
+																			</a>
+																		</div>
+																	</div>
+																	<div class="col-md-10">
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>ファイル</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="form-control"
+																						th:value="${image.name}">
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>コメント</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="form-control" propertyName="comment"
+																						th:value="${image.comment}">
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>サイズ</label>
+																				</div>
+																				<div class="col-md-9">
+																					<span class="name"
+																						th:text="${image.getCreatedAccountName()}"></span>
+																					<span class="file-size"
+																						th:text="${#numbers.formatDecimal(image.size/1024, 0, 0)} + 'KB'"></span>
+																					<span class="created-date"
+																						th:text="${image.getDiffirentFromNow()}"></span>
+																				</div>
+																				<div class="col-md-1">
+																					<div class="trash j-delete-item">
+																						<i class="fa fa-trash"></i>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																					<label>区分</label>
+																				</div>
+																				<div class="col-md-9">
+																					<input class="object-property" type="hidden"
+																						th:value="${image.division}"
+																						propertyName="division">
+																					<div class="btn-group" data-toggle="buttons">
+																						<label
+																							th:class="'btn btn-primary' + (${image.division}=='BUILDING'? ' active':'')">
+																							<input type="radio"
+																							th:name="divisionImage-exist + ${image.id}"
+																							name-control="division" value="BUILDING"
+																							autocomplete="off"
+																							th:checked="${image.division}=='BUILDING'? 'true':'false'">
+																							<span class="fa fa-check"></span> <lable>館</lable>
+																						</label> <label
+																							th:class="'btn btn-primary' + (${image.division}=='PROJECT'? ' active':'')">
+																							<input type="radio"
+																							th:name="divisionImage-exist + ${image.id}"
+																							name-control="division" value="PROJECT"
+																							autocomplete="off"
+																							th:checked="${image.division}=='PROJECT'? 'true':'false'">
+																							<span class="fa fa-check"></span> <lable>DB進捗</lable>
+																						</label>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<div class="col-md-2">
+																				</div>
+																				<div class="col-md-9 radio">
+																					<label><input type="checkbox" class="isDefaultImage" propertyName="isDefaultImage"
+																						th:value="${image.path == building.imagePath}? 'true':'false'"
+																						th:checked="${image.path == building.imagePath}? 'true':'false'">一覧表示に使用</label>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="general-meeting"
+													role="tabpanel">
+													<div class="tab-content-body">
+														<div class="media-list">
+															<div class="media-list-item has-trash present-item"
+																objectName="buildingMeetingDto"
+																th:each="meeting : ${building.buildingMeetingHistorys}">
+																<div class="row">
+																	<input class="object-property" type="hidden"
+																		propertyName="id" th:value="${meeting.id}">
+																	<div class="col-md-12">
+																		<div class="form-group">
+																			<div class="row">
+																				<label class="col-sm-2 control-label">総会名</label>
+																				<div class="col-sm-9">
+																					<input class="form-control" type="text"
+																						propertyName="name" placeholder="総会名"
+																						th:value="${meeting.name}">
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<label class="col-sm-2 control-label">総会実施日</label>
+																				<div class="col-sm-9 j-implementation-date-time">
+																					<input class="form-control" type="text"
+																						placeholder="総会実施日" propertyName="date"
+																						th:name="j-meeting-date-exits + ${meeting.id}"
+																						j-meeting="date"
+																						th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																						th:value="${meeting.date!=null}? ${meeting.date.format(formatter.ofPattern('yyyy-MM-dd HH:ss'))}:''">
+																				</div>
+																				<div class="col-md-1">
+																					<div class="trash j-delete-item">
+																						<i class="fa fa-trash"></i>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="row">
+																				<label class="col-sm-2 control-label">出席者</label>
+																				<div class="col-sm-9">
+																					<input class="form-control" type="text"
+																						propertyName="attendee" placeholder="出席者"
+																						th:value="${meeting.attendee}">
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<input class="btn btn-primary" type="button"
+																	id="addMeetingHistory" value="追加">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="modal fade" id="addSalesGroup" tabindex="-1"
+					role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">ファイル追加</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form id="add-building-sales-form">
+									<div class="form-group">
+										<label class="col-form-label">決算年度</label> <input
+											type="number" placeholder="決算年度 (YYYY)" class="form-control"
+											name="add-f-month" maxlength="4">
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">データ種別</label>
+										<select class="form-control" name="add-type">
+											<option th:each="salesType : ${buildingSalesTypes}" th:value="${salesType.id}" th:text="${salesType.value}"></option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">データ区分</label>
+										<select class="form-control" name="add-division">
+											<option th:each="salesClassification : ${buildingSalesClassifications}" th:value="${salesClassification.id}" th:text="${salesClassification.value}"></option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">売上(百万)</label> <input
+											type="number" placeholder="売上(百万)" class="form-control"
+											name="add-sales">
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">面積(㎡)</label> <input
+											type="number" placeholder="面積(㎡)" class="form-control"
+											name="add-area">
+									</div>
+									<div class="form-group">
+										<label class="col-form-label">月坪(千円)</label> <input
+											type="number" placeholder="月坪(千円)" class="form-control"
+											name="add-month-basis">
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary"
+									id="add-building-sales">Save</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	let building = /*[[${building}]]*/'';
+	if (building.buildingSaless !== null) {
+		var buildingSaless = building.buildingSaless;
+		textBuildingSale = buildingSales(buildingSaless, '');
+		$('#buildingSales').append(textBuildingSale);
+	}
+	/*]]>*/
+	resetDefaultImage();
+</script>
+		</div>
+	</div>
+</body>
+</html>

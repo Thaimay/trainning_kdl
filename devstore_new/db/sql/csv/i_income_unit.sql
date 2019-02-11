@@ -1,0 +1,3 @@
+\c store_development_dev;
+\COPY I_INCOME_UNIT(income_unit_id,income_unit_cd,income_unit_name,company_id,coordination_creator,coordination_creation_time,coordination_deleting_flag,coordination_applying_date,coordination_updater,coordination_update_time)FROM 'db/csv/RIEKITANIMST.csv' WITH CSV;
+

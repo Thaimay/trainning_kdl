@@ -1,0 +1,12 @@
+.btns-sort {
+  text-align: left;
+}
+
+.btns-sort-item {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.btns-sort-item + .btns-sort-item {
+  margin-left: 10px;
+}

@@ -1,0 +1,115 @@
+<div class="row">
+	<div class="col-md-7">
+		<form class="btn-sort" action="GET" id="j-sortbtn"
+			accept-charset="UTF-8">
+			<div class="btns-sort-item">
+				<div class="radio">
+					<label><input type="radio" name="sort-category"
+						id="radioBuilding" value="BUILDING">館 </label>
+				</div>
+			</div>
+			<div class="btns-sort-item">
+				<div class="radio">
+					<label><input type="radio" name="sort-category"
+						checked="true" id="radioStore" value="STORE">店舗 </label>
+				</div>
+			</div>
+			<div class="btns-sort-item">
+				<div class="checkbox">
+					<label> <input type="checkbox" id="chkOwner"
+						th:checked="${findKeywordDTO!=null && findKeywordDTO.accountId!=null && findKeywordDTO.accountId>0}">担当
+					</label>
+				</div>
+			</div>
+		</form>
+		<div class="refine-by-text">
+			<input class="form-control" type="text"
+				th:value="${findKeywordDTO!=null && findKeywordDTO.keyWord!=null && findKeywordDTO.keyWord!=''}? ${findKeywordDTO.keyWord}:''"
+				placeholder="店舗 検索" id="keyWordSearch">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="detail-table">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-wrapper">
+						<table class="table">
+							<colgroup span="5"></colgroup>
+							<colgroup span="3"></colgroup>
+							<colgroup span="3"></colgroup>
+							<colgroup span="2"></colgroup>
+							<colgroup span="1"></colgroup>
+							<colgroup span="7"></colgroup>
+							<colgroup span="3"></colgroup>
+							<colgroup span="4"></colgroup>
+							<colgroup span="5"></colgroup>
+							<colgroup span="1"></colgroup>
+							<thead>
+								<tr>
+									<th>店舗名</th>
+									<th>店舗名称</th>
+									<th>会社名</th>
+									<th>館ID</th>
+									<th>館名</th>
+									<th>坪数</th>
+									<th>エリア</th>
+									<th>屋号</th>
+									<th>事業名</th>
+									<th>オープン日</th>
+									<th>館期待値(月坪売上)</th>
+									<th>写真・画像</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="iShop : ${shopKeywords}">
+									<td><a th:href="@{/pc/store/detail/} + ${iShop?.id}"
+										th:text="${iShop?.shopNameZenkaku}"></a></td>
+									<td th:text="${iShop?.stringShopName}"></td>
+									<td th:text="${iShop?.iShopCompany?.companyName}"></td>
+									<td th:text="${iShop?.building?.buildingCd}"></td>
+									<td th:text="${iShop?.building?.name}"></td>
+									<td
+										th:text="${iShop?.contractTsubo!=null && iShop?.contractTsubo!=''}? ${iShop?.contractTsubo + '坪'}:''"></td>
+									<td th:text="${iShop?.building?.iArea?.areaName}"></td>
+									<td th:text="${iShop?.iIncomeUnit?.incomeUnitCd}"></td>
+									<td th:text="${iShop?.iIncomeUnit?.incomeUnitName}"></td>
+									<td
+										th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+										th:text="${iShop?.openDate!=null}? ${iShop?.openDate?.format(formatter.ofPattern('yyyy/MM/dd'))}:''"></td>
+									<td th:text="${#numbers.formatDecimal(iShop?.shop?.buildingExpectedValue, 1, 'COMMA', 0, 'DEFAULT')}"></td>
+									<td>
+										<a th:if="${iShop?.shop?.imagePath} != null" target="_blank" th:href="@{/pc/building/} + ${iShop.shop.imagePath}">
+											<img class="img-responsive" height="50" width="50" th:src="@{/pc/building/} + ${iShop.shop.imagePath}" alt="">
+										</a>
+										<a th:if="${iShop?.shop?.imagePath} == null" target="_blank" th:href="@{/pc/building/} + 'img/no_img.jpg'">
+											<img class="img-responsive" height="50" width="50" th:src="@{/pc/building/} + 'img/no_img.jpg'" alt="no_img">
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<nav class="pagination-area is-centered"
+					aria-label="Page navigation">
+					<ul id="paginationKeyword" class="pagination">
+					</ul>
+					<input type="hidden" id="currentPageKeyword"
+						th:value="${findKeywordDTO.numberOfPage}" /> <input type="hidden"
+						id="pageCountKeyword" th:value="${pageCountKeyword}" />
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	let accountId = /*[[${session.LOGIN_ACCOUNT.id}]]*/'';
+	/*]]>*/
+</script>

@@ -1,0 +1,1 @@
+alter table project_switing_item_control add column basic_directionality_profit_amount boolean;

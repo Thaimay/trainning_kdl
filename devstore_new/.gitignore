@@ -1,0 +1,48 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+dump
+
+.metadata
+
+### STS ###
+.apt_generated
+#.classpath
+.factorypath
+.project
+#.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### resources
+src/main/resources/static/image/*.jpg
+src/main/resources/static/image/*.png
+src/main/resources/static/document/*
+src/main/resources/static/sales/*
+src/main/resources/static/log/*
+
+
+## Frontend resource
+mat/node_modules
+mat/.sass-cache/
+mat/*.css.map
+mat/npm-debug.log*
+
+## eclipse
+.settings/org.eclipse.core.resources.prefs
+/src/main/resources/static/image
+/src/main/resources/static/video
+/src/main/resources/static/document

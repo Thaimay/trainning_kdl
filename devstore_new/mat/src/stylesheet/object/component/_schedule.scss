@@ -1,0 +1,23 @@
+.schedule {
+  &-list-item:hover {
+    background-color: $color-list-hover;
+    cursor: pointer;
+  }
+  &-info {
+    color: $color-primary;
+
+    &:hover {
+      color: $color-primary;
+      text-decoration: none;
+    }
+
+    .title {
+      font-size: 1.1em;
+    }
+
+    .meeting-meta * {
+      font-size: 0.9em;
+      color: $color-meta-content;
+    }
+  }
+}

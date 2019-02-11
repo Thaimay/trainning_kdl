@@ -1,0 +1,1 @@
+alter table negotiation add column created_company_cd bpchar(5)

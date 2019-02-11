@@ -1,0 +1,108 @@
+.project-delete {
+  padding-bottom: 30px;
+  text-align: right;
+}
+.project-delete-button {
+  margin-left: 80%;
+  margin-right: 10px;
+}
+
+.project-add {
+  padding-bottom: 30px;
+  text-align: right;
+}
+
+.project-add-button {
+  margin-left: 80%;
+  margin-right: 10px;
+}
+
+.project-center {
+  padding : 25px ;
+}
+
+.project-search{
+  padding : 5px ;
+}
+
+.project-button {
+  margin-right: 5px;
+  margin-top: 10px;
+}
+
+.project-margin{
+  padding-left: 0px;
+}
+
+.project-float{
+  float: left;
+  padding-left: 25px;
+}
+
+.project-box1 {
+    padding: 20px;
+    margin: 20px;
+    font-weight: bold;
+    border: solid 1px #000000;
+}
+.project-box1 p {
+    margin: 0;
+    padding: 0;
+}
+
+.project-list-item {
+  position: relative;
+  padding: 20px 10px;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-top: 2px solid #dddddd;
+    border-right: 2px solid #dddddd;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    margin-top: -7px;
+    transform: rotate(45deg);
+  }
+
+  & + & {
+    border-top: 1px solid #dddddd;
+  }
+
+  &.isNotTransition {
+    &::after {
+      display: none;
+    }
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    a {
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+}
+
+.project-detail {
+  color: #333333;
+  text-decoration: none;
+  &:hover {
+    color: #333333;
+    text-decoration: none;
+  }
+}
+
+.project-list-item:hover {
+  background-color: #eeeeee;
+}
+
+.project-detail-header .title {
+  color: #991616;
+}
+
+.project-detail-body, .project-detail-footer {}

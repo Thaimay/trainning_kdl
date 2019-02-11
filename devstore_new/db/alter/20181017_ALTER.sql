@@ -1,0 +1,1 @@
+alter table shop add column shop_name varchar(100)

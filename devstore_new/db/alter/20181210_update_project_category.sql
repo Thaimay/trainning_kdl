@@ -1,0 +1,15 @@
+update project_category set name = '契約期中対応' where id = 3;
+update project_classification set name = '契約期中'  where id = 48;
+update project_category set is_deleted = true where id = 4; 
+update project_category_classification set project_classification_id = 65 where id = 93;
+update project_category set sort = 1 where id = 1;
+update project_category set sort = 2 where id = 2;
+update project_category set sort = 3 where id = 3;
+update project_category set sort = 4 where id = 4;
+update project_category set sort = 5 where id = 5;
+update project_category set sort = 6 where id = 6;
+update project_category set sort = 7 where id = 7;
+update project_category set sort = 8 where id = 8;
+update project_category set sort = 9 where id = 9;
+update project_category set sort = 10 where id = 10;
+update project_category set sort = 11 where id = 11;

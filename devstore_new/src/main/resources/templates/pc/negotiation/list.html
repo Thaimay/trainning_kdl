@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="/pc/layout">
+<head>
+<title>商談一覧</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script type="text/javascript">
+	$(function() {
+		$(window).keydown(function(event){
+		    if(event.keyCode == 13 && !$('#keyWordSearch').is(':focus')) {
+		      event.preventDefault();
+		      return false;
+		    }
+		});
+	});
+</script>
+</head>
+<body data-ng-app="app">
+
+	<div layout:fragment="content">
+
+		<div ng-controller="NegotiationListController as controller" ng-init="controller.initSuggest()">
+			<form class="form form-horizontal" id="negotiation-form" action="/pc/negotiation/find" th:action="@{/pc/negotiation/find}" method="post" accept-charset="UTF-8" th:object="${searchQuery}">
+				<ul class="nav nav-tabs" id="j-negotiation-tabs" role="tablist">
+					<li class="active" role="presentation"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">一覧</a></li>
+					<li role="presentation"><a href="#search" aria-controls="search" role="tab" data-toggle="tab">検索</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane fade in active" id="home" th:insert="/pc/negotiation/list_content.html"></div>
+					<div class="tab-pane fade" id="search" th:insert="/pc/negotiation/list_find_form.html"></div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+</body>
+</html>

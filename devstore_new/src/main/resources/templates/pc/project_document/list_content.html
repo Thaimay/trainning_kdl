@@ -1,0 +1,123 @@
+<div class="tab-pane fade in active" id="list" role="tabpanel">
+	<div class="row">
+		<div class="col-md-7">
+<!-- 			<form class="btn-sort" action="GET" id="j-sortbtn" accept-charset="UTF-8"> -->
+<!-- 				<div class="btns-sort-item"> -->
+<!-- 					<div class="radio"> -->
+<!-- 						<label><input type="radio" name="sort-category" -->
+<!-- 							checked="true" id="radioBuilding" value="BUILDING">é¤¨ -->
+<!-- 						</label> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 				<div class="btns-sort-item"> -->
+<!-- 					<div class="radio"> -->
+<!-- 						<label><input type="radio" name="sort-category"  -->
+<!-- 							id="radioStore" value="STORE">åº—èˆ— -->
+<!-- 						</label> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 				<div class="btns-sort-item"> -->
+<!-- 					<div class="checkbox"> -->
+<!-- 						<label> <input type="checkbox" id="chkOwner" -->
+<!-- 							th:checked="${findKeywordDTO!=null && findKeywordDTO.accountId!=null && findKeywordDTO.accountId>0}">æ‹…å½“ -->
+<!-- 						</label> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</form> -->
+			<div class="refine-by-text">
+			<form method="post" th:action="@{/pc/project_document/search}">
+				<input class="form-control" type="text"
+					placeholder="Enter key word search" name='nameSearch'>
+				<br/>	
+				<input type="submit" class="btn btn-primary" value="Search"/>
+			</form>
+			</div>
+		</div>
+		<div class="col-md-4 col-md-offset-1">
+			<div class="inline-list create-buttons">
+				<a class="btn btn-info pull-right" href="/pc/project_document/showCreate" th:href="@{/pc/project_document/showCreate}">Add</a>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="detail-table">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="table-wrapper">
+							<table class="table">
+								<colgroup span="5"></colgroup>
+								<colgroup span="3"></colgroup>
+								<colgroup span="2"></colgroup>
+								<colgroup span="1"></colgroup>
+								<colgroup span="7"></colgroup>
+								<colgroup span="3"></colgroup>
+								<colgroup span="4"></colgroup>
+								<colgroup span="5"></colgroup>
+								<colgroup span="1"></colgroup>
+								<thead>
+									<tr>
+										<th>Name</th>									
+										<th>Corporation Group</th>
+										<th>Project ID</th>
+										<th>File ID</th>
+										<th>Project_DCC</th>
+										<th>Meeting Point</th>
+										<th>Output Status</th>
+										<th>Created Datetime</th>
+										<th>Update Datetime</th>
+										<th>Created Account Code</th>
+										<th>Update Account Code</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="project : ${projectList}">
+										<td><a
+											th:href="@{/pc/project_document/detail/} + ${project.id}"
+											th:text="${project.name}"></a></td>
+										<td th:text="${project.corporationGroup}"></td>
+										<td th:text="${project.projectId}"></td>
+										<td th:text="${project.fileId}"></td>
+										<td th:text="${project.projectDocumentCoversheetClassification}"></td>
+										<td th:text="${project.meetingPoint}"></td>
+										<td th:text="${project.outputStatus}"></td>
+										<td th:text="${project.createdDatetimeString()}"></td>
+										<td th:text="${project.updateDatetimeString()}"></td>
+										<td th:text="${project.createdAccountCode}"></td>
+										<td th:text="${project.updateAccountCode}"></td>
+										<td>
+											<div class="inline-list create-buttons">
+												<a class="btn btn-danger" th:href="@{/pc/project_document/delete/}+${project.id}" 
+												href="/pc/project_document/delete/" 
+												onclick="return confirm('Are you sure you want to delete?');">Delete</a>
+											</div>
+										</td>
+										
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+<!-- 			<div class="row"> -->
+<!-- 				<div class="col-md-12"> -->
+<!-- 					<nav class="pagination-area is-centered" -->
+<!-- 						aria-label="Page navigation"> -->
+<!-- 						<ul id="paginationKeyword" class="pagination"> -->
+<!-- 						</ul> -->
+<!-- 						<input type="hidden" id="currentPageKeyword" -->
+<!-- 							th:value="${findKeywordDTO.numberOfPage}" /> <input type="hidden" -->
+<!-- 							id="pageCountKeyword" th:value="${pageCountKeyword}" /> -->
+<!-- 					</nav> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+		</div>
+	</div>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+		let accountId = /*[[${session.LOGIN_ACCOUNT.id}]]*/'';
+	/*]]>*/
+</script>

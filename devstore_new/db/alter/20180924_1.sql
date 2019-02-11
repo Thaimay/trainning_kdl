@@ -1,0 +1,8 @@
+INSERT INTO m_todo_batch_setting(id, name, value, remarks) VALUES
+(5, 'PROJECT_TASK_TERM_IN_ADVANCE', '5', '案件タスク'),
+(6, 'PROJECT_EXTERNAL_RELEASE_IN_ADVANCE', '5', '案件外部公開'),
+(7, 'PROJECT_OPINION_RECORD_IN_ADVANCE', '3', '案件見解'),
+(8, 'PROJECT_PREVENT_RETREAT', '-7', '案件退店阻止'),
+(9, 'PROJECT_START_DATETIME_EXPIRED', '-60', '案件開始日'),
+(10, 'PROJECT_OPINION_TARGET_PROJECT_CATEGORY_ID', '1, 2, 3, 4, 5, 6', ''),
+(11, 'PROJECT_CLOSE_CATEGORY_ID', '2', '');

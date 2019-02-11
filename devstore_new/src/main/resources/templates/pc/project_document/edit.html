@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>Edit Project Document</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script th:src="@{/js/building/building-create.js}"></script>
+<script th:src="@{/js/building/validation/create.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<form method="post" th:object="${project}" th:action="@{/pc/project_document/edit/} + ${project.id}">
+					<div class="content-detail negotiation">
+						<header class="content-detail-header">
+							<div class="row">
+								<div class="col-md-2 col-md-offset-10 ta-r">
+<!-- 									<button class="btn btn-primary" type="button" id="j-detail-create"> -->
+<!-- 										<i class="fa fa-pencil" aria-hidden="true"></i> Create -->
+<!-- 									</button> -->
+
+										<input class="btn btn-primary" type="submit" value="Save"/>
+									<br />
+									<div style="margin-top:5px"></div>
+									<a class="btn btn-default" th:href="@{/pc/project_document/}">Back to list</a>
+								</div>
+							</div>
+						</header>
+						<div class="content-detail-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="building-detail-body">
+										<div>
+											<!-- Nav tabs-->
+<!-- 											<ul class="nav nav-tabs basic-detail-tabs" role="tablist"> -->
+<!-- 												<li class="active" role="presentation"><a href="#basic" -->
+<!-- 													aria-controls="home" role="tab" data-toggle="tab">1</a></li> -->
+<!-- 												<li role="presentation"><a href="#keyman" -->
+<!-- 													aria-controls="profile" role="tab" data-toggle="tab">2</a></li> -->
+<!-- 												<li role="presentation"><a href="#activate" -->
+<!-- 													aria-controls="messages" role="tab" data-toggle="tab">3</a></li> -->
+<!-- 												<li role="presentation"><a href="#building-sales" -->
+<!-- 													aria-controls="settings" role="tab" data-toggle="tab">4</a></li> -->
+<!-- 												<li role="presentation"><a href="#shop-case"
+<!-- 													aria-controls="settings" role="tab" data-toggle="tab">店・案件</a></li> -->
+<!-- 												<li role="presentation"><a href="#competition" -->
+<!-- 													aria-controls="settings" role="tab" data-toggle="tab">コンペチ</a></li> -->
+<!-- 												<li role="presentation"><a href="#related-document" -->
+<!-- 													aria-controls="settings" role="tab" data-toggle="tab">5</a></li> -->
+<!-- 												<li role="presentation"><a href="#image" -->
+<!-- 													aria-controls="settings" role="tab" data-toggle="tab">5</a></li> -->
+<!-- 												<li role="presentation"><a href="#general-meeting" -->
+<!-- 													aria-controls="settings" role="tab" data-toggle="tab">6</a></li> -->
+<!-- 											</ul> -->
+											<!-- Tab panes-->
+											<div class="tab-content">
+												<div class="tab-pane fade in active" id="basic"
+													role="tabpanel">
+													<div class="tab-content-body">
+														<ul class="building-basic-list">
+															<li class="building-basic-list-item">
+																<div class="building-basic-info j-dropdown">
+																	<header class="building-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">EDIT PROJECT DOCUMENT</h3>
+																	</header>
+																	<div class="building-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>PROJECT ID</th>
+																				<td><input class="form-control" type="number"
+																					placeholder="Project ID" disabled="true" th:field="*{projectId}"></td>
+																			</tr>
+																			
+																			<tr>
+																				<th>FILE ID</th>
+																				<td><input class="form-control" type="number"
+																					placeholder="File ID" disabled="true" th:field="*{fileId}"></td>
+																			</tr>
+																			<tr>
+																				<th>NAME</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="Name" th:field="*{name}"></td>
+																			</tr>
+																			<tr>
+																				<th>PR CONVERSHEET</th>
+																				<td><input class="form-control" type="number"
+																					placeholder="Project Document Conversheet Classification" th:field="*{projectDocumentCoversheetClassification}" 
+																					></td>
+																			</tr>
+																			<tr>
+																				<th>MEETING POINT</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="Meeting Point" th:field="*{meetingPoint}" ></td>
+																			</tr>
+																			<tr>
+																				<th>OUTPUT STATUS</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="Output Status" th:field="*{outputStatus}" ></td>
+																			</tr>
+																			<tr>
+																				<th>CREATED DATETIME</th>
+																				<td class="j-open-date-start"><input
+																					class="form-control" id="form-open-date"
+																					type="text" placeholder="Created Datetime" disabled="true" th:value="${project.createdDatetimeString()}"></td>
+																			</tr>
+																			
+																			<tr>
+																				<th>CREATED ACCOUNT CODE</th>
+																				<td><input class="form-control" type="text"
+																					 placeholder="Created Account Code" disabled="true" th:value="${project.getCreatedAccountCode()}">
+																				</td>
+																			</tr>					
+																		</table>
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

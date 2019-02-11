@@ -1,0 +1,1 @@
+update m_store_develop_team set is_deleted = true where dept_name in ('計画調整_店舗開発部', 'BtoBｿﾘｭｰｼｮﾝ事業推進', '店舗開発部ｽﾀｯﾌ')

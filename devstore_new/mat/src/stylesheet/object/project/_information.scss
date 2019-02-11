@@ -1,0 +1,50 @@
+.information-header {}
+
+.information-meta, .information-footer, .panel-utility {
+  text-align: right;
+}
+
+.information-list {
+  margin-bottom: 0;
+}
+
+.information-list-item {
+  transition: 0.2s ease-out 0s;
+  &:hover {
+    background-color: $color-list-hover;
+    cursor: pointer;
+  }
+  .isRead {
+    pointer-event: none;
+    color: #666;
+  }
+  .isNice {
+    pointer-event: none;
+    color: #666;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.information-content {
+  margin-top: 10px;
+  line-height: 1.4;
+  font-size: 1.2em;
+}
+
+.information-good {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.account-name {
+	line-height: 1;
+	font-size: 0.8em;
+	color: #919191;
+}

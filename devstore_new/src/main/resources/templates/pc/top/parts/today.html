@@ -1,0 +1,25 @@
+<header class="panel-header task">
+	<div class="row">
+		<div class="col-md-12">
+			<h2 class="title">予定一覧</h2>
+		</div>
+	</div>
+</header>
+<div class="panel-body">
+	<div class="panel-body-inner">
+		<div class="" th:object="${top}">
+			<ul class="list-group">
+				<li class="list-group-item schedule-list-item" th:each="negotiation : *{NegotiationList}" th:object=${negotiation}>
+					<a th:href="@{/pc/negotiation/showUpdate/} + *{id}" class="btn btn-primary">商談報告</a>
+					<a class="schedule-info" th:href="@{/pc/negotiation/detail/} + *{id}">
+						<p class="title" th:text=*{title}><p>
+						<footer class="meeting-meta">
+							<time th:text="*{startTime} + '〜' + *{endTime}"></time>
+							<p th:text="*{place}"><p>
+						</footer>
+					</a>
+				</li>
+			<ul>
+		<div>
+	</div>
+</div>

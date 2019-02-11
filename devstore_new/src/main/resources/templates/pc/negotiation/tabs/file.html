@@ -1,0 +1,106 @@
+<div class="tab-content-body">
+  <div class="media-list">
+	  <div class="media-list-item" th:each="file : ${negotiation.fileUploadList}" th:switch="${file.type}">
+	    <div class="row" th:case="'IMAGE'">
+	      <div class="col-md-2">
+	        <div class="img">
+	            <a target="_blank" th:href="@{/pc/negotiation/} + ${file.path}">
+	           <img class="media-object img-rounded negotiation_detail_image_lazy"
+	             th:attr="data-src=@{/pc/negotiation/} + ${file.path}" alt="">
+	         </a>
+	        </div>
+	      </div>
+	      <div class="col-md-10">
+	        <h4 class="media-heading" th:text="${file.name}"></h4>
+	        <p class="comment" th:text="${file.comment}"></p>
+	        <div class="registered-data">
+	          <span class="name" th:text="${file.accountName}"></span><span
+	            class="file-size" th:text="${file.size}"></span><span
+	            class="created-date" th:text="${file.byTheTime + '時間前'}"></span>
+	        </div>
+	        <p class="update_datetime" th:text="${file.updateDatetimeValue}"></p>
+	      </div>
+	    </div>
+      
+        <div class="row" th:case="'DOCUMENT'">
+          <div class="col-md-2">
+            <div class="img">
+                <a target="_blank" th:href="@{/pc/negotiation/} + ${file.pathDocument}">
+	              <img class="media-object img-rounded negotiation_detail_image_lazy"
+	                th:attr="data-src=@{/pc/negotiation/} + ${file.pathDocument}" alt="">
+	            </a>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <h4 class="media-heading" th:text="${file.name}"></h4>
+            <p class="comment" th:text="${file.comment}"></p>
+            <div class="registered-data">
+              <span class="name" th:text="${file.accountName}"></span><span
+                class="file-size" th:text="${file.size}"></span><span
+                class="created-date" th:text="${file.byTheTime + '時間前'}"></span>
+            </div>
+            <p class="update_datetime" th:text="${file.updateDatetimeValue}"></p>
+            <div class="download j-download-item" th:path="@{/pc/negotiation/} + ${file.path}">
+				<i class="fa fa-download"></i>
+			</div>
+          </div>
+        </div>
+
+	    <div class="row" th:case="'VIDEO'">
+	      <div class="col-md-2">
+	        <div class="video">
+	           <video controls>
+	           	<source th:src="@{/pc/negotiation/} + ${file.path}" type="video/mp4">
+			   </video>
+	         </a>
+	        </div>
+	      </div>
+	      <div class="col-md-10">
+	        <h4 class="media-heading" th:text="${file.name}"></h4>
+	        <p class="comment" th:text="${file.comment}"></p>
+	        <div class="registered-data">
+	          <span class="name" th:text="${file.accountName}"></span><span
+	            class="file-size" th:text="${file.size}"></span><span
+	            class="created-date" th:text="${file.byTheTime + '時間前'}"></span>
+	        </div>
+	        <p class="update_datetime" th:text="${file.updateDatetimeValue}"></p>
+	        <div class="download j-download-item" th:path="@{/pc/negotiation/} + ${file.path}">
+				<i class="fa fa-download"></i>
+			</div>
+	      </div>
+	    </div>
+    </div>
+  </div>
+  <div class="media-list" th:if="${negotiation.fileUploadList.size() <= 0}">
+  	 <p>ファイルがありません</p>
+  </div>
+</div>
+<script>
+$(document).on('click', '.j-download-item', function() {
+	window.open($(this).attr('path'), '_system');
+});
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+	var target = $(e.target).attr("href") // activated tab
+	if(target == '#file'){
+		loadedElements = 0;
+		
+		var instance = $('.negotiation_detail_image_lazy').Lazy({
+			beforeLoad: function(element){
+				console.log('image "' + element.data('src') + '" is about to be loaded');
+			},
+			afterLoad: function(element) {
+				loadedElements++;
+				console.log('image "' + element.data('src') + '" was loaded successfully');
+			},
+			onError: function(element) {
+				loadedElements++;
+				console.log('image "' + element.data('src') + '" could not be loaded');
+			},
+			onFinishedAll: function() {
+				console.log('finished loading ' + loadedElements + ' elements');
+				console.log('lazy instance is about to be destroyed')
+			}
+	  });
+	}
+});
+</script>

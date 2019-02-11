@@ -1,0 +1,146 @@
+
+<div class="row">
+	<div class="col-md-12">
+		<form class="form-horizontal" id="building-form"
+			action="/pc/building/find" th:action="@{/pc/building/find}" method="post" accept-charset="UTF-8">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="building-form">
+						<div class="building-form-body">
+							<ul class="basic-list">
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label for="form-building-name">館名</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text" placeholder=""
+													name="buildingName"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.buildingName!=null && findKeywordDTO.buildingName!=''}? ${findKeywordDTO.buildingName}:''">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>法人名</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text"
+													id="j-form-corporation">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>館区分</label>
+											</div>
+											<div class="col-md-10 radio">
+												<label> <input class="" type="radio"
+													name="buildingType" value="1"
+													th:checked="${findKeywordDTO!=null && findKeywordDTO.buildingType!=null && findKeywordDTO.buildingType==1}? 'true':'false'">既存
+												</label> <label><input class="" type="radio"
+													name="buildingType" value="2"
+													th:checked="${findKeywordDTO!=null && findKeywordDTO.buildingType!=null && findKeywordDTO.buildingType==2}? 'true':'false'">新規
+												</label>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>販売チャンネル</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text"
+													id="j-form-sales-channel">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>SC分類</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text"
+													id="j-form-sales-channel-2">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>ブロック</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text" id="j-form-block">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>エリア</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text" id="j-form-area">
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<button class="btn btn-primary btn-lg btn-block" id="j-search">
+						<i class="fa fa-search"></i>検索する
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	let findKeywordDTO = /*[[${findKeywordDTO}]]*/'';
+	var corporationData = JSON.parse(findKeywordDTO.jsonCurrentCorporation);
+	var salesChannelData = JSON.parse(findKeywordDTO.jsonCurrentSalesChannel);
+	var salesChannel2Data = JSON
+			.parse(findKeywordDTO.jsonCurrentSalesChannel2);
+	var blockData = JSON.parse(findKeywordDTO.jsonCurrentBlock);
+	var areaData = JSON.parse(findKeywordDTO.jsonCurrentArea);
+
+	var iCorporationIds = findKeywordDTO.iCorporationIds;
+	var iSalesChannelIds = findKeywordDTO.iSalesChannelIds;
+	var salesChannelCd2s = findKeywordDTO.salesChannelCd2s;
+	var iBlockIds = findKeywordDTO.iBlockIds;
+	var iAreaIds = findKeywordDTO.iAreaIds;
+	var suggestCorporation = createSuggest('#j-form-corporation',
+			corporationData, iCorporationIds, false);
+	var suggestSalesChannel = createSuggest('#j-form-sales-channel',
+			salesChannelData, iSalesChannelIds, false);
+	var suggestSalesChannel2 = createSuggest('#j-form-sales-channel-2',
+			salesChannel2Data, salesChannelCd2s, false);
+	var suggestBlock = createSuggest('#j-form-block', blockData, iBlockIds,
+			false);
+	var suggestArea = createSuggest('#j-form-area', areaData, iAreaIds, false);
+	/*]]>*/
+</script>

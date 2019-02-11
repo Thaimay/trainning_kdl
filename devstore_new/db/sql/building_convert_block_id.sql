@@ -1,0 +1,6 @@
+UPDATE BUILDING
+SET i_block_id = IB.id
+FROM BUILDING BU LEFT OUTER JOIN I_BLOCK IB on BU.i_block_id = trim(LEADING '0' from IB.block_cd) 
+WHERE BUILDING.id = BU.id;
+
+ALTER TABLE BUILDING ADD FOREIGN KEY (i_block_id) REFERENCES i_block(id);

@@ -1,0 +1,23 @@
+.keyman-category {
+  text-align: right;
+  .label {
+    display: inline-block;
+    width: 100%;
+    padding: .4em 1em .5em;
+    font-size: 1.4rem;
+  }
+}
+
+.keyman-info-name {
+  font-size: 1.4em;
+}
+
+// 削除ボタン
+.keyman-edit-util {
+  margin-top: 0.5em;
+
+  i {
+    font-size: 1.6rem;
+    cursor: pointer;
+  }
+}

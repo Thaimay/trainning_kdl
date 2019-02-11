@@ -1,0 +1,1 @@
+ALTER TABLE project_switing_item_control ADD basic_negotiation_store_frontage boolean not null default true;

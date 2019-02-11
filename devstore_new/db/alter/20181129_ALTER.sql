@@ -1,0 +1,3 @@
+alter table project add is_changed_implementation_schedule_datetime boolean;
+alter table project_history add is_changed_implementation_schedule_datetime boolean;
+alter table project_plan add column number_of_year float;

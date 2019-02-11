@@ -1,0 +1,1006 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>館詳細履歴</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script th:src="@{/js/building/building-revision.js}"></script>
+<script th:src="@{/js/lib/angular/angular.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="content-detail building">
+					<header class="content-detail-header">
+						<div class="row">
+							<div class="col-md-6">
+								<h2 class="title">
+									<span class="building_cd" th:text="${building.getBuildingCd()}"></span>
+									<span class="name" th:text="${building.getName()}"></span>
+								</h2>
+								<div class="registered-data">
+									登録者:<span class="id"
+										th:text="${building.getCreatedAccountCode()}"></span> <span
+										class="name" th:text="${building.getCreatedAccountName()}"></span>
+									<time class="date"
+										th:text="${building.getCreatedDatetimeString()}"></time>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="col-md-12">
+									<form class="form-horizontal" id="building-revision"
+										th:action="@{'/pc/building/revision/' + ${buildingId}}"
+										method="post" accept-charset="UTF-8">
+										<select class="form-control" id="j-form-history"
+											name="idHistory">
+											<option value="0" selected>最新</option>
+											<option th:each="history : ${historyList}"
+												th:value="${history.id}" th:text="${history.name}"
+												th:selected="${history.id == building.id}? 'true':'false'">
+											</option>
+										</select>
+									</form>
+								</div>
+							</div>
+							<div class="col-md-2 ta-r">
+								<a class="btn btn-primary disabled" id="j-detail-edit"
+									th:href="@{/pc/building/showUpdate/} + ${buildingId}"> <i
+									class="fa fa-pencil" aria-hidden="true"></i>編集
+								</a>
+								<br />
+								<div style="margin-top:5px"></div>
+								<a class="btn btn-default" th:href="@{/pc/building/list}">戻る</a>
+							</div>
+						</div>
+					</header>
+					<div class="content-detail-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="building-detail-body">
+									<div>
+										<!-- Nav tabs-->
+										<ul class="nav nav-tabs basic-detail-tabs" role="tablist">
+											<li class="active" role="presentation"><a href="#basic"
+												aria-controls="home" role="tab" data-toggle="tab">館基本</a></li>
+											<li role="presentation"><a href="#keyman"
+												aria-controls="profile" role="tab" data-toggle="tab">キーマン</a></li>
+											<li role="presentation"><a href="#activate"
+												aria-controls="messages" role="tab" data-toggle="tab">活性化</a></li>
+											<li role="presentation"><a href="#building-sales"
+												aria-controls="settings" role="tab" data-toggle="tab">館売上</a></li>
+											<li role="presentation"><a href="#shop-case"
+												aria-controls="settings" role="tab" data-toggle="tab">店舗</a></li>
+											<li role="presentation"><a href="#negotiation"
+												aria-controls="settings" role="tab" data-toggle="tab">商談</a></li>
+											<li role="presentation"><a href="#competition"
+												aria-controls="settings" role="tab" data-toggle="tab">コンペチ</a></li>
+											<li role="presentation"><a href="#related-document"
+												aria-controls="settings" role="tab" data-toggle="tab">関連資料</a></li>
+											<li role="presentation"><a href="#image"
+												aria-controls="settings" role="tab" data-toggle="tab">画像</a></li>
+											<li role="presentation"><a href="#general-meeting"
+												aria-controls="settings" role="tab" data-toggle="tab">総会情報</a></li>
+										</ul>
+										<!-- Tab panes-->
+										<div class="tab-content">
+											<div class="tab-pane fade in active" id="basic"
+												role="tabpanel">
+												<div class="tab-content-body">
+													<ul class="building-basic-list">
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">館企業情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>企業G</th>
+																				<td
+																					th:text="${building.getiCorporationGroup() != null} ? ${building.getiCorporationGroup().getCorporationGpName()}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>法人</th>
+																				<td
+																					th:text="${building.getiCorporation() != null} ?  ${building.getiCorporation().getCorporationName()} : ''"></td>
+																			</tr>
+																			<tr>
+																				<th>館長</th>
+																				<td th:text="${building.getOwner()}"></td>
+																			</tr>
+																			<tr>
+																				<th>PM運営会社</th>
+																				<td><span
+																					th:each="pmCorporation : ${building.getPmCorporations()}">
+																						<div
+																							th:text="${pmCorporation.getCorporationName()}"></div>
+																				</span></td>
+																			</tr>
+																			<tr>
+																				<th>与信ランク</th>
+																				<td
+																					th:text="${building.iCorporation != null && building.iCorporation.mCreditRank != null} ? ${building.iCorporation.mCreditRank.creditRank} : ''"></td>
+																			</tr>
+																			<tr>
+																				<th>館区分</th>
+																				<td
+																					th:text="${building.getBuildingType()}=='1' ? '既存' : '新規'"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">館基本情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>OPEN</th>
+																				<td th:text="${building.getOpenDateString()}"></td>
+																			</tr>
+																			<tr>
+																				<th>CLOSE</th>
+																				<td th:text="${building.getCloseDateString()}"></td>
+																			</tr>
+																			<tr>
+																				<th>住所</th>
+																				<td th:text="${building.getAddress()}"></td>
+																			</tr>
+																			<tr>
+																				<th>HP</th>
+																				<td><a th:href="${building.getHomepageUrl()}"
+																					th:text="${building.getHomepageUrl()}"></a></td>
+																			</tr>
+																			<tr>
+																				<th>都道府県</th>
+																				<td
+																					th:text="${building.getiPrefectures() != null} ? ${building.getiPrefectures().getPrefecturesName()} : ''"></td>
+																			</tr>
+																			<tr>
+																				<th>JISCD</th>
+																				<td th:text="${building.getJiscd()}"></td>
+																			</tr>
+																			<tr>
+																				<th>グランドフロア</th>
+																				<td th:text="${building.getGroundFloor()}"></td>
+																			</tr>
+																			<tr>
+																				<th>集客コンテンツ</th>
+																				<td th:text="${building.getAttractingContent()}"></td>
+																			</tr>
+																			<tr>
+																				<th>核テナント</th>
+																				<td th:text="${building.getCoreTenant()}"></td>
+																			</tr>
+																			<tr>
+																				<th>サブ核テナント</th>
+																				<td th:text="${building.getSubCoreTenant()}"></td>
+																			</tr>
+																			<tr>
+																				<th>テナント数</th>
+																				<td th:text="${building.getTenantNumber()}"></td>
+																			</tr>
+																			<tr>
+																				<th>建物構造</th>
+																				<td th:text="${building.getStructure()}"></td>
+																			</tr>
+																			<tr>
+																				<th>駐車場台数</th>
+																				<td th:text="${building.getParkingNumber()}"></td>
+																			</tr>
+																			<tr>
+																				<th>営業時間</th>
+																				<td th:text="${building.getBusinessHours()}"></td>
+																			</tr>
+																			<tr>
+																				<th>テナント</th>
+																				<td><span
+																					th:each="buildingTenant : ${building.getBuildingTenants()}">
+																						<div
+																							th:text="${buildingTenant.getTenant().getName()}"></div>
+																				</span></td>
+																			</tr>
+																			<tr>
+																				<th>最寄り駅名</th>
+																				<td th:text="${building.getNearestStation()}"></td>
+																			</tr>
+																			<tr>
+																				<th>緯度経度</th>
+																				<td><span th:text="${building.getLongitude()}"></span>
+																					<span th:text="${building.getLatitude()}"></span></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">担当者</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>店舗開発</th>
+																				<td><span
+																					th:each="storeDeveloperName : ${building.storeDeveloperNames}">
+																						<div th:text="${storeDeveloperName}"></div>
+																				</span></td>
+																			</tr>
+																			<tr>
+																				<th>支店営業</th>
+																				<td><span
+																					th:each="branchsSalesName : ${building.branchsSalesNames}">
+																						<div th:text="${branchsSalesName}"></div>
+																				</span></td>
+																			</tr>
+																			<tr>
+																				<th>人事リーダー</th>
+																				<td><span
+																					th:each="humanResourceLeaderName : ${building.humanResourceLeaderNames}">
+																						<div th:text="${humanResourceLeaderName}"></div>
+																				</span></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">立地環境</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>販売チャンネル</th>
+																				<td
+																					th:text="${building.getiSalesChannel() != null} ? ${building.getiSalesChannel().getSalesChannelName()} : ''"></td>
+																			</tr>
+																			<tr>
+																				<th>SC分類</th>
+																				<td
+																					th:text="${building.getiSalesChannel2() != null} ? ${building.getiSalesChannel2().getSalesChannelName()} : ''"></td>
+																			</tr>
+																			<tr>
+																				<th>ブロック</th>
+																				<td th:text="${building.getiBlock().getBlockName()}"></td>
+																			</tr>
+																			<tr>
+																				<th>エリア</th>
+																				<td th:text="${building.getiArea().getAreaName()}"></td>
+																			</tr>
+																			<tr>
+																				<th>立地①</th>
+																				<td th:text="${building.getLocationFirst()}"></td>
+																			</tr>
+																			<tr>
+																				<th>立地②</th>
+																				<td th:text="${building.getLocationSecond()}"></td>
+																			</tr>
+																			<tr>
+																				<th>小商圏</th>
+																				<td th:text="${building.getSmallMarketArea()}"></td>
+																			</tr>
+																			<tr>
+																				<th>採用難易度</th>
+																				<td th:text="${building.getAdoptDifficulty()}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item"
+															th:if="${building.buildingTradeArea}!=null and ${building.getiSalesChannel()} != null">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">商圏情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>１km商圏人口</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.tradeAreaPopulation1Km!=null}? ${building?.buildingTradeArea?.tradeAreaPopulation1Km + '人'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>1km女性</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.female1Km}"></td>
+																			</tr>
+																			<tr>
+																				<th>1km昼間人口</th>
+																				<td
+																					th:text="${building.buildingTradeArea.daytimePopulation1Km!=null}? ${building.buildingTradeArea.daytimePopulation1Km + '人'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>1km夜間人口</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.nighttimePopulation1Km!=null}? ${building?.buildingTradeArea?.nighttimePopulation1Km + '人'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>1km小売販売額</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.retailSales1Km}"></td>
+																			</tr>
+																			<tr>
+																				<th>1km売場占有率</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.departmentOccupancy1Km!=null}? ${building?.buildingTradeArea?.departmentOccupancy1Km + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>1km人口パワー</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.populationPower1Km}"></td>
+																			</tr>
+																			<tr>
+																				<th>1km商圏パワー(百万円)</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.tradeAreaPower1Km!=null}? ${building?.buildingTradeArea?.tradeAreaPower1Km + '百万円'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>3km商圏人口</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.tradeAreaPopulation3Km!=null}? ${building?.buildingTradeArea?.tradeAreaPopulation3Km + '人'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>3km売場占有率</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.departmentOccupancy3Km!=null}? ${building?.buildingTradeArea?.departmentOccupancy3Km + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>3km人口パワー</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.populationPower3Km}"></td>
+																			</tr>
+																			<tr>
+																				<th>3km商圏パワー(百万円)</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.tradeAreaPower3Km!=null}? ${building?.buildingTradeArea?.tradeAreaPower3Km + '百万円'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>5km商圏人口</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.tradeAreaPopulation5Km!=null}? ${building?.buildingTradeArea?.tradeAreaPopulation5Km + '人'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>5km売場占有率</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.departmentOccupancy5Km!=null}? ${building?.buildingTradeArea?.departmentOccupancy5Km + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>5km人口パワー</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.populationPower5Km}"></td>
+																			</tr>
+																			<tr>
+																				<th>5km商圏パワー(百万円)</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.tradeAreaPower5Km!=null}? ${building?.buildingTradeArea?.tradeAreaPower5Km + '百万円'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>10km商圏人口</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.tradeAreaPopulation10Km!=null}? ${building?.buildingTradeArea?.tradeAreaPopulation10Km + '人'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>10km売場占有率</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.departmentOccupancy10Km!=null}? ${building?.buildingTradeArea?.departmentOccupancy10Km + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>10km人口パワー</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.populationPower10Km}"></td>
+																			</tr>
+																			<tr>
+																				<th>10km商圏パワー(百万円)</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.tradeAreaPower10Km!=null}? ${building?.buildingTradeArea?.tradeAreaPower10Km + '百万円'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>5分</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.drivePopulationWithin5Minutes}"></td>
+																			</tr>
+																			<tr>
+																				<th>15分</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.drivePopulationWithin15Minutes}"></td>
+																			</tr>
+																			<tr>
+																				<th>20分</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.drivePopulationWithin20Minutes}"></td>
+																			</tr>
+																			<tr>
+																				<th>30分</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.drivePopulationWithin30Minutes}"></td>
+																			</tr>
+																			<tr>
+																				<th>年間1人当所得</th>
+																				<td
+																					th:text="${building?.buildingTradeArea?.incomePerPeople}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">備考</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>備考</th>
+																				<td th:text="${building.getNote()}"></td>
+																			</tr>
+																			<tr th:if="${building.isBuildingGroup}">
+																				<th>関連館情報</th>
+																				<td><p
+																						th:each="children : ${building.buildingChildrens}"
+																						th:text="${children.name}"></p></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">更新</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>更新アカウント</th>
+																				<td th:text="${building.updateAccountName}"></td>
+																			</tr>
+																			<tr>
+																				<th>更新日時</th>
+																				<td
+																					th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																					th:text="${building.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="keyman" role="tabpanel">
+												<div class="tab-content-body">
+													<ul class="basic-list">
+														<li class="basic-list-item"
+															th:each="buildingKeyman : ${building.getBuildingKeymans()}">
+															<div class="keyman-info">
+																<header class="keyman-info-header">
+																	<div class="row">
+																		<div class="col-md-10">
+																			<div class="inline-list">
+																				<div class="stars">
+																					<span
+																						th:class="${buildingKeyman.priority != '' && buildingKeyman.priority >= '1'}? 'star fullStar':'star'"
+																						title="1"></span> <span
+																						th:class="${buildingKeyman.priority != '' && buildingKeyman.priority >= '2'}? 'star fullStar':'star'"
+																						title="2"></span> <span
+																						th:class="${buildingKeyman.priority != '' && buildingKeyman.priority >= '3'}? 'star fullStar':'star'"
+																						title="3"></span>
+																				</div>
+																				<p class="keyman-info-name"
+																					th:text="${buildingKeyman.keyman.businessCard != null} ? ${buildingKeyman.keyman.businessCard.name} : ''"></p>
+																			</div>
+																		</div>
+																		<div class="col-md-2"
+																			th:switch="${buildingKeyman.role}">
+																			<span class="label label-primary"
+																				th:case="'HQ Leasing'">本部リーシング</span> <span
+																				class="label label-primary"
+																				th:case="'Building Leasing'">館リーシング</span> <span
+																				class="label label-primary"
+																				th:case="'Building Promotion'">館販促</span> <span
+																				class="label label-primary"
+																				th:case="'Interior Management'">内装管理</span>
+																		</div>
+																	</div>
+																</header>
+																<div class="keyman-info-body">
+																	<p
+																		th:text="${buildingKeyman.keyman.businessCard != null} ? '役職： ' + ${buildingKeyman.keyman.businessCard.departmentName} : '役職：'"></p>
+																	<p
+																		th:text="${buildingKeyman.keyman.businessCard != null} ? '部署： ' + ${buildingKeyman.keyman.businessCard.positionName} : '部署： '"></p>
+																	<p th:text="'メモ： ' + ${buildingKeyman.getNote()}"></p>
+																	<p
+																		th:text="${buildingKeyman.keyman.getiCorporation() != null} ? '法人： ' + ${buildingKeyman.getKeyman().getiCorporation().getCorporationName()} : '法人： '"></p>
+																	<p
+																		th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																		th:text="'更新日時： ' + ${buildingKeyman.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></p>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="activate" role="tabpanel">
+												<div class="tab-content-body">
+													<div class="basic-list">
+														<div class="basic-list-item"
+															th:each="activation : ${building.getActivations()}">
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="inline-list">
+																		<time class="time"
+																			th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																			th:text="${activation.expectedDay.format(formatter.ofPattern('yyyy/MM/dd'))}"></time>
+																		<p th:text="${activation.floor}"></p>
+																	</div>
+																	<p th:text="${activation.content}"></p>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="basic-list">
+														<div class="basic-list-item"
+															th:each="importantInformations : ${building.getImportantInformations()}">
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="inline-list">
+																		<time class="time"
+																			th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																			th:text="${importantInformations.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></time>
+																		<p
+																			th:text="${importantInformations.getUpdateAccountCode()}"></p>
+																	</div>
+																	<p th:text="${importantInformations.getContent()}"></p>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="building-sales"
+												role="tabpanel">
+												<div class="row tab-content-body">
+													<div class="col-md-10 radio">
+														<label class="col-form-label col-md-3"
+															th:each="buildingsalestype, iter : ${buildingSalesTypes}">
+															<input type="radio" name="sales-type"
+															th:value="${buildingsalestype.id}"
+															th:checked="${iter.index == 0}? 'true' : 'false'">[[${buildingsalestype.value}]]
+														</label>
+													</div>
+												</div>
+												<div class="tab-content-body">
+													<ul class="media-list" id="buildingSales">
+														<li class="media-list-item">
+															<table style="width: 100%">
+																<tbody>
+																	<tr>
+																		<th></th>
+																		<th class="ta-r"
+																			style="width: 150px; min-width: 150px; max-with: 150px">売上(百万)</th>
+																		<th class="ta-r"
+																			style="width: 150px; min-width: 150px; max-with: 150px">面積(㎡)</th>
+																		<th class="ta-r"
+																			style="width: 150px; min-width: 150px; max-with: 150px">月坪(千円)
+																		</th>
+																		<th
+																			style="width: 100px; min-width: 100px; max-with: 100px">
+																		</th>
+																	</tr>
+																</tbody>
+															</table>
+														</li>
+														<li class="media-list-item hide"></li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="shop-case" role="tabpanel">
+												<div class="tab-content-body">
+													<div class="media-list">
+														<div class="media-list-item"
+															th:each="shop : ${building?.iShopSalesLatestOneYears}" th:if="${shop?.shopCd != null && shop?.shopCd != ''}">
+															<div class="row">
+																<div class="col-md-offset-1 col-md-10 table-responsive">
+																	<table class="table table-bordered">
+																		<tbody>
+																			<tr>
+																				<th class="warning" colspan="2">店舗</th>
+																				<td class="item-date-string" th:text="${shop?.shopName}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" colspan="2">出店日</th>
+																				<td class="item-date-string" th:text="${shop?.openDate}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" colspan="2">退店日</th>
+																				<td class="item-date-string" th:text="${shop?.closeDate}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" colspan="2">改装日</th>
+																				<td class="item-date-string" th:text="${shop?.remodelingDate}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" colspan="2">坪数</th>
+																				<td class="item-number" th:text="${shop?.tsuboNum}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" colspan="2">フロア</th>
+																				<td class="item-number" th:text="${shop?.floor}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" colspan="2">定借満了日</th>
+																				<td></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" rowspan="5" style="width: 25%">売上高</th>
+																				<th class="warning" style="width: 25%">実績</th>
+																				<td class="item-number" style="width: 50%"
+																					th:text="${#numbers.formatDecimal(shop?.salesAchievement, 1, 'COMMA', 0, 'DEFAULT')}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">実績構成比</th>
+																				<td class="item-number"
+																					th:text="${shop?.salesAchievementComposition!=null}? ${shop?.salesAchievementComposition + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">前年差構成比</th>
+																				<td class="item-number"
+																					th:text="${shop?.salesAchievementLastYearDifferenceComposition!=null}? ${shop?.salesAchievementLastYearDifferenceComposition + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">前年比</th>
+																				<td class="item-number"
+																					th:text="${shop?.salesAchievementYearToYear!=null}? ${shop?.salesAchievementYearToYear + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">前年差</th>
+																				<td class="item-number"
+																					th:text="${#numbers.formatDecimal(shop?.salesAchievementLastYearDifference, 1, 'COMMA', 0, 'DEFAULT')}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" rowspan="5">営業利益</th>
+																				<th class="warning">実績</th>
+																				<td class="item-number"
+																					th:text="${#numbers.formatDecimal(shop?.operatingProfitAchievement, 1, 'COMMA', 0, 'DEFAULT')}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">実績構成比</th>
+																				<td class="item-number"
+																					th:text="${shop?.operatingProfitAchievementComposition!=null}? ${shop?.operatingProfitAchievementComposition + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">前年差構成比</th>
+																				<td class="item-number"
+																					th:text="${shop?.operatingProfitLastYearDifferenceComposition!=null}? ${shop?.operatingProfitLastYearDifferenceComposition + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">前年比</th>
+																				<td class="item-number" th:text="${shop?.operatingProfitYearToYear != null}? ${shop?.operatingProfitYearToYear + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">前年差</th>
+																				<td class="item-number"
+																					th:text="${#numbers.formatDecimal(shop?.operatingProfitLastYearDifference, 1, 'COMMA', 0, 'DEFAULT')}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" rowspan="3" style="width: 25%">月坪売上</th>
+																				<th class="warning" style="width: 25%">実績</th>
+																				<td class="item-number" th:text="${#numbers.formatDecimal(shop?.monthAreaSalesAchievement * 1000, 1, 'COMMA', 0, 'DEFAULT')}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">前年比</th>
+																				<td class="item-number"
+																					th:text="${shop?.monthAreaSalesYearToYear!=null}? ${shop?.monthAreaSalesYearToYear + '%'}:''"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">前年差</th>
+																				<td class="item-number"
+																					th:text="${shop?.monthAreaSalesLastYearDifference}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning" rowspan="2">館期待値</th>
+																				<th class="warning">期待月坪売上</th>
+																				<td class="item-number" th:text="${shop?.iShop == null || shop?.iShop?.shop == null || shop?.iShop?.shop?.buildingExpectedValue == 0 || shop?.iShop?.shop?.buildingExpectedValue == null}?'－':${#numbers.formatDecimal(shop.iShop.shop.buildingExpectedValue, 1, 'COMMA', 0, 'DEFAULT')}"></td>
+																			</tr>
+																			<tr>
+																				<th class="warning">達成率</th>
+																				<td class="item-number" th:text="${shop?.achievementRate}"></td>
+																			</tr>
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="negotiation" role="tabpanel">
+												<div class="tab-content-body">
+													<div class="row">
+														<div class="col-md-12">
+															<div class="table-wrapper">
+																<table class="table">
+																	<thead>
+																		<tr>
+																			<th>件名</th>
+																			<th>商談区分</th>
+																			<th>予定日</th>
+																			<th>予定時間</th>
+																			<th>実施日</th>
+																			<th>実施時間</th>
+																			<th>中止区分</th>
+																			<th>後で読む</th>
+																			<th>面談先法人</th>
+																			<th>訪問者</th>
+																			<th>面談者</th>
+																			<th>重要度</th>
+																			<th>会議場所</th>
+																			<th>面談内容</th>
+																			<th>ネクストアクション</th>
+																			<th>開封率</th>
+																			<th>通知先</th>
+																		</tr>
+																	</thead>
+
+																	<tbody>
+																		<tr
+																			th:each="negotiation : ${building.relatedNegotiationHistoryViewModelList}"
+																			th:object="${negotiation}">
+																			<td th:text="*{title}"></td>
+																			<td th:text="*{divisionValue()}"></td>
+																			<td th:text="*{getScheduleDate()}"></td>
+																			<td th:text="*{getScheduleTime()}"></td>
+																			<td th:text="*{getImplementationDate()}"></td>
+																			<td th:text="*{getImplementationTime()}"></td>
+																			<td th:text="*{getStopState()}"></td>
+																			<td th:text="*{IsReadLater()}"></td>
+																			<td><span
+																				th:each="corporation : *{getNegotiationInterviewCorporations()}"
+																				th:text="${corporation.name}"></span>
+																			</td>
+																			<td class="table-pre-area"><span
+																				th:each="InterviewAccount : *{interviewAccounts}"
+																				th:text="${InterviewAccount.getAccountName()}"></span>
+																			<td><span
+																				th:each="interviewBusinessCard : *{interviewBussinessCards}"
+																				th:text="${interviewBusinessCard.getBusinessCardName()}"></span></td>
+																			<td th:text="*{priority}"></td>
+																			<td th:text="*{place}"></td>
+																			<td class="table-pre-area"
+																				th:text="*{getTrimContent()}">
+																			</td>
+																			<td class="table-pre-area"
+																				th:text="*{getTrimNextActionContent()}"></td>
+																			<td th:text="*{openRates()}"></td>
+																			<td th:text="*{getNotification()}"></td>
+																		</tr>
+																	</tbody>
+
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="competition" role="tabpanel">
+												<div class="tab-content-body table-responsive">
+													<table class="table table-bordered" th:if="${building.iCompetitionSales != null && building.iCompetitionSales.size() > 0}">
+														<tbody>
+															<tr>
+																<th style="width: 100px;"></th>
+																<th style="min-width: 150px;" class="info text-center"
+																	th:each="competition : ${building.getiCompetitionSales()}"
+																	th:text="${competition.getCompetitionShopName()}"></th>
+															</tr>
+															<tr>
+																<th class="warning text-center">坪数</th>
+																<th class="warning text-center"
+																	th:each="competition : ${building.getiCompetitionSales()}"
+																	th:text="${competition.getTsuboNum()}"></th>
+															</tr>
+															<tr>
+																<th class="warning text-center"
+																	th:with="util=${T(org.apache.commons.lang3.time.DateUtils)}"
+																	th:text="${#dates.format(util.addMonths(#dates.createNow(),-6), 'yyyyMM')}"></th>
+																<td class="text-right"
+																	th:each="competition : ${building.getiCompetitionSales()}"
+																	th:text="${competition.getN5Num()}!=null? ${competition.getN5Num()} + '%':'-'"></td>
+															</tr>
+															<tr>
+																<th class="warning text-center"
+																	th:with="util=${T(org.apache.commons.lang3.time.DateUtils)}"
+																	th:text="${#dates.format(util.addMonths(#dates.createNow(),-5), 'yyyyMM')}"></th>
+																<td class="text-right"
+																	th:each="competition : ${building.getiCompetitionSales()}"
+																	th:text="${competition.getN4Num()}!=null? ${competition.getN4Num()} + '%':'-'"></td>
+															</tr>
+															<tr>
+																<th class="warning text-center"
+																	th:with="util=${T(org.apache.commons.lang3.time.DateUtils)}"
+																	th:text="${#dates.format(util.addMonths(#dates.createNow(),-4), 'yyyyMM')}"></th>
+																<td class="text-right"
+																	th:each="competition : ${building.getiCompetitionSales()}"
+																	th:text="${competition.getN3Num()}!=null? ${competition.getN3Num()} + '%':'-'"></td>
+															</tr>
+															<tr>
+																<th class="warning text-center"
+																	th:with="util=${T(org.apache.commons.lang3.time.DateUtils)}"
+																	th:text="${#dates.format(util.addMonths(#dates.createNow(),-3), 'yyyyMM')}"></th>
+																<td class="text-right"
+																	th:each="competition : ${building.getiCompetitionSales()}"
+																	th:text="${competition.getN2Num()}!=null? ${competition.getN2Num()} + '%':'-'"></td>
+															</tr>
+															<tr>
+																<th class="warning text-center"
+																	th:with="util=${T(org.apache.commons.lang3.time.DateUtils)}"
+																	th:text="${#dates.format(util.addMonths(#dates.createNow(),-2), 'yyyyMM')}"></th>
+																<td class="text-right"
+																	th:each="competition : ${building.getiCompetitionSales()}"
+																	th:text="${competition.getN1Num()}!=null? ${competition.getN1Num()} + '%':'-'"></td>
+															</tr>
+															<tr>
+																<th class="warning text-center"
+																	th:with="util=${T(org.apache.commons.lang3.time.DateUtils)}"
+																	th:text="${#dates.format(util.addMonths(#dates.createNow(),-1), 'yyyyMM')}"></th>
+																<td class="text-right"
+																	th:each="competition : ${building.getiCompetitionSales()}"
+																	th:text="${competition.getnNum()}!=null? ${competition.getnNum()} + '%':'-'"></td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="related-document"
+												role="tabpanel">
+												<div class="tab-content-body">
+													<div class="media-list">
+														<div class="media-list-item"
+															th:each="file : ${building.getBuildingFiles()}">
+															<div class="row">
+																<div class="col-md-12">
+																	<h4 class="media-heading" th:text="${file.displayName}"></h4>
+																	<p class="comment" th:text="${file.comment}"></p>
+																	<div class="registered-data">
+																		<span class="name"
+																			th:text="${file.getCreatedAccountName()}"></span> <span
+																			class="file-size"
+																			th:text="${#numbers.formatDecimal(file.size/1024, 0, 0)} + 'KB'"></span>
+																		<span class="created-date"
+																			th:text="${file.getDiffirentFromNow()}"></span>
+																	</div>
+																	<p th:text="${file.division}=='BUILDING'? '館':'DB進捗'"></p>
+																	<div class="download j-download-item" th:path="${file.path}">
+																		<i class="fa fa-download"></i>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="image" role="tabpanel">
+												<div class="tab-content-body">
+													<div class="masonry-grid">
+														<div class="grid-sizer"></div>
+														<div class="masonry-item thumbnail"
+															th:each="image : ${building.getBuildingImages()}">
+															<div class="img-view">
+																<a th:if="${image.path} != null" target="_blank"
+																	th:href="@{/pc/building/} + ${image.path}"> <img
+																	class="media-object img-rounded"
+																	th:src="@{/pc/building/} + ${image.path}" alt="">
+																</a> <a th:if="${image.path} == null" target="_blank"
+																	th:href="@{/pc/building/} + 'img/no_img.jpg'"> <img
+																	class="media-object img-rounded"
+																	th:src="@{/pc/building/} + 'img/no_img.jpg'"
+																	alt="no_img">
+																</a>
+															</div>
+															<div class="img-content">
+																<h4 class="media-heading" th:text="${image.displayName}"></h4>
+																<p class="comment" th:text="${image.comment}"></p>
+																<div class="registered-data">
+																	<span class="name"
+																		th:text="${image.getCreatedAccountName()}"></span> <span
+																		class="file-size"
+																		th:text="${#numbers.formatDecimal(image.size/1024, 0, 0)} + 'KB'"></span>
+																	<span class="created-date"
+																		th:text="${image.getDiffirentFromNow()}"></span>
+																</div>
+																<p th:text="${image.division}=='BUILDING'? '館':'DB進捗'"></p>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="general-meeting"
+												role="tabpanel">
+												<div class="tab-content-body">
+													<div class="basic-list">
+														<div class="basic-list-item"
+															th:each="buildingMeetingHistory : ${building.buildingMeetingHistorys}">
+															<div class="row">
+																<div class="col-md-12">
+																	<h4 th:text="${buildingMeetingHistory.name}"></h4>
+																	<p>
+																		実施日:<span
+																			th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																			th:text="${buildingMeetingHistory.date.format(formatter.ofPattern('yyyy/MM/dd'))}"></span>
+																	</p>
+																	<div class="registered-data">
+																		<span class="name">出席者:<span
+																			th:text="${buildingMeetingHistory.attendee}"></span></span>
+																	</div>
+																	<div class="registered-data">
+																		<span class="name">登録者:<span
+																			th:text="${buildingMeetingHistory.createdAccountName}"></span></span>
+																	</div>
+
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			let building = /*[[${building}]]*/'';
+			var buildingSaless = building.buildingSaless;
+			textBuildingSale = buildingSales(buildingSaless, '');
+			$('#buildingSales').append(textBuildingSale);
+
+			var childrenBuildings = /*[[${building.getBuildingChildrens()}]]*/'';
+			$.each(childrenBuildings,
+					function(index, children) {
+						buildingSaless = children.buildingSaless;
+						textBuildingSale = buildingSales(buildingSaless,
+								children.name);
+						$('#buildingSales').append(textBuildingSale);
+					});
+			/*]]>*/
+		</script>
+	</div>
+</body>
+</html>

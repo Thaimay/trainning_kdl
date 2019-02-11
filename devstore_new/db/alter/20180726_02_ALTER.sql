@@ -1,0 +1,1 @@
+alter table i_account add data_user text;

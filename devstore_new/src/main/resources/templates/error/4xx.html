@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+	<title>Error</title>
+	<meta name="keywords" content="content1" />
+	<meta name="description" content="content1" />
+  </head>
+  <body>
+    <div layout:fragment="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                  <div class="jumbotron">
+                    <header class="error-infor-header">
+                      <h2 class="text-center" th:text="${status} + ': ' + ${error}">エラーが発生しました</h2>
+                    </header>
+                    <div class="error-infor-body">
+                      <p class="lead text-center">処理の途中でなんらかのエラーが発生しました。</p>
+                    </div>
+                    <footer class="error-infor-footer" style="margin-top: 3em;">
+                      <div class="row">
+                        <div class="col-md-4 col-md-offset-4">
+                          <p class="text-center">
+                          	<a class="btn btn-default btn-lg btn-block" href="#" th:href="@{/pc/top/}">トップページへ戻る</a>
+                          </p>
+                        </div>
+                      </div>
+                    </footer>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+	    </div>
+ 	  </div>
+  </body>
+</html>

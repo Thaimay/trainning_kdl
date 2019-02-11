@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_SHOP_SALES_TREND(building_cd,building_name,shop_id,shop_name,tsubo_num,sales,sales_planning_ratio,sales_year_to_year,operating_income,operating_profit_planning_ratio,operating_profit_year_to_year,month_tsubo_sales,month_tsubo_sales_planning_ratio,month_tsubo_sales_year_to_year,appropriating_year_month,disp_order)FROM 'db/csv/I_SHOP_SALES_TREND.csv' WITH CSV;

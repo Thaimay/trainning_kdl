@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <link rel="stylesheet" href="./css/my.css">
+  <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+</head>
+<body>
+  <ons-page>
+    <ons-toolbar>
+      <div class="left" style="margin-left: 10px">戻る</div>
+      <div class="center" style="text-align: center">商談予定</div>
+    </ons-toolbar>
+
+      <ons-list>
+        <ons-list-item>
+          <ons-segment style="width: 280px">
+            <button>商談内容</button>
+            <button>館</button>
+            <button>商談履歴</button>
+            <button>ファイル</button>
+            <button>コメント</button>
+          </ons-segment>
+        <ons-list-item>
+      </ons-list>
+
+      <ons-list>
+        <ons-list-header>館</ons-list-header>
+        <ons-list-item modifier="chevron tappable">アピタ長津田</ons-list-item>
+        <ons-list-item modifier="chevron tappable">アピタ新潟西</ons-list-item>
+      </ons-list>
+    </ons-page>
+
+  <ons-tabbar>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="ion-home"></ons-icon>
+    </ons-tab>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="ion-calendar"></ons-icon>
+    </ons-tab>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="address-card"></ons-icon>
+    </ons-tab>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="users"></ons-icon>
+    </ons-tab>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="window-maximize"></ons-icon>
+    </ons-tab>
+</ons-tabbar>
+</body>
+</html>
