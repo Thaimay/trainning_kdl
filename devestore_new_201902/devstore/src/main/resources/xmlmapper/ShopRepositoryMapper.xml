@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.world.storedevelopment.model.mapper.ShopRepositoryMapper">
+	<resultMap id="listShop" type="IShop">
+	    <id property="id" column="id"/>
+	    <result property="shopId" column="shop_id"/>
+		<result property="shopCd" column="shop_cd"/>
+		<result property="shopNameZenkaku" column="shop_name_zenkaku"/>
+		<result property="iShopCompanyId" column="i_shop_company_id"/>
+		<result property="contractTsubo" column="contract_tsubo"/>
+		<result property="wholesaleAreaId" column="wholesale_area_id"/>
+		<result property="iIncomeUnitId" column="i_income_unit_id"/>
+		<result property="placeId" column="place_id"/>
+		<result property="openDate" column="open_date"/>
+		<result property="closeDate" column="close_date"/>
+    </resultMap>
+    <resultMap id="listShopForPC" type="IShop">
+	    <id property="id" column="id"/>
+	    <result property="shopId" column="shop_id"/>
+		<result property="shopCd" column="shop_cd"/>
+		<result property="shopNameZenkaku" column="shop_name_zenkaku"/>
+		<result property="iShopCompanyId" column="i_shop_company_id"/>
+		<result property="contractTsubo" column="contract_tsubo"/>
+		<result property="wholesaleAreaId" column="wholesale_area_id"/>
+		<result property="iIncomeUnitId" column="i_income_unit_id"/>
+		<result property="placeId" column="place_id"/>
+		<result property="openDate" column="open_date"/>
+		<result property="closeDate" column="close_date"/>
+    </resultMap>
+    <resultMap id="countListShopForPC" type="Integer">
+		<result property="value" column="count"/>
+    </resultMap>
+    <resultMap id="detailShop" type="IShop">
+		<id property="id" column="id"/>
+	    <result property="shopId" column="shop_id"/>
+		<result property="shopCd" column="shop_cd"/>
+		<result property="shopNameZenkaku" column="shop_name_zenkaku"/>
+		<result property="iShopCompanyId" column="i_shop_company_id"/>
+		<result property="contractTsubo" column="contract_tsubo"/>
+		<result property="wholesaleAreaId" column="wholesale_area_id"/>
+		<result property="iIncomeUnitId" column="i_income_unit_id"/>
+		<result property="placeId" column="place_id"/>
+		<result property="openDate" column="open_date"/>
+		<result property="closeDate" column="close_date"/>
+	</resultMap>
+    <resultMap id="detailShopHistory" type="ShopHistory">
+		<id property="id" column="id"/>
+		<result property="shopId" column="shop_id"/>
+		<result property="iShopId" column="i_shop_id"/>
+		<result property="section" column="section"/>
+		<result property="frontage" column="frontage"/>
+		<result property="iSalesAgencyTargetId" column="i_sales_agency_target_id"/>
+		<result property="participatingStoreCorporationId" column="participating_store_corporation_id"/>
+		<result property="buildingExpectedValue" column="building_expected_value"/>
+		<result property="remarks" column="remarks"/>
+		<result property="imagePath" column="image_path"/>
+		<result property="updateDatetime" column="update_datetime"/>
+		<result property="updateAccountCode" column="update_account_code"/>
+	</resultMap>
+    <select id="findShop" resultMap="listShop">
+        SELECT
+			ish.id,
+			ish.shop_id,
+			ish.shop_cd,
+			ish.shop_name_zenkaku,
+			ish.i_shop_company_id,
+			ish.contract_tsubo,
+			ish.wholesale_area_id,
+			ish.i_income_unit_id,
+			ish.place_id,
+			ish.open_date,
+			ish.close_date
+		FROM i_shop ish
+		LEFT JOIN shop shop on shop.i_shop_id = ish.id
+		WHERE ish.is_deleted = false
+		AND ( now() > ish.open_date OR ish.open_date is null )
+		<if test="shopIds != null and shopIds.size() > 0">
+			AND ish.id IN 
+				<foreach item = "shopId" index = "index" collection = "shopIds" open = "(" separator = "," close = ")">
+					#{shopId}
+				</foreach>
+		</if>
+		<if test="iShopCompanyIds != null and iShopCompanyIds.size() > 0">
+			AND ish.i_shop_company_id IN
+				<foreach item = "iShopCompanyId" index = "index" collection = "iShopCompanyIds" open = "(" separator = "," close = ")">
+					#{iShopCompanyId}
+				</foreach>
+		</if>
+		<if test="iAreaIds != null and iAreaIds.size() > 0">
+			AND ish.place_id IN (SELECT ip.place_id 
+						FROM i_place ip
+						WHERE ip.is_deleted = false
+						AND ip.origin_building_id IN (SELECT bd.origin_building_id
+														FROM building bd
+														WHERE bd.is_deleted = false
+														AND bd.i_area_id IN
+														<foreach item = "iAreaId" index = "index" collection = "iAreaIds" open = "(" separator = "," close = ")">
+															#{iAreaId}
+														</foreach>
+														))
+		</if>
+		<if test="keyWord != null and keyWord !=''">			
+			AND	(
+					ish.shop_name_zenkaku like '%'||#{keyWord}||'%'
+					OR ish.shop_name_zenkaku like '%'||#{keyWordHankaku}||'%'
+					OR ish.shop_name_zenkaku like '%'||#{keyWordZenkaku}||'%'
+					OR ish.place_id IN (SELECT ip.place_id 
+						FROM i_place ip
+						WHERE ip.is_deleted = false
+						AND ip.origin_building_id IN (SELECT bd.origin_building_id
+														FROM building bd
+														WHERE bd.is_deleted = false
+														AND (bd.name like '%'||#{keyWord}||'%'
+															OR bd.name like '%'||#{keyWordHankaku}||'%'
+															OR bd.name like '%'||#{keyWordZenkaku}||'%')))
+					OR ish.i_shop_company_id IN (SELECT isc.id 
+						FROM i_shop_company isc
+						WHERE isc.is_deleted = false
+						AND (isc.company_name like '%'||#{keyWord}||'%' 
+							OR isc.company_name like '%'||#{keyWordHankaku}||'%'
+							OR isc.company_name like '%'||#{keyWordZenkaku}||'%' ))
+					OR ish.wholesale_area_id IN (SELECT ia.id 
+						FROM i_area ia
+						WHERE ia.is_deleted = false
+						AND (ia.area_name like '%'||#{keyWord}||'%'
+							OR ia.area_name like '%'||#{keyWordHankaku}||'%'
+							OR ia.area_name like '%'||#{keyWordZenkaku}||'%'))
+					OR ish.i_income_unit_id IN (SELECT ii.id 
+						FROM i_income_unit ii
+						WHERE ii.is_deleted = false
+						AND (ii.income_unit_name like '%'||#{keyWord}||'%'
+							OR ii.income_unit_name like '%'||#{keyWordHankaku}||'%'
+							OR ii.income_unit_name like '%'||#{keyWordZenkaku}||'%'))
+				)
+		</if>
+		<if test="accountId != null and accountId > 0">
+			AND ish.place_id in (
+									SELECT ipl.place_id
+									FROM i_place ipl
+									WHERE ipl.is_deleted = false
+									AND ipl.origin_building_id in 
+									(
+										SELECT b.origin_building_id
+											FROM building b
+											WHERE b.is_deleted = false
+											AND b.building_cd in
+											(
+												SELECT bpd.building_cd
+												FROM building_personal_develop bpd
+												WHERE bpd.is_deleted = false
+												AND bpd.account_id = #{accountId}
+											)
+									)
+								)
+		</if>
+		ORDER BY shop.update_datetime DESC NULLS LAST, ish.id DESC
+		<if test="pagingSize != null and pagingSize > 0">
+			LIMIT #{pagingSize} OFFSET #{numberOfPage} * #{pagingSize}
+		</if>
+    </select>
+    <select id="findForPC" resultMap="listShopForPC">
+        SELECT
+			ish.id,
+			ish.shop_id,
+			ish.shop_cd,
+			ish.shop_name_zenkaku,
+			ish.i_shop_company_id,
+			ish.contract_tsubo,
+			ish.wholesale_area_id,
+			ish.i_income_unit_id,
+			ish.place_id,
+			ish.open_date,
+			ish.close_date
+		FROM i_shop ish
+		LEFT JOIN shop shop on shop.i_shop_id = ish.id
+		WHERE ish.is_deleted = false
+		AND ( now() > ish.open_date OR ish.open_date is null )
+		<if test="shopIds != null and shopIds.size() > 0">
+			AND ish.id IN 
+				<foreach item = "shopId" index = "index" collection = "shopIds" open = "(" separator = "," close = ")">
+					#{shopId}
+				</foreach>
+		</if>
+		<if test="iShopCompanyIds != null and iShopCompanyIds.size() > 0">
+			AND ish.i_shop_company_id IN
+				<foreach item = "iShopCompanyId" index = "index" collection = "iShopCompanyIds" open = "(" separator = "," close = ")">
+					#{iShopCompanyId}
+				</foreach>
+		</if>
+		<if test="iAreaIds != null and iAreaIds.size() > 0">
+			AND ish.place_id IN (SELECT ip.place_id 
+						FROM i_place ip
+						WHERE ip.is_deleted = false
+						AND ip.origin_building_id IN (SELECT bd.origin_building_id
+														FROM building bd
+														WHERE bd.is_deleted = false
+														AND bd.i_area_id IN
+														<foreach item = "iAreaId" index = "index" collection = "iAreaIds" open = "(" separator = "," close = ")">
+															#{iAreaId}
+														</foreach>
+														))
+		</if>
+		<if test="keyWord != null and keyWord !=''">			
+			AND	(
+					ish.shop_name_zenkaku like '%'||#{keyWord}||'%'
+					OR ish.shop_name_zenkaku like '%'||#{keyWordHankaku}||'%'
+					OR ish.shop_name_zenkaku like '%'||#{keyWordZenkaku}||'%'
+					OR ish.place_id IN (SELECT ip.place_id 
+						FROM i_place ip
+						WHERE ip.is_deleted = false
+						AND ip.origin_building_id IN (SELECT bd.origin_building_id
+														FROM building bd
+														WHERE bd.is_deleted = false
+														AND (bd.name like '%'||#{keyWord}||'%'
+															OR bd.name like '%'||#{keyWordHankaku}||'%'
+															OR bd.name like '%'||#{keyWordZenkaku}||'%')))
+					OR ish.i_shop_company_id IN (SELECT isc.id 
+						FROM i_shop_company isc
+						WHERE isc.is_deleted = false
+						AND (isc.company_name like '%'||#{keyWord}||'%' 
+							OR isc.company_name like '%'||#{keyWordHankaku}||'%'
+							OR isc.company_name like '%'||#{keyWordZenkaku}||'%' ))
+					OR ish.wholesale_area_id IN (SELECT ia.id 
+						FROM i_area ia
+						WHERE ia.is_deleted = false
+						AND (ia.area_name like '%'||#{keyWord}||'%'
+							OR ia.area_name like '%'||#{keyWordHankaku}||'%'
+							OR ia.area_name like '%'||#{keyWordZenkaku}||'%'))
+					OR ish.i_income_unit_id IN (SELECT ii.id 
+						FROM i_income_unit ii
+						WHERE ii.is_deleted = false
+						AND (ii.income_unit_name like '%'||#{keyWord}||'%'
+							OR ii.income_unit_name like '%'||#{keyWordHankaku}||'%'
+							OR ii.income_unit_name like '%'||#{keyWordZenkaku}||'%'))
+				)
+		</if>
+		<if test="accountId != null and accountId > 0">
+			AND ish.place_id in (
+									SELECT ipl.place_id
+									FROM i_place ipl
+									WHERE ipl.is_deleted = false
+									AND ipl.origin_building_id in 
+									(
+										SELECT b.origin_building_id
+											FROM building b
+											WHERE b.is_deleted = false
+											AND b.building_cd in
+											(
+												SELECT bpd.building_cd
+												FROM building_personal_develop bpd
+												WHERE bpd.is_deleted = false
+												AND bpd.account_id = #{accountId}
+											)
+									)
+								)
+		</if>
+		ORDER BY shop.update_datetime DESC NULLS LAST, ish.id DESC
+		<if test="pagingSize != null and pagingSize > 0">
+			LIMIT #{pagingSize} OFFSET #{numberOfPage} * #{pagingSize}
+		</if>
+    </select>
+    <select id="getCountFindForPC" resultMap="countListShopForPC">
+        SELECT
+			count(1) count
+		FROM i_shop ish
+		WHERE ish.is_deleted = false
+		AND ( now() > ish.open_date OR ish.open_date is null )
+		<if test="shopIds != null and shopIds.size() > 0">
+			AND ish.id IN 
+				<foreach item = "shopId" index = "index" collection = "shopIds" open = "(" separator = "," close = ")">
+					#{shopId}
+				</foreach>
+		</if>
+		<if test="iShopCompanyIds != null and iShopCompanyIds.size() > 0">
+			AND ish.i_shop_company_id IN
+				<foreach item = "iShopCompanyId" index = "index" collection = "iShopCompanyIds" open = "(" separator = "," close = ")">
+					#{iShopCompanyId}
+				</foreach>
+		</if>
+		<if test="iAreaIds != null and iAreaIds.size() > 0">
+			AND ish.place_id IN (SELECT ip.place_id 
+						FROM i_place ip
+						WHERE ip.is_deleted = false
+						AND ip.origin_building_id IN (SELECT bd.origin_building_id
+														FROM building bd
+														WHERE bd.is_deleted = false
+														AND bd.i_area_id IN
+														<foreach item = "iAreaId" index = "index" collection = "iAreaIds" open = "(" separator = "," close = ")">
+															#{iAreaId}
+														</foreach>
+														))
+		</if>
+		<if test="keyWord != null and keyWord !=''">			
+			AND	(
+					ish.shop_name_zenkaku like '%'||#{keyWord}||'%'
+					OR ish.shop_name_zenkaku like '%'||#{keyWordHankaku}||'%'
+					OR ish.shop_name_zenkaku like '%'||#{keyWordZenkaku}||'%'
+					OR ish.place_id IN (SELECT ip.place_id 
+						FROM i_place ip
+						WHERE ip.is_deleted = false
+						AND ip.origin_building_id IN (SELECT bd.origin_building_id
+														FROM building bd
+														WHERE bd.is_deleted = false
+														AND (bd.name like '%'||#{keyWord}||'%'
+															OR bd.name like '%'||#{keyWordHankaku}||'%'
+															OR bd.name like '%'||#{keyWordZenkaku}||'%')))
+					OR ish.i_shop_company_id IN (SELECT isc.id 
+						FROM i_shop_company isc
+						WHERE isc.is_deleted = false
+						AND (isc.company_name like '%'||#{keyWord}||'%' 
+							OR isc.company_name like '%'||#{keyWordHankaku}||'%'
+							OR isc.company_name like '%'||#{keyWordZenkaku}||'%' ))
+					OR ish.wholesale_area_id IN (SELECT ia.id 
+						FROM i_area ia
+						WHERE ia.is_deleted = false
+						AND (ia.area_name like '%'||#{keyWord}||'%'
+							OR ia.area_name like '%'||#{keyWordHankaku}||'%'
+							OR ia.area_name like '%'||#{keyWordZenkaku}||'%'))
+					OR ish.i_income_unit_id IN (SELECT ii.id 
+						FROM i_income_unit ii
+						WHERE ii.is_deleted = false
+						AND (ii.income_unit_name like '%'||#{keyWord}||'%'
+							OR ii.income_unit_name like '%'||#{keyWordHankaku}||'%'
+							OR ii.income_unit_name like '%'||#{keyWordZenkaku}||'%'))
+				)
+		</if>
+		<if test="accountId != null and accountId > 0">
+			AND ish.place_id in (
+									SELECT ipl.place_id
+									FROM i_place ipl
+									WHERE ipl.is_deleted = false
+									AND ipl.origin_building_id in 
+									(
+										SELECT b.origin_building_id
+											FROM building b
+											WHERE b.is_deleted = false
+											AND b.building_cd in
+											(
+												SELECT bpd.building_cd
+												FROM building_personal_develop bpd
+												WHERE bpd.is_deleted = false
+												AND bpd.account_id = #{accountId}
+											)
+									)
+								)
+		</if>
+    </select>
+    <select id="findShopById" resultMap="detailShop">
+		SELECT
+			ish.id,
+			ish.shop_id,
+			ish.shop_cd,
+			ish.shop_name_zenkaku,
+			ish.i_shop_company_id,
+			ish.contract_tsubo,
+			ish.wholesale_area_id,
+			ish.i_income_unit_id,
+			ish.place_id,
+			ish.open_date,
+			ish.close_date
+		FROM i_shop ish
+		WHERE ish.is_deleted = false
+		AND ( now() > ish.open_date OR ish.open_date is null )
+		AND ish.id = #{id}
+	</select>
+	<select id="findShopHistoryById" resultMap="detailShopHistory">
+		SELECT
+			s.id,
+			s.shop_id,
+			s.i_shop_id,
+			s."section",
+			s.frontage,
+			s.i_sales_agency_target_id,
+			s.participating_store_corporation_id,
+			s.building_expected_value,
+			s.remarks,
+			s.image_path,
+			s.update_datetime,
+			s.update_account_code
+		FROM shop_history s
+		WHERE s.id = #{id}
+	</select>
+	<select id="updateShopHistory">
+		
+		insert into shop_history (
+			shop_id
+			,i_shop_id
+			,corporation_group
+			,section
+			,frontage
+			,i_sales_agency_target_id
+			,participating_store_corporation_id
+			,building_expected_value
+			,remarks
+			,image_path
+			,rent_start_date
+			,rent_end_date
+			,rent_year
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+			)
+		select id shop_id
+			,i_shop_id
+			,corporation_group
+			,section
+			,frontage
+			,i_sales_agency_target_id
+			,participating_store_corporation_id
+			,building_expected_value
+			,remarks
+			,image_path
+			,rent_start_date
+			,rent_end_date
+			,rent_year
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		from shop
+		where id = #{id};
+	</select>
+	<select id="findByNameForNegotiationFile" resultMap="listShop">
+		SELECT *
+		FROM i_shop
+		WHERE is_deleted IS false
+			AND place_id IN (
+				SELECT id
+				FROM i_place
+				WHERE is_deleted IS false
+					AND origin_building_id IN (
+						SELECT origin_building_id
+						FROM building
+						WHERE is_deleted IS false
+						<if test="params != null and params.size() > 0">
+							AND id IN
+							<foreach item = "param" index = "index" collection = "params" open = "(" separator = "," close = ")">
+							#{param}
+							</foreach>
+						</if>
+					)
+				)
+		<if test="text != null and text != '' and hankaku != null and hankaku != ''">
+			AND ( shop_name_zenkaku LIKE '%${text}%'
+			OR shop_name_zenkaku LIKE '%${hankaku}%' )
+		</if>
+		<if test="limit != null">
+			limit #{limit}
+		</if>
+	</select>
+</mapper>

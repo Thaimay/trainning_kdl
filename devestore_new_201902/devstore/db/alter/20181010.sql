@@ -1,0 +1,1 @@
+ALTER TABLE project_contract_progress ALTER COLUMN contract_number_of_year type double precision;

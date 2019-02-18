@@ -1,0 +1,938 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.world.storedevelopment.model.mapper.BuildingRepositoryMapper">
+	<resultMap id="listBuilding" type="BuildingListDTO">
+	    <id property="id" column="id"/>
+	    <result property="name" column="name"/>
+	    <result property="buildingCd" column="building_cd"/>
+	    <result property="buildingGroupId" column="building_group_id"/>
+	    <result property="iCorporationId" column="i_corporation_id"/>
+	    <result property="openDate" column="open_date"/>
+	    <result property="updateDatetime" column="update_datetime"/>
+	    <result property="iAreaId" column="i_area_id"/>
+	    <result property="iBlockId" column="i_block_id"/>
+	    <result property="address" column="address"/>
+	    <result property="homepageUrl" column="homepage_url"/>
+	    <result property="imagePath" column="image_path"/>
+	    <result property="latitude" column="latitude"/>
+	    <result property="longitude" column="longitude"/>
+    </resultMap>
+    <resultMap id="listBuildingForPC" type="Building">
+	    <id property="id" column="id"/>
+	    <result property="name" column="name"/>
+		<result property="buildingCd" column="building_cd"/>
+		<result property="buildingGroupId" column="building_group_id"/>
+		<result property="isBuildingGroup" column="is_building_group"/>
+		<result property="buildingType" column="building_type"/>
+		<result property="openDate" column="open_date"/>
+		<result property="closeDate" column="close_date"/>
+		<result property="iCorporationId" column="i_corporation_id"/>
+		<result property="owner" column="owner"/>
+		<result property="iSalesChannelId" column="i_sales_channel_id"/>
+		<result property="locationFirst" column="location_first"/>
+		<result property="locationSecond" column="location_second"/>
+		<result property="iBlockId" column="i_block_id"/>
+		<result property="iAreaId" column="i_area_id"/>
+		<result property="smallMarketArea" column="small_market_area"/>
+		<result property="salesChannelCd2" column="sales_channel_cd_2"/>
+		<result property="adoptDifficulty" column="adopt_difficulty"/>
+		<result property="address" column="address"/>
+		<result property="iPrefecturesId" column="i_prefectures_id"/>
+		<result property="homepageUrl" column="homepage_url"/>
+		<result property="jiscd" column="jiscd"/>
+		<result property="groundFloor" column="ground_floor"/>
+		<result property="attractingContent" column="attracting_content"/>
+		<result property="coreTenant" column="core_tenant"/>
+		<result property="subCoreTenant" column="sub_core_tenant"/>
+		<result property="structure" column="structure"/>
+		<result property="parkingNumber" column="parking_number"/>
+		<result property="businessHours" column="business_hours"/>
+		<result property="nearestStation" column="nearest_station"/>
+		<result property="latitude" column="latitude"/>
+		<result property="longitude" column="longitude"/>
+		<result property="tenantNumber" column="tenant_number"/>
+		<result property="note" column="note"/>
+		<result property="imagePath" column="image_path"/>
+		<result property="createdDatetime" column="created_datetime"/>
+		<result property="updateDatetime" column="update_datetime"/>
+		<result property="createdAccountCode" column="created_account_code"/>
+		<result property="updateAccountCode" column="update_account_code"/>
+    </resultMap>
+	<resultMap id="detailBuilding" type="BuildingDetailDTO">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="buildingCd" column="building_cd"/>
+		<result property="buildingGroupId" column="building_group_id"/>
+		<result property="isBuildingGroup" column="is_building_group"/>
+		<result property="buildingType" column="building_type"/>
+		<result property="openDate" column="open_date"/>
+		<result property="closeDate" column="close_date"/>
+		<result property="iCorporationId" column="i_corporation_id"/>
+		<result property="owner" column="owner"/>
+		<result property="iSalesChannelId" column="i_sales_channel_id"/>
+		<result property="locationFirst" column="location_first"/>
+		<result property="locationSecond" column="location_second"/>
+		<result property="iBlockId" column="i_block_id"/>
+		<result property="iAreaId" column="i_area_id"/>
+		<result property="smallMarketArea" column="small_market_area"/>
+		<result property="salesChannelCd2" column="sales_channel_cd_2"/>
+		<result property="adoptDifficulty" column="adopt_difficulty"/>
+		<result property="address" column="address"/>
+		<result property="iPrefecturesId" column="i_prefectures_id"/>
+		<result property="homepageUrl" column="homepage_url"/>
+		<result property="jiscd" column="jiscd"/>
+		<result property="groundFloor" column="ground_floor"/>
+		<result property="attractingContent" column="attracting_content"/>
+		<result property="coreTenant" column="core_tenant"/>
+		<result property="subCoreTenant" column="sub_core_tenant"/>
+		<result property="structure" column="structure"/>
+		<result property="parkingNumber" column="parking_number"/>
+		<result property="businessHours" column="business_hours"/>
+		<result property="nearestStation" column="nearest_station"/>
+		<result property="latitude" column="latitude"/>
+		<result property="longitude" column="longitude"/>
+		<result property="tenantNumber" column="tenant_number"/>
+		<result property="note" column="note"/>
+		<result property="imagePath" column="image_path"/>
+		<result property="createdDatetime" column="created_datetime"/>
+		<result property="updateDatetime" column="update_datetime"/>
+		<result property="createdAccountCode" column="created_account_code"/>
+		<result property="updateAccountCode" column="update_account_code"/>
+	</resultMap>
+	<resultMap id="countListBuildingForPC" type="Integer">
+		<result property="value" column="count"/>
+    </resultMap>
+    <resultMap id="detailBuildingHistory" type="Building">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="buildingCd" column="building_cd"/>
+		<result property="buildingGroupId" column="building_group_id"/>
+		<result property="isBuildingGroup" column="is_building_group"/>
+		<result property="buildingType" column="building_type"/>
+		<result property="openDate" column="open_date"/>
+		<result property="closeDate" column="close_date"/>
+		<result property="iCorporationId" column="i_corporation_id"/>
+		<result property="owner" column="owner"/>
+		<result property="iSalesChannelId" column="i_sales_channel_id"/>
+		<result property="locationFirst" column="location_first"/>
+		<result property="locationSecond" column="location_second"/>
+		<result property="iBlockId" column="i_block_id"/>
+		<result property="iAreaId" column="i_area_id"/>
+		<result property="smallMarketArea" column="small_market_area"/>
+		<result property="salesChannelCd2" column="sales_channel_cd_2"/>
+		<result property="adoptDifficulty" column="adopt_difficulty"/>
+		<result property="address" column="address"/>
+		<result property="iPrefecturesId" column="i_prefectures_id"/>
+		<result property="homepageUrl" column="homepage_url"/>
+		<result property="jiscd" column="jiscd"/>
+		<result property="groundFloor" column="ground_floor"/>
+		<result property="attractingContent" column="attracting_content"/>
+		<result property="coreTenant" column="core_tenant"/>
+		<result property="subCoreTenant" column="sub_core_tenant"/>
+		<result property="structure" column="structure"/>
+		<result property="parkingNumber" column="parking_number"/>
+		<result property="businessHours" column="business_hours"/>
+		<result property="nearestStation" column="nearest_station"/>
+		<result property="latitude" column="latitude"/>
+		<result property="longitude" column="longitude"/>
+		<result property="tenantNumber" column="tenant_number"/>
+		<result property="note" column="note"/>
+		<result property="imagePath" column="image_path"/>
+		<result property="createdDatetime" column="created_datetime"/>
+		<result property="updateDatetime" column="update_datetime"/>
+		<result property="createdAccountCode" column="created_account_code"/>
+		<result property="updateAccountCode" column="update_account_code"/>
+	</resultMap>
+	<select id="find" resultMap="listBuilding">
+		SELECT
+			b.id,
+			b.name,
+			b.building_cd,
+			b.building_group_id,
+			b.i_corporation_id,
+			b.open_date,
+			b.update_datetime,
+			b.i_area_id,
+			b.i_block_id,
+			b.address,
+			b.homepage_url,
+			b.image_path,
+			b.latitude,
+			b.longitude
+		FROM building b
+		WHERE b.is_deleted = false
+			<if test="buildingName != null and buildingName != ''">
+				AND (b.name like '%'||#{buildingName}||'%' OR b.name like '%'||#{buildingNameHankaku}||'%')
+			</if>
+			<if test="iCorporationIds != null and iCorporationIds.size() > 0">
+				AND b.i_corporation_id IN
+				<foreach item = "iCorporationId" index = "index" collection = "iCorporationIds" open = "(" separator = "," close = ")">
+					#{iCorporationId}
+				</foreach>
+			</if>
+			<if test="buildingType != null and buildingType > 0">
+				AND b.building_type = #{buildingType}
+			</if>
+			<if test="iSalesChannelIds != null and iSalesChannelIds.size() > 0">
+				AND b.i_sales_channel_id IN
+				<foreach item = "iSalesChannelId" index = "index" collection = "iSalesChannelIds" open = "(" separator = "," close = ")">
+					#{iSalesChannelId}
+				</foreach>
+			</if>
+			<if test="salesChannelCd2s != null and salesChannelCd2s.size() > 0">
+				AND b.sales_channel_cd_2 IN
+				<foreach item = "salesChannelCd2" index = "index" collection = "salesChannelCd2s" open = "(" separator = "," close = ")">
+					#{salesChannelCd2}
+				</foreach>
+			</if>
+			<if test="iBlockIds != null and iBlockIds.size() > 0">
+				AND b.i_block_id IN
+				<foreach item = "iBlockId" index = "index" collection = "iBlockIds" open = "(" separator = "," close = ")">
+					#{iBlockId}
+				</foreach>
+			</if>
+			<if test="iAreaIds != null and iAreaIds.size() > 0">
+				AND b.i_area_id IN
+				<foreach item = "iAreaId" index = "index" collection = "iAreaIds" open = "(" separator = "," close = ")">
+					#{iAreaId}
+				</foreach>
+			</if>
+			<if test="keyWord != null and keyWord != ''">
+			AND (b.name like '%'||#{keyWord}||'%'
+				OR b.name like '%'||#{keyWordHankaku}||'%'
+				OR b.name like '%'||#{keyWordZenkaku}||'%'
+				OR b.i_corporation_id IN (SELECT ic.id 
+										FROM i_corporation ic
+										WHERE ic.is_deleted = false
+										AND (ic.corporation_name like '%'||#{keyWord}||'%'
+											OR ic.corporation_name like '%'||#{keyWordHankaku}||'%'
+											OR ic.corporation_name like '%'||#{keyWordZenkaku}||'%'
+											OR ic.corporation_gp_id IN (SELECT icg.id
+																		FROM i_corporation_group icg
+																		WHERE icg.is_deleted = false
+																		AND (icg.corporation_gp_name like '%'||#{keyWord}||'%'
+																			OR icg.corporation_gp_name like '%'||#{keyWordHankaku}||'%'
+																			OR icg.corporation_gp_name like '%'||#{keyWordZenkaku}||'%'))))
+				OR b.owner like '%'||#{keyWord}||'%'
+				OR b.owner like '%'||#{keyWordHankaku}||'%'
+				OR b.owner like '%'||#{keyWordZenkaku}||'%'
+				OR b.building_cd IN (SELECT bpd.building_cd
+							FROM building_personal_develop bpd
+							WHERE bpd.is_deleted = false
+							AND bpd.account_id IN (SELECT acc.id
+													FROM i_account acc
+													WHERE acc.is_deleted = false
+													AND (acc.full_name like '%'||#{keyWord}||'%'
+														OR acc.full_name like '%'||#{keyWordHankaku}||'%'
+														OR acc.full_name like '%'||#{keyWordZenkaku}||'%')))
+				OR b.i_sales_channel_id IN (SELECT isc.id 
+										FROM i_sales_channel isc
+										WHERE isc.is_deleted = false
+										AND (isc.sales_channel_name like '%'||#{keyWord}||'%'
+											OR isc.sales_channel_name like '%'||#{keyWordHankaku}||'%'
+											OR isc.sales_channel_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.sales_channel_cd_2 IN (SELECT isc2.id 
+										FROM i_sales_channel isc2
+										WHERE isc2.is_deleted = false
+										AND (isc2.sales_channel_name like '%'||#{keyWord}||'%'
+											OR isc2.sales_channel_name like '%'||#{keyWordHankaku}||'%'
+											OR isc2.sales_channel_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.i_area_id IN (SELECT ia.id 
+										FROM i_area ia
+										WHERE ia.is_deleted = false
+										AND (ia.area_name like '%'||#{keyWord}||'%'
+											OR ia.area_name like '%'||#{keyWordHankaku}||'%'
+											OR ia.area_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.i_block_id IN (SELECT ib.id 
+										FROM i_block ib
+										WHERE ib.is_deleted = false
+										AND (ib.block_name like '%'||#{keyWord}||'%'
+											OR ib.block_name like '%'||#{keyWordHankaku}||'%'
+											OR ib.block_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.location_first like '%'||#{keyWord}||'%'
+				OR b.location_first like '%'||#{keyWordHankaku}||'%'
+				OR b.location_first like '%'||#{keyWordZenkaku}||'%'
+				OR b.location_second like '%'||#{keyWord}||'%'
+				OR b.location_second like '%'||#{keyWordHankaku}||'%'
+				OR b.location_second like '%'||#{keyWordZenkaku}||'%'
+				OR b.small_market_area like '%'||#{keyWord}||'%'
+				OR b.small_market_area like '%'||#{keyWordHankaku}||'%'
+				OR b.small_market_area like '%'||#{keyWordZenkaku}||'%'
+				OR b.note like '%'||#{keyWord}||'%'
+				OR b.note like '%'||#{keyWordHankaku}||'%'
+				OR b.note like '%'||#{keyWordZenkaku}||'%')
+			</if>
+			<if test="accountId != null and accountId > 0">
+				AND b.building_cd in (SELECT bpd.building_cd
+							FROM building_personal_develop bpd
+							WHERE bpd.is_deleted = false
+							AND bpd.account_id = #{accountId})
+			</if>
+		ORDER BY b.update_datetime DESC, b.i_prefectures_id ASC,
+		b.name <if test="isNotLocal">COLLATE "ja_JP.utf8"</if> ASC
+		<if test="pagingSize != null and pagingSize > 0">
+			LIMIT #{pagingSize} OFFSET #{numberOfPage} * #{pagingSize}
+		</if>
+    </select>
+    <select id="findForPC" resultMap="listBuildingForPC">
+		SELECT
+				b.id,
+				b."name",
+				b.building_cd,
+				b.building_group_id,
+				b.is_building_group,
+				b.building_type,
+				b.open_date,
+				b.close_date,
+				b.i_corporation_id,
+				b.owner,
+				b.i_sales_channel_id,
+				b.location_first,
+				b.location_second,
+				b.i_block_id,
+				b.i_area_id,
+				b.small_market_area,
+				b.sales_channel_cd_2,
+				b.adopt_difficulty,
+				b.address,
+				b.i_prefectures_id,
+				b.homepage_url,
+				b.jiscd,
+				b.ground_floor,
+				b.attracting_content,
+				b.core_tenant,
+				b.sub_core_tenant,
+				b."structure",
+				b.parking_number,
+				b.business_hours,
+				b.nearest_station,
+				b.latitude,
+				b.longitude,
+				b.tenant_number,
+				b.note,
+				b.image_path,
+				b.created_datetime,
+				b.update_datetime,
+				b.created_account_code,
+				b.update_account_code
+		FROM building b
+		WHERE b.is_deleted = false
+			<if test="buildingName != null and buildingName != ''">
+				AND (b.name like '%'||#{buildingName}||'%' OR b.name like '%'||#{buildingNameHankaku}||'%')
+			</if>
+			<if test="iCorporationIds != null and iCorporationIds.size() > 0">
+				AND b.i_corporation_id IN
+				<foreach item = "iCorporationId" index = "index" collection = "iCorporationIds" open = "(" separator = "," close = ")">
+					#{iCorporationId}
+				</foreach>
+			</if>
+			<if test="buildingType != null and buildingType > 0">
+				AND b.building_type = #{buildingType}
+			</if>
+			<if test="iSalesChannelIds != null and iSalesChannelIds.size() > 0">
+				AND b.i_sales_channel_id IN
+				<foreach item = "iSalesChannelId" index = "index" collection = "iSalesChannelIds" open = "(" separator = "," close = ")">
+					#{iSalesChannelId}
+				</foreach>
+			</if>
+			<if test="salesChannelCd2s != null and salesChannelCd2s.size() > 0">
+				AND b.sales_channel_cd_2 IN
+				<foreach item = "salesChannelCd2" index = "index" collection = "salesChannelCd2s" open = "(" separator = "," close = ")">
+					#{salesChannelCd2}
+				</foreach>
+			</if>
+			<if test="iBlockIds != null and iBlockIds.size() > 0">
+				AND b.i_block_id IN
+				<foreach item = "iBlockId" index = "index" collection = "iBlockIds" open = "(" separator = "," close = ")">
+					#{iBlockId}
+				</foreach>
+			</if>
+			<if test="iAreaIds != null and iAreaIds.size() > 0">
+				AND b.i_area_id IN
+				<foreach item = "iAreaId" index = "index" collection = "iAreaIds" open = "(" separator = "," close = ")">
+					#{iAreaId}
+				</foreach>
+			</if>
+			<if test="keyWord != null and keyWord != ''">
+			AND (b.name like '%'||#{keyWord}||'%'
+				OR b.name like '%'||#{keyWordHankaku}||'%'
+				OR b.name like '%'||#{keyWordZenkaku}||'%'
+				OR b.i_corporation_id IN (SELECT ic.id 
+										FROM i_corporation ic
+										WHERE ic.is_deleted = false
+										AND (ic.corporation_name like '%'||#{keyWord}||'%'
+											OR ic.corporation_name like '%'||#{keyWordHankaku}||'%'
+											OR ic.corporation_name like '%'||#{keyWordZenkaku}||'%'
+											OR ic.corporation_gp_id IN (SELECT icg.id
+																		FROM i_corporation_group icg
+																		WHERE icg.is_deleted = false
+																		AND (icg.corporation_gp_name like '%'||#{keyWord}||'%'
+																			OR icg.corporation_gp_name like '%'||#{keyWordHankaku}||'%'
+																			OR icg.corporation_gp_name like '%'||#{keyWordZenkaku}||'%'))))
+				OR b.owner like '%'||#{keyWord}||'%'
+				OR b.owner like '%'||#{keyWordHankaku}||'%'
+				OR b.owner like '%'||#{keyWordZenkaku}||'%'
+				OR b.building_cd IN (SELECT bpd.building_cd
+							FROM building_personal_develop bpd
+							WHERE bpd.is_deleted = false
+							AND bpd.account_id IN (SELECT acc.id
+													FROM i_account acc
+													WHERE acc.is_deleted = false
+													AND (acc.full_name like '%'||#{keyWord}||'%'
+														OR acc.full_name like '%'||#{keyWordHankaku}||'%'
+														OR acc.full_name like '%'||#{keyWordZenkaku}||'%')))
+				OR b.i_sales_channel_id IN (SELECT isc.id 
+										FROM i_sales_channel isc
+										WHERE isc.is_deleted = false
+										AND (isc.sales_channel_name like '%'||#{keyWord}||'%'
+											OR isc.sales_channel_name like '%'||#{keyWordHankaku}||'%'
+											OR isc.sales_channel_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.sales_channel_cd_2 IN (SELECT isc2.id 
+										FROM i_sales_channel isc2
+										WHERE isc2.is_deleted = false
+										AND (isc2.sales_channel_name like '%'||#{keyWord}||'%'
+											OR isc2.sales_channel_name like '%'||#{keyWordHankaku}||'%'
+											OR isc2.sales_channel_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.i_area_id IN (SELECT ia.id 
+										FROM i_area ia
+										WHERE ia.is_deleted = false
+										AND (ia.area_name like '%'||#{keyWord}||'%'
+											OR ia.area_name like '%'||#{keyWordHankaku}||'%'
+											OR ia.area_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.i_block_id IN (SELECT ib.id 
+										FROM i_block ib
+										WHERE ib.is_deleted = false
+										AND (ib.block_name like '%'||#{keyWord}||'%'
+											OR ib.block_name like '%'||#{keyWordHankaku}||'%'
+											OR ib.block_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.location_first like '%'||#{keyWord}||'%'
+				OR b.location_first like '%'||#{keyWordHankaku}||'%'
+				OR b.location_first like '%'||#{keyWordZenkaku}||'%'
+				OR b.location_second like '%'||#{keyWord}||'%'
+				OR b.location_second like '%'||#{keyWordHankaku}||'%'
+				OR b.location_second like '%'||#{keyWordZenkaku}||'%'
+				OR b.small_market_area like '%'||#{keyWord}||'%'
+				OR b.small_market_area like '%'||#{keyWordHankaku}||'%'
+				OR b.small_market_area like '%'||#{keyWordZenkaku}||'%'
+				OR b.note like '%'||#{keyWord}||'%'
+				OR b.note like '%'||#{keyWordHankaku}||'%'
+				OR b.note like '%'||#{keyWordZenkaku}||'%')
+			</if>
+			<if test="accountId != null and accountId > 0">
+				AND b.building_cd in (SELECT bpd.building_cd
+							FROM building_personal_develop bpd
+							WHERE bpd.is_deleted = false
+							AND bpd.account_id = #{accountId})
+			</if>
+		ORDER BY b.update_datetime DESC, b.i_prefectures_id ASC, 
+		b.name <if test="isNotLocal">COLLATE "ja_JP.utf8"</if> ASC
+		<if test="pagingSize != null and pagingSize > 0">
+			LIMIT #{pagingSize} OFFSET #{numberOfPage} * #{pagingSize}
+		</if>
+    </select>
+    <select id="getCountFindForPC" resultMap="countListBuildingForPC">
+		SELECT count(1) count
+		FROM building b
+		WHERE b.is_deleted = false
+			<if test="buildingName != null and buildingName != ''">
+				AND (b.name like '%'||#{buildingName}||'%' OR b.name like '%'||#{buildingNameHankaku}||'%')
+			</if>
+			<if test="iCorporationIds != null and iCorporationIds.size() > 0">
+				AND b.i_corporation_id IN
+				<foreach item = "iCorporationId" index = "index" collection = "iCorporationIds" open = "(" separator = "," close = ")">
+					#{iCorporationId}
+				</foreach>
+			</if>
+			<if test="buildingType != null and buildingType > 0">
+				AND b.building_type = #{buildingType}
+			</if>
+			<if test="iSalesChannelIds != null and iSalesChannelIds.size() > 0">
+				AND b.i_sales_channel_id IN
+				<foreach item = "iSalesChannelId" index = "index" collection = "iSalesChannelIds" open = "(" separator = "," close = ")">
+					#{iSalesChannelId}
+				</foreach>
+			</if>
+			<if test="salesChannelCd2s != null and salesChannelCd2s.size() > 0">
+				AND b.sales_channel_cd_2 IN
+				<foreach item = "salesChannelCd2" index = "index" collection = "salesChannelCd2s" open = "(" separator = "," close = ")">
+					#{salesChannelCd2}
+				</foreach>
+			</if>
+			<if test="iBlockIds != null and iBlockIds.size() > 0">
+				AND b.i_block_id IN
+				<foreach item = "iBlockId" index = "index" collection = "iBlockIds" open = "(" separator = "," close = ")">
+					#{iBlockId}
+				</foreach>
+			</if>
+			<if test="iAreaIds != null and iAreaIds.size() > 0">
+				AND b.i_area_id IN
+				<foreach item = "iAreaId" index = "index" collection = "iAreaIds" open = "(" separator = "," close = ")">
+					#{iAreaId}
+				</foreach>
+			</if>
+			<if test="keyWord != null and keyWord != ''">
+			AND (b.name like '%'||#{keyWord}||'%'
+				OR b.name like '%'||#{keyWordHankaku}||'%'
+				OR b.name like '%'||#{keyWordZenkaku}||'%'
+				OR b.i_corporation_id IN (SELECT ic.id 
+										FROM i_corporation ic
+										WHERE ic.is_deleted = false
+										AND (ic.corporation_name like '%'||#{keyWord}||'%'
+											OR ic.corporation_name like '%'||#{keyWordHankaku}||'%'
+											OR ic.corporation_name like '%'||#{keyWordZenkaku}||'%'
+											OR ic.corporation_gp_id IN (SELECT icg.id
+																		FROM i_corporation_group icg
+																		WHERE icg.is_deleted = false
+																		AND (icg.corporation_gp_name like '%'||#{keyWord}||'%'
+																			OR icg.corporation_gp_name like '%'||#{keyWordHankaku}||'%'
+																			OR icg.corporation_gp_name like '%'||#{keyWordZenkaku}||'%'))))
+				OR b.owner like '%'||#{keyWord}||'%'
+				OR b.owner like '%'||#{keyWordHankaku}||'%'
+				OR b.owner like '%'||#{keyWordZenkaku}||'%'
+				OR b.building_cd IN (SELECT bpd.building_cd
+							FROM building_personal_develop bpd
+							WHERE bpd.is_deleted = false
+							AND bpd.account_id IN (SELECT acc.id
+													FROM i_account acc
+													WHERE acc.is_deleted = false
+													AND (acc.full_name like '%'||#{keyWord}||'%'
+														OR acc.full_name like '%'||#{keyWordHankaku}||'%'
+														OR acc.full_name like '%'||#{keyWordZenkaku}||'%')))
+				OR b.i_sales_channel_id IN (SELECT isc.id 
+										FROM i_sales_channel isc
+										WHERE isc.is_deleted = false
+										AND (isc.sales_channel_name like '%'||#{keyWord}||'%'
+											OR isc.sales_channel_name like '%'||#{keyWordHankaku}||'%'
+											OR isc.sales_channel_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.sales_channel_cd_2 IN (SELECT isc2.id 
+										FROM i_sales_channel isc2
+										WHERE isc2.is_deleted = false
+										AND (isc2.sales_channel_name like '%'||#{keyWord}||'%'
+											OR isc2.sales_channel_name like '%'||#{keyWordHankaku}||'%'
+											OR isc2.sales_channel_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.i_area_id IN (SELECT ia.id 
+										FROM i_area ia
+										WHERE ia.is_deleted = false
+										AND (ia.area_name like '%'||#{keyWord}||'%'
+											OR ia.area_name like '%'||#{keyWordHankaku}||'%'
+											OR ia.area_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.i_block_id IN (SELECT ib.id 
+										FROM i_block ib
+										WHERE ib.is_deleted = false
+										AND (ib.block_name like '%'||#{keyWord}||'%'
+											OR ib.block_name like '%'||#{keyWordHankaku}||'%'
+											OR ib.block_name like '%'||#{keyWordZenkaku}||'%'))
+				OR b.location_first like '%'||#{keyWord}||'%'
+				OR b.location_first like '%'||#{keyWordHankaku}||'%'
+				OR b.location_first like '%'||#{keyWordZenkaku}||'%'
+				OR b.location_second like '%'||#{keyWord}||'%'
+				OR b.location_second like '%'||#{keyWordHankaku}||'%'
+				OR b.location_second like '%'||#{keyWordZenkaku}||'%'
+				OR b.small_market_area like '%'||#{keyWord}||'%'
+				OR b.small_market_area like '%'||#{keyWordHankaku}||'%'
+				OR b.small_market_area like '%'||#{keyWordZenkaku}||'%'
+				OR b.note like '%'||#{keyWord}||'%'
+				OR b.note like '%'||#{keyWordHankaku}||'%'
+				OR b.note like '%'||#{keyWordZenkaku}||'%')
+			</if>
+			<if test="accountId != null and accountId > 0">
+				AND b.building_cd in (SELECT bpd.building_cd
+							FROM building_personal_develop bpd
+							WHERE bpd.is_deleted = false
+							AND bpd.account_id = #{accountId})
+			</if>
+    </select>
+	<select id="findBuildingById" resultMap="detailBuilding">
+		select 	b.id,
+				b."name",
+				b.building_cd,
+				b.building_group_id,
+				b.is_building_group,
+				b.building_type,
+				b.open_date,
+				b.close_date,
+				b.i_corporation_id,
+				b.owner,
+				b.i_sales_channel_id,
+				b.location_first,
+				b.location_second,
+				b.i_block_id,
+				b.i_area_id,
+				b.small_market_area,
+				b.sales_channel_cd_2,
+				b.adopt_difficulty,
+				b.address,
+				b.i_prefectures_id,
+				b.homepage_url,
+				b.jiscd,
+				b.ground_floor,
+				b.attracting_content,
+				b.core_tenant,
+				b.sub_core_tenant,
+				b."structure",
+				b.parking_number,
+				b.business_hours,
+				b.nearest_station,
+				b.latitude,
+				b.longitude,
+				b.tenant_number,
+				b.note,
+				b.image_path,
+				b.created_datetime,
+				b.update_datetime,
+				b.created_account_code,
+				b.update_account_code
+		from building b
+		WHERE b.is_deleted = false
+		AND b.id = #{id}
+	</select>
+	<select id="getListAccountIdForFile" resultType="java.lang.Long">
+		select distinct
+			a.id
+		from I_ACCOUNT a 
+		join I_DEPT b
+		on a.dept_cd = b.dept_cd::numeric
+		where 
+			a.employee_cd in (select employee_code from sub_account)
+		OR	a.employee_cd in (select company_code from sub_account)
+		OR	b.income_unit_cd_1 in (select income_unit_code from ROLE)
+		OR	b.income_unit_cd_2 in (select income_unit_code from ROLE)
+		OR	b.income_unit_cd_3 in (select income_unit_code from ROLE)
+	</select>
+	<select id="findBuildingHistoryById" resultMap="detailBuildingHistory">
+		select 	b.id,
+				b."name",
+				b.origin_building_id,
+				b.building_cd,
+				b.building_group_id,
+				b.is_building_group,
+				b.building_type,
+				b.open_date,
+				b.close_date,
+				b.i_corporation_id,
+				b.owner,
+				b.i_sales_channel_id,
+				b.location_first,
+				b.location_second,
+				b.i_block_id,
+				b.i_area_id,
+				b.small_market_area,
+				b.sales_channel_cd_2,
+				b.adopt_difficulty,
+				b.address,
+				b.i_prefectures_id,
+				b.homepage_url,
+				b.jiscd,
+				b.ground_floor,
+				b.attracting_content,
+				b.core_tenant,
+				b.sub_core_tenant,
+				b."structure",
+				b.parking_number,
+				b.business_hours,
+				b.nearest_station,
+				b.latitude,
+				b.longitude,
+				b.tenant_number,
+				b.note,
+				b.image_path,
+				b.created_datetime,
+				b.update_datetime,
+				b.created_account_code,
+				b.update_account_code
+		from building_history b
+		WHERE b.is_deleted = false
+		AND b.id = #{id}
+	</select>
+	<select id="updateBuildingHistory">
+	
+		INSERT INTO building_history ( 
+			id,
+			corporation_group
+			,"name"
+			,origin_building_id
+			,building_cd
+			,building_group_id
+			,is_building_group
+			,building_type
+			,open_date
+			,close_date
+			,i_corporation_id
+			,OWNER
+			,i_sales_channel_id
+			,location_first
+			,location_second
+			,i_block_id
+			,i_area_id
+			,small_market_area
+			,sales_channel_cd_2
+			,adopt_difficulty
+			,address
+			,i_prefectures_id
+			,homepage_url
+			,jiscd
+			,ground_floor
+			,attracting_content
+			,core_tenant
+			,sub_core_tenant
+			,"structure"
+			,parking_number
+			,business_hours
+			,nearest_station
+			,latitude
+			,longitude
+			,tenant_number
+			,note
+			,image_path
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		)
+		SELECT nextval('building_history_id_seq'::regclass) id,
+			corporation_group
+			,"name"
+			,origin_building_id
+			,building_cd
+			,building_group_id
+			,is_building_group
+			,building_type
+			,open_date
+			,close_date
+			,i_corporation_id
+			,OWNER
+			,i_sales_channel_id
+			,location_first
+			,location_second
+			,i_block_id
+			,i_area_id
+			,small_market_area
+			,sales_channel_cd_2
+			,adopt_difficulty
+			,address
+			,i_prefectures_id
+			,homepage_url
+			,jiscd
+			,ground_floor
+			,attracting_content
+			,core_tenant
+			,sub_core_tenant
+			,"structure"
+			,parking_number
+			,business_hours
+			,nearest_station
+			,latitude
+			,longitude
+			,tenant_number
+			,note
+			,image_path
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		FROM building
+		WHERE id = ${building.id};
+		
+		INSERT INTO pm_corporation_history (
+			corporation_group
+			,building_cd
+			,corporation_id
+			,corporation_name
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+			)
+		SELECT corporation_group
+			, currval('building_history_id_seq'::regclass) id
+			,corporation_id
+			,corporation_name
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		FROM pm_corporation
+		WHERE building_cd = '${building.buildingCd}';
+		
+		INSERT INTO activation_history (
+			corporation_group
+			,building_cd
+			,content
+			,expected_day
+			,floor
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+			)
+		SELECT corporation_group
+			,currval('building_history_id_seq'::regclass) id
+			,content
+			,expected_day
+			,floor
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		FROM activation
+		WHERE building_cd = '${building.buildingCd}';
+		
+		INSERT INTO building_tenant_history (
+			corporation_group
+			,building_cd
+			,tenant_id
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+			)
+		select corporation_group
+			,currval('building_history_id_seq'::regclass) id
+			,tenant_id
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		from building_tenant 
+		where building_cd = '${building.buildingCd}';
+		
+		insert into building_keyman_history (
+			corporation_group
+			,building_cd
+			,keyman_id
+			,category
+			,priority
+			,ROLE
+			,note
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+			)
+		SELECT corporation_group
+			,currval('building_history_id_seq'::regclass) id
+			,keyman_id
+			,category
+			,priority
+			,ROLE
+			,note
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		FROM building_keyman
+		WHERE building_cd = '${building.buildingCd}';
+
+		insert into building_meeting_history_history (
+			corporation_group
+			,building_cd
+			,name
+			,overview
+			,date
+			,attendee
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+			)
+		select corporation_group
+			,currval('building_history_id_seq'::regclass) id
+			,name
+			,overview
+			,date
+			,attendee
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		from building_meeting_history
+		where building_cd = '${building.buildingCd}';
+
+		insert into building_personal_develop_history (
+			corporation_group
+			,building_cd
+			,account_id
+			,category
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+			)
+		select corporation_group
+			,currval('building_history_id_seq'::regclass) id
+			,account_id
+			,category
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		from building_personal_develop
+		where building_cd = '${building.buildingCd}';
+		
+		insert into building_sales_history (
+			corporation_group
+			,building_cd
+			,division
+			,sales
+			,area
+			,month_basis
+			,financial_month
+			,type
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+			)
+		select corporation_group
+			,currval('building_history_id_seq'::regclass) id
+			,division
+			,sales
+			,area
+			,month_basis
+			,financial_month
+			,type
+			,created_datetime
+			,update_datetime
+			,created_account_code
+			,update_account_code
+			,is_deleted
+		from building_sales
+		where building_cd = '${building.buildingCd}';
+		
+	</select>
+	<select id="findByNameForNegotiationFile" resultMap="listBuildingForPC">
+		SELECT *
+		FROM building
+		WHERE is_deleted IS false
+		<if test="params != null and params.size() > 0">
+			AND id IN
+			<foreach item = "param" index = "index" collection = "params" open = "(" separator = "," close = ")">
+				#{param}
+			</foreach>
+		</if>
+		<if test="text != null and text != '' and hankaku != null and hankaku != ''">
+			AND ( name LIKE '%${text}%'
+			OR name LIKE '%${hankaku}%' )
+		</if>
+		<if test="limit != null">
+			limit #{limit}
+		</if>
+	</select>
+</mapper>

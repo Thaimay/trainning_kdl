@@ -1,0 +1,18 @@
+alter table shop add column business_hours varchar(256);
+alter table project add is_changed_implementation_schedule_datetime boolean;
+alter table project_history add is_changed_implementation_schedule_datetime boolean;
+alter table project_plan add column number_of_year float;
+alter table file alter column comment drop not null;
+alter table i_shop_sales_br alter column shop_name type varchar(80);
+alter table i_shop_sales_trend alter column operating_profit_year_to_year type numeric(16,2);
+alter table project drop column operation_form;
+alter table project drop column management_form;
+alter table project_history drop column operation_form;
+alter table project_history drop column management_form;
+ALTER TABLE project ALTER COLUMN external_release_confirm SET DEFAULT false;
+ALTER TABLE participating_store_corporation ALTER COLUMN corporation_division DROP NOT NULL;
+alter table participating_store_corporation ALTER column corporation_cd type varchar(6);
+alter table project_switing_item_control add column rent_contract_startdate_progress boolean default true;
+alter table project_switing_item_control add column rent_contract_enddate_progress boolean default true;
+alter table project_switing_item_control add column rent_contract_number_of_year_progress boolean default true;
+ALTER TABLE public.project_category_classification ADD disp_order int4;

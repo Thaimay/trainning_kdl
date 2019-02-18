@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_PREFECTURES(jis_prefectures_id,prefectures_name,prefectures_name_ellipsis_name,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action)FROM 'db/csv/I_TODOUFUKEN.csv' WITH CSV;

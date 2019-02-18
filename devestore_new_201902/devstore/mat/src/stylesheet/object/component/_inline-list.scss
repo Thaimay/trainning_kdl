@@ -1,0 +1,15 @@
+/* 簡易横並べ */
+
+.inline-list {
+  text-align: left;
+  > {
+    * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    p {
+      margin-bottom: 0;
+      /* override */
+    }
+  }
+}

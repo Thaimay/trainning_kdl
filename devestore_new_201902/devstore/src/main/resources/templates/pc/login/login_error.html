@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="/pc/layout_minimal">
+	<head>
+		<title>ログイン</title>
+		<meta name="keywords" content="content1" />
+		<meta name="description" content="content1" />
+	</head>
+	<body>
+
+		<div layout:fragment="content">
+
+		  <div class="form-signin">
+		    <header class="form-signin-header">
+		      <h2 class="form-signin-heading">店舗開発システム:ログイン</h2>
+		    </header>
+
+			<div th:if="${error}" class="alert alert-danger" role="alert">社員CDが登録されていないためログインできません。</div>
+			<div th:if="${roleError}" class="alert alert-danger" role="alert">権限が登録されていないため、画面が参照できません。</div>
+		  </div>
+		</div>
+	</body>
+</html>

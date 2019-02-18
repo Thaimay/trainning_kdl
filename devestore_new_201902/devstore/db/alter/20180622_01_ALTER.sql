@@ -1,0 +1,1 @@
+ALTER TABLE sub_account ALTER COLUMN area_code type text;

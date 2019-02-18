@@ -1,0 +1,16 @@
+.list-group.has-arrow a {
+  position: relative;
+  &::before {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid #cccccc;
+    border-top: 2px solid #cccccc;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    margin-top: -5px;
+    transform: rotate(45deg);
+  }
+}

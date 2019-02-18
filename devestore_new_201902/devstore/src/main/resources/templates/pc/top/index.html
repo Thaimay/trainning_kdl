@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>TOP</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<style media="screen">
+
+.date-buttons{
+	display: inline-block;
+    margin-top: 10px;
+}
+
+.date-buttons > li > a {
+    padding: 6px 13px;
+}
+
+/* utility */
+.scrollable-content {
+	overflow: scroll;
+}
+
+.fa-trash-permission{
+ display:none;
+}
+</style>
+
+</head>
+
+<body  data-ng-app="app">
+	<div class="wrapper">
+		<main class="main-contents"  id="mainContents">
+			<div layout:fragment="content">
+				<div class="container-fluid" ng-controller="TopListController as topListController" ng-init="topListController.initTop()">
+					<div class="row">
+						<div class="col-md-12 panel-utility">
+							<div class="form-inline panel-utility">
+								<div class="input-group date">
+									<form class="" th:action="@{/pc/top}" method="post">
+										<input type="text" class="form-control" id="j-date-select" name="deadline" th:value="${form.date}">
+										<button type="submit" class="btn btn-primary">表示</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="top-panels">
+					<section class="panel panel-default"
+						th:insert="/pc/top/parts/important_information.html"></section>
+
+					<section class="panel panel-default"
+						th:insert="/pc/top/parts/todo.html"></section>
+
+					<section class="panel panel-default"
+						th:insert="/pc/top/parts/recent_changes.html"></section>
+
+					<section class="panel panel-default"
+						th:insert="/pc/top/parts/today.html"></section>
+				</div>
+			</div>
+		</main>
+	</div><!-- .wrapper -->
+</body>

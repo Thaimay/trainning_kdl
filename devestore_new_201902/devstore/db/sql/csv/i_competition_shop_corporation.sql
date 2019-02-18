@@ -1,0 +1,3 @@
+\c store_development_dev;
+
+\COPY I_COMPETITION_SHOP_CORPORATION(competition_shop_corporation_id,competition_shop_corporation_cd,competition_shop_corporation_name,registration_time,registrant_cd,update_time,updater_cd,action,past_id) FROM 'db/csv/I_COMPETITION_SHOP_CORPORATION.csv' WITH CSV;

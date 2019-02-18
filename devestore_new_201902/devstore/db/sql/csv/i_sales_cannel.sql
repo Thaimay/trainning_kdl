@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_SALES_CHANNEL(sales_channel_id,sales_channel_cd,sales_channel_name,verification_sales_channel_cd,verification_sales_channel_name,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action)FROM 'db/csv/I_SALES_CHANNEL.csv' WITH CSV;

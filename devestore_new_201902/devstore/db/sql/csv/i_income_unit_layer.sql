@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_INCOME_UNIT_LAYER(company_id,income_unit_id,level_level_1,level_level_2,level_level_3,level_level_4,level_level_5,level_level_6,level_level_seven,level_level_eight,level_level_nine,level_level_ten,start_date,end_date,report_display_control_rank,web_menu_division,backup_cd1,backup_cd2,backup_cd3,backup_cd4,backup_cd5,coordination_creator,coordination_creation_time,coordination_deleting_flag,coordination_applying_date,coordination_updater,coordination_update_time)FROM 'db/csv/M_RIEKI_TNI_KAISO.csv' WITH CSV;

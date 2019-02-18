@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>商談予定</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<script th:src="@{/js/controllers/information/create.js}"></script>
+<style> .ms-ctn input{ width: 100% !important; } </style>
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="container-fluid">
+			<div class="col-md-12">
+				<div class="col-md-6">
+					<a class="btn btn-default" href="/negotiation.html"
+						th:href="@{/pc/top}" role="button">一覧に戻る</a>
+				</div>
+				<div class="col-md-6 ">
+					<a class="btn btn-primary pull-right"
+						id="information-btn-create">登録</a>
+				</div>
+
+			</div>
+
+			<form id="information-form" class="j-form-submit" method="post">
+				<table class="table" style="margin-top: 60px">
+					<tr>
+						<th>法人</th>
+						<td><input class="form-control form-info-corporation"
+							id="j-form-info-corporation" type="text" placeholder="" required></td>
+					</tr>
+					<tr>
+						<th>館</th>
+						<td><input class="form-control form-info-meeting-building"
+							id="j-info-meeting-building" type="text" placeholder="" required></td>
+					</tr>
+					<tr>
+						<th>内容</th>
+						<td><textarea class="form-control" name="content"
+								id="content" type="text" rows="8" placeholder="内容"></textarea></td>
+					</tr>
+					<tr>
+						<th>実施日</th>
+						<td><input class="form-control j-show-end-date-info"
+							name="showEndDatetime" id="show-end-date-info" type="text"
+							placeholder=""></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+
+</body>
+</html>

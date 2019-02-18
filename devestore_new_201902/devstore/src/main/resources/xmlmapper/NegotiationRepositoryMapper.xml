@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.world.storedevelopment.model.mapper.NegotiationRepositoryMapper">
+	<resultMap id="relatedNegotiation" type="Negotiation">
+    </resultMap>
+    <select id="findRelatedNegotiationByProject" resultMap="relatedNegotiation">
+		select n.*
+		from negotiation n
+		where n.is_deleted = false
+		and n.id != #{id}
+		and n.id in (
+			select pn.negotiation_id 
+			from project_negotiation pn
+			where pn.is_deleted = false 
+			and pn.project_id in (
+				select np.project_id
+				from project_negotiation np 
+				where np.is_deleted = false 
+				and np.negotiation_id = #{id}
+				<if test="projectIds != null and projectIds.size() > 0">
+					and np.project_id in
+					<foreach item = "projectId" index = "index" collection = "projectIds" open = "(" separator = "," close = ")">
+						#{projectId}
+					</foreach>
+				</if>
+			)
+		)
+		<if test="latest2Year">
+			and n.update_datetime >= (select now() - interval '24 month')
+		</if>
+	</select>
+    <select id="findRelatedNegotiationByCorporation" resultMap="relatedNegotiation">
+		select n.*
+		from negotiation n
+		where n.is_deleted = false
+		and n.id != #{id}
+		and n.id in (
+			select nic.negotiation_id 
+			from negotiation_interview_corporation nic 
+			where nic.is_deleted = false 
+			and nic.corporation_id in (
+				select ic.corporation_id
+				from negotiation_interview_corporation ic 
+				where ic.is_deleted = false 
+				and ic.negotiation_id = #{id}
+				<if test="corporationIds != null and corporationIds.size() > 0">
+					and ic.corporation_id in
+					<foreach item = "corporationId" index = "index" collection = "corporationIds" open = "(" separator = "," close = ")">
+						#{corporationId}
+					</foreach>
+				</if>
+			)
+		)
+		<if test="latest2Year">
+			and n.update_datetime >= (select now() - interval '24 month')
+		</if>
+	</select>
+	<select id="findRelatedNegotiationByBusinessCard" resultMap="relatedNegotiation">
+		select n.*
+		from negotiation n
+		where n.is_deleted = false
+		and n.id != #{id}		
+		and n.id in (
+			select nibc.negotiation_id 
+			from negotiation_interview_business_card nibc 
+			where nibc.is_deleted = false 
+			and nibc.business_card_id in (
+				select ibc.business_card_id
+				from negotiation_interview_business_card ibc 
+				where ibc.is_deleted = false
+				and ibc.negotiation_id = #{id}
+				<if test="interviewBusinessCardIds != null and interviewBusinessCardIds.size() > 0">
+					and ibc.business_card_id in
+					<foreach item = "businessCardId" index = "index" collection = "interviewBusinessCardIds" open = "(" separator = "," close = ")">
+						#{businessCardId}
+					</foreach>
+				</if>				
+			)					
+		)
+		<if test="latest2Year">
+			and n.update_datetime >= (select now() - interval '24 month')
+		</if>
+	</select>
+	<select id="findRelatedNegotiationByBusinessCardFree" resultMap="relatedNegotiation">
+		select n.*
+		from negotiation n
+		where n.is_deleted = false
+		and n.id != #{id}
+		and trim(n.business_card_free) != ''
+		and n.business_card_free like (
+			select ne.business_card_free from negotiation ne where id = #{id}
+		)
+		<if test="interviewBusinessCardFree != ''">
+			and n.business_card_free like #{interviewBusinessCardFree}
+		</if>
+		<if test="latest2Year">
+			and n.update_datetime >= (select now() - interval '24 month')
+		</if>
+	</select>
+	<select id="findRelatedNegotiationByBuilding" resultMap="relatedNegotiation">
+		select n.*
+		from negotiation n
+		where n.is_deleted = false
+		and n.id != #{id}		
+		and n.id in (
+			select nib.negotiation_id 
+			from negotiation_interview_building nib
+			where nib.is_deleted = false 
+			and nib.building_id in (
+				select ib.building_id
+				from negotiation_interview_building ib 
+				where ib.is_deleted = false 
+				and ib.negotiation_id = #{id}
+				<if test="buildingIds != null and buildingIds.size() > 0">
+					and ib.building_id in
+					<foreach item = "buildingId" index = "index" collection = "buildingIds" open = "(" separator = "," close = ")">
+						#{buildingId}
+					</foreach>
+				</if>
+			)					
+		)		
+		<if test="latest2Year">
+			and n.update_datetime >= (select now() - interval '24 month')
+		</if>
+	</select>
+	<select id="findRelatedNegotiationByBrand" resultMap="relatedNegotiation">
+		select n.*
+		from negotiation n
+		where n.is_deleted = false
+		and n.id != #{id}
+		and n.id in (
+			select nibr.negotiation_id 
+			from negotiation_interview_brand nibr
+			where nibr.is_deleted = false 
+			and nibr.brand_id in (
+				select ibr.brand_id
+				from negotiation_interview_brand ibr 
+				where ibr.is_deleted = false 
+				and ibr.negotiation_id = #{id}
+				<if test="brandIds != null and brandIds.size() > 0">
+					and ibr.brand_id in
+					<foreach item = "brandId" index = "index" collection = "brandIds" open = "(" separator = "," close = ")">
+						#{brandId}
+					</foreach>
+				</if>
+			)					
+		)
+		<if test="latest2Year">
+			and n.update_datetime >= (select now() - interval '24 month')
+		</if>
+	</select>
+</mapper>
+
+

@@ -1,0 +1,71 @@
+<header class="panel-header task-compleate">
+	<div class="row">
+		<div class="col-md-6">
+			<h2 class="title">関連情報更新のお知らせ</h2>
+		</div>
+		<div class="col-md-6 panel-utility">
+		</div>
+	</div>
+</header>
+<div class="panel-body">
+	<div class="panel-body-inner">
+		<ul class="list-group">
+			<div th:each="relatedTask : ${top.relatedTaskList}">
+
+				<li  class="list-item-infor schedule-list-item"  th:if="${relatedTask.negotiationId != null && relatedTask.accountId == currentAccount}" >
+					<a
+						th:href="@{/pc/negotiation/detail/} + ${relatedTask.negotiationId}" class="schedule-info"
+>
+							<p
+								th:if="${relatedTask.updateInformation.division != null  && relatedTask.updateInformation.division != ''}"
+								th:text="${relatedTask.updateInformation.division + 'の同席者に指定されました。'}"></p>
+							<p th:text="${relatedTask.updateInformation.title}"></p>
+							<div>
+								<p th:text="${relatedTask.updateInformation.startEndDate}"></p>
+							</div>
+							<footer class="information-footer">
+								<span th:text="${relatedTask.updateInformation.createAccountAndAttendeeNames}"></span>
+	
+							</footer>
+					</a>
+				</li>
+
+				<li class="list-item-infor schedule-list-item" th:if="${relatedTask.negotiationCommentId != null && relatedTask.accountId == currentAccount}">
+					<a th:href="@{/pc/negotiation/detail/} + ${relatedTask.updateInformationComment.id}" class="schedule-info">
+						<p
+							th:if="${relatedTask.updateInformationComment.comment != null && relatedTask.updateInformationComment.comment != ''}"
+							th:text="${'商談コメント追加：' + relatedTask.updateInformationComment.comment}"></p>
+						<p th:text="${relatedTask.updateInformationComment.title}"></p>
+						<footer
+							class="information-footer">
+							<span th:text="${relatedTask.updateInformationComment.createAccountName}"></span>
+							<span th:text="${relatedTask.updateInformationComment.createDateTime}"></span>
+						
+						</footer>
+					</a>
+				</li>
+
+				<li class="list-item-infor" th:if="${relatedTask.division =='BUILDING'}">
+					<p th:text="${relatedTask.content}"></p> <footer
+						class="information-footer">
+						<span th:text="${relatedTask.updateAccountName}"></span>
+						<span
+							th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+							th:text="${relatedTask.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></span>
+					</footer>
+
+				</li>
+				<li class="list-item-infor" th:if="${relatedTask.division == 'SALES'}">
+					<p th:text="${relatedTask.content}"></p> <footer
+						class="information-footer">
+						<span th:text="${relatedTask.updateAccountName}"></span>
+						<span
+							th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+							th:text="${relatedTask.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd HH:mm'))}"></span>
+					</footer>
+				</li>
+			</div>
+
+		</ul>
+	</div>
+</div>

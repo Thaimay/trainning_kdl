@@ -1,0 +1,41 @@
+<div class="modal-content">
+  <form class="form-horizontal" id="sales-modal-form" action="/pc/sales/file/create" th:action="@{/pc/sales/file/create}" method="post" enctype="multipart/form-data">	  
+
+	  <div class="modal-header">
+	    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+	    <h4 class="modal-title">営業資料の登録</h4>
+	  </div>
+	  <div class="modal-body">
+	      <div class="form-group">
+	        <div class="col-md-12">
+	          <input id="sales-file" type="file" name="file" accept=".pdf, .docx, .xlsx, .pptx">
+	        </div>
+	      </div>
+	      <div class="form-group">
+	        <div class="col-md-4">
+	          <select class="form-control" name="division">
+	            <option th:each="division : ${divisions}" th:value="${division}" th:text="${T(jp.co.world.storedevelopment.model.value.FileDivision).toString(division)}"></option>
+	          </select>
+	        </div>
+	      </div>
+	      <div class="form-group">
+	        <div class="col-sm-12">
+	          <textarea class="form-control" rows="3" name="comment" placeholder="コメント"></textarea>
+	        </div>
+	      </div>
+	  </div>
+	  <div class="modal-footer">
+    	<button class="btn btn-primary" type="submit">登録</button>
+	  </div>
+    </form>
+    <script>
+    $("#sales-file").on("change",function(){
+    	var fileExtension = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+        if ($.inArray(this.files[0].type, fileExtension) == -1) {
+            alert("画像の拡張子はpdf、xlsx、docx、またはpptxでアップロードしてください");
+            $("#sales-file").val("");
+			return;
+        }
+	});
+    </script>
+</div>

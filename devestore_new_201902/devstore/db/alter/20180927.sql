@@ -1,0 +1,11 @@
+ALTER TABLE project_category ADD COLUMN category_name varchar(32);
+UPDATE project_category SET category_name = 'STORE_OPENINGS' WHERE name = '出店';
+UPDATE project_category SET category_name = 'TEYCA_EXPIRATION' WHERE name = '定借満了';
+UPDATE project_category SET category_name = 'TEYCA_EXPIRATION_OTHER' WHERE name = '定借満了以外';
+UPDATE project_category SET category_name = 'RENT_EXPIRATION' WHERE name = '賃料低減満了';
+UPDATE project_category SET category_name = 'TERMS_NEGOTIATION' WHERE name = '時短交渉';
+UPDATE project_category SET category_name = 'SALES_AGENCY' WHERE name = '販売代行';
+UPDATE project_category SET category_name = 'EXTERNAL_SALES_AGENCY' WHERE name = '外部販売代行';
+UPDATE project_category SET category_name = 'FOREIGN_TAKE_ACTIVITY' WHERE name = '外貨獲得活動';
+UPDATE project_category SET category_name = 'EVENT' WHERE name = '催事';
+UPDATE project_category SET category_name = 'OTHER' WHERE name = 'その他';

@@ -1,0 +1,1 @@
+ALTER TABLE mail ALTER COLUMN mail_address DROP NOT NULL;

@@ -1,0 +1,29 @@
+.media-list-item {
+  display: block;
+  color: #333333;
+  &:hover {
+    color: #333333;
+  }
+  + .media-list-item {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #cccccc;
+  }
+
+  &.has-trash {
+    position: relative;
+    padding-right: 2%;
+    .trash {
+      position: absolute;
+      right: 2%;
+      top: 50%;
+      margin-top: -12px;
+      font-size: 18px;
+      color: #991616;
+    }
+  }
+}
+
+.media-body p {
+  margin-bottom: 0;
+}

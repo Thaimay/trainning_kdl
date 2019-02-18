@@ -1,0 +1,57 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout_minimal">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags-->
+<meta name="description" content="">
+<meta name="author" content="">
+<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">店舗開発</title>
+<!-- Bootstrap core CSS-->
+
+<link href="./bootstrap/css/bootstrap.min.css" th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+<link href="./css/mycss.css" th:href="@{/css/mycss.css}" rel="stylesheet">
+<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug-->
+<link href="./bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css"
+	th:href="@{/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css}" rel="stylesheet">
+<link href="./font-awesome/css/font-awesome.min.css" th:href="@{/font-awesome/css/font-awesome.min.css}"
+	rel="stylesheet">
+<link href="./star-rating/min/rating.css" th:href="@{/star-rating/min/rating.css}" rel="stylesheet">
+
+<link href="https://getbootstrap.com/docs/3.3/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/magicsuggest/2.1.4/magicsuggest-min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wrapper">
+		<main class="main-contents login" id="mainContents">
+		  <div class="container-fluid" layout:fragment="content">コンテンツ</div>
+		</main>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+		crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/magicsuggest/2.1.4/magicsuggest-min.js"></script>
+
+	<script src="./bootstrap/js/bootstrap.min.js" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- <script src="./js/controller/negotiation-controller.js" th:src="@{/js/controller/negotiation-controller.js}"></script> -->
+	<script src="./bootstrap-switch/js/bootstrap-switch.min.js" th:src="@{/bootstrap-switch/js/bootstrap-switch.min.js}"></script>
+
+	<script src="./js/script.js" th:src="@{/js/script.js}"></script>
+	<script src="./js/magic-suggest.js" th:src="@{/js/magic-suggest.js}"></script>
+	<!-- Just for debugging purposes. Don't actually copy these 2 lines!-->
+	<!--if lt IE 9script(src='https://getbootstrap.com/docs/3.3/assets/js/ie8-responsive-file-warning.js')
+    -->
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries-->
+	<!--if lt IE 9
+    script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
+    script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+    -->
+</body>
+</html>

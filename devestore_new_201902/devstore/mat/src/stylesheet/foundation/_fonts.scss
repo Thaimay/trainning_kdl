@@ -1,0 +1,14 @@
+$font-jp: '游ゴシック  Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', meiryo, sans-serif;
+$font-en: "SF Pro JP", "SF Pro Display", "SF Pro Icons", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", メイリオ, Meiryo, "ＭＳ Ｐゴシック", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+@mixin font-jp {
+  font-weight: 300;
+  font-family: $font-jp;
+}
+
+@mixin font-en {
+  letter-spacing: 0em;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  font-family: $font-en;
+}

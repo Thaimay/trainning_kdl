@@ -1,0 +1,185 @@
+<div class="negotiation-list">
+	<header class="negotiation-list-header">
+		<div class="row">
+			<div class="col-md-7">
+				<div class="btn-sort" id="j-sortbtn">
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<p style="font-weight: bold;">絞込み：</p>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input id="negotiation-search-isOpened" class="negotiation-search-onCheck" value="isOpened" type="checkbox" th:field="*{isOpened}" ng-click="controller.onCheck()">未読
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input id="negotiation-search-isOwn" class="negotiation-search-onCheck" value="isOwn" type="checkbox" th:field="*{isOwn}" ng-click="controller.onCheck()">担当のみ
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<label>
+								<input id="negotiation-search-isReadLater" class="negotiation-search-onCheck" value="isReadLater" type="checkbox" th:field="*{isReadLater}" ng-click="controller.onCheck()">あとで読む
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="checkbox">
+							<p style="font-weight: bold;">　表示：</p>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="radio">
+							<label>
+								<input id="negotiation-search-all" type="radio" name="negotiation-type" th:checked="*{isScheduled == false && isImplemented == false}" value="All" ng-click="controller.onCheck()">すべて
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="radio">
+							<label>
+								<input id="negotiation-search-scheduled" type="radio" name="negotiation-type" th:checked="*{isScheduled}" value="Scheduled" ng-click="controller.onCheck()">予定のみ
+							</label>
+						</div>
+					</div>
+					<div class="btns-sort-item">
+						<div class="radio">
+							<label>
+								<input id="negotiation-search-implemented" type="radio" name="negotiation-type" th:checked="*{isImplemented}" value="Implemented" ng-click="controller.onCheck()">実績のみ
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="refine-by-text">
+					<input class="form-control" type="text" id="keyWordSearch" th:field="*{fillText}" placeholder="商談検索：　検索したいキーワードを入力し、ENTERキーを押します。" ng-keypress="controller.searchFullText($event)">
+				</div>
+			</div>
+			<div class="col-md-4 col-md-offset-1">
+				<div class="inline-list create-buttons">
+					<a class="btn btn-info pull-right" href="./negotiation-create.html?division=report"
+						th:href=@{showCreate/report}>新規商談報告作成</a>
+					<a class="btn btn-info pull-right" href="./negotiation-create.html?division=schedule"
+						th:href=@{showCreate/schedule}>新規商談予定作成</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<div class="negotiation-list-body">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-wrapper">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>件名</th>
+								<th>商談区分</th>
+								<th>予定日</th>
+								<th>予定時間</th>
+								<th>実施日</th>
+								<th>実施時間</th>
+								<th>中止区分</th>
+								<th>公開範囲</th>
+								<th>参照者数</th>
+								<th>後で読む</th>
+								<th>面談先法人</th>
+								<th>訪問者</th>
+								<th>面談者</th>
+								<th>重要度</th>
+								<th>会議場所</th>
+								<th>面談内容</th>
+								<th>ネクストアクション</th>
+								<th>通知先</th>
+								<th>目的</th>
+								<th>面談先館</th>
+								<th>屋号</th>
+								<th>更新日時</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="negotiation : ${negotiations}" th:object="${negotiation}" th:attr="class= *{getOpened() == false } ? 'negotiation-list-items-infomation-background' : '' " th:id = "@{negotiation-item} + *{id}">
+								<td>
+									<a th:href="@{/pc/negotiation/detail/} + *{id}" ng-click="controller.toDetail()">
+										<span th:text="*{title}"></span>
+										<span th:if="*{draft}">(下書き)</span>
+									</a>
+								</td>
+								<td th:text="*{getDivisionName()}"></td>
+								<td th:text="*{getScheduleDate()}"></td>
+								<td th:text="*{getScheduleTime()}"></td>
+								<td th:text="*{getImplementationDate()}"></td>
+								<td th:text="*{getImplementationTime()}"></td>
+								<td th:text="*{getStopState()}"></td>
+								<td th:text="*{getReleaseLevelValue()}"></td>
+								<td style="text-align: center;" class="negotiation-tooltip-open-account">
+									<span th:if="*{getOpenedAccountSize() <= 0}" th:text="*{getOpenedAccountSize()}"></span>
+									<span style="color: blue;" th:if="*{getOpenedAccountSize() > 0}" th:text="*{getOpenedAccountSize()}"></span>
+									<span class="negotiation-tooltip-open-account-text negotiation-tooltip-open-account-display" th:if="*{getOpenedAccountSize() > 0}" >
+										<span th:classappend="*{getOpenedAccountSize() > 6} ? 'negotiation-tooltip-open-account-display-scroll' : '' ">
+											<p th:each="openAccount : *{getOpenAccountList()}" th:text="${openAccount}">
+											</p>
+										</span>
+									</span>
+								</td>
+								<td class="center">
+									<div class="fa fa-star col-md-12" style="color: magenta;" th:if="*{IsReadLater()}"></div>
+									<div class="fa fa-star-o col-md-12" th:if="*{IsReadLater() == false}"></div>
+								</td>
+								<td>
+									<span
+										th:each="corporation : *{getNegotiationInterviewCorporations()}"
+										><span th:text="${corporation.name}"></span></span>
+								</td>
+								<td class="table-pre-area">
+									<span
+										th:each="InterviewAccount : *{getInterviewAccounts()}">
+										<span th:text="${InterviewAccount.getAccountName()}"></span>
+									</span>
+									<span th:text="*{interviewAccountFree}"></span>
+								</td>
+								<td>
+									<span
+										th:each="interviewBusinessCard : *{getInterviewBussinessCards()}"
+										>
+										<span th:text="${interviewBusinessCard.getBusinessCardName()}"></span>
+									</span>
+									<span th:text="*{businessCardFree}"></span>
+								</td>
+								<td th:text="*{priority}"></td>
+								<td th:text="*{place}"></td>
+								<td class="table-pre-area" th:text="*{getTrimContent()}"></td>
+								<td class="table-pre-area" th:text="*{getTrimNextActionContent()}"></td>
+								<td th:text="*{getNotification()}"></td>
+								<td th:text="*{purpose}"></td>
+								<td class="table-pre-area">
+									<span
+										th:each="building : *{interviewBuildings}">
+										<span th:text="${building.buildingName}"></span>
+									</span>
+								</td>
+								<td class="table-pre-area">
+									<span
+										th:each="brand : *{interviewBrands}">
+										<span th:text="${brand.brandName}"></span>
+									</span>
+								</td>
+								<td th:text="*{updateDatetimeValue}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<nav class="pagination-area is-centered" aria-label="Page navigation">
+						<ul id="paginationKeyword" class="pagination"></ul>
+						<input type="hidden" id="numberOfPage" name="numberOfPage" th:value="${numberOfPage}" />
+						<input type="hidden" id="pageCountKeyword" th:value="${pageCountKeyword}" />
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>

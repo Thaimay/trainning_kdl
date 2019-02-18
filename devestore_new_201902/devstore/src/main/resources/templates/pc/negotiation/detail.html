@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>商談詳細</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+</head>
+<body data-ng-app="app">
+
+	<div layout:fragment="content">
+		<input type="hidden" class="negotiation-id" th:value="${negotiation.id}">
+		<div class="row" ng-controller="NegotiationDetailController as negotiationController" ng-init="negotiationController.init()">
+			<div class="col-md-12">
+				<div class="content-detail negotiation">
+					<header class="content-detail-header">
+						<div class="row">
+							<div class="col-md-10">
+								<div class="content-meta">
+									<div class="stars">
+										<a class="star fullStar" title="1" th:if="${negotiation.priority>=1}"></a>
+										<a class="star" title="1" th:if="${negotiation.priority<1}"></a>
+										<a class="star fullStar"title="2" th:if="${negotiation.priority>=2}"></a>
+										<a class="star"title="2" th:if="${negotiation.priority<2}"></a>
+										<a class="star fullStar" title="3" th:if="${negotiation.priority>=3}"></a>
+										<a class="star" title="3" th:if="${negotiation.priority<3}"></a>
+										<a class="star fullStar"title="4" th:if="${negotiation.priority>=4}"></a>
+										<a class="star"title="4" th:if="${negotiation.priority<4}"></a>
+										<a class="star fullStar" title="5" th:if="${negotiation.priority>=5}"></a>
+										<a class="star" title="5" th:if="${negotiation.priority<5}"></a>
+									</div>
+								</div>
+								<h2></h2>
+								<div>
+									<span class="title" style="font-size: 30px;" th:text="${negotiation.title}"></span>
+									<span th:if="${!negotiation.divisionValue.isEmpty()}">
+										<b><span th:text="'[' + ${negotiation.divisionValue} + ']'"></span></b>
+									</span>
+									<span th:if="${negotiation.stop}"><b>[中止]</b></span>
+								</div>
+								<div class="registered-data">
+									登録者:<span class="id" th:text="${negotiation.createAccount.code}"></span><span class="name" th:text="${negotiation.createAccount.name}"></span>
+									<time class="date" th:text="${negotiation.createAccount.updateDatetime}"></time>
+								</div>
+								<div>
+									<span th:if="${negotiation.draft}" class="negotiation-label negotiation-label-draft">下書き</span>
+								</div>
+							</div>
+							<div class="col-md-2 ta-r">
+								<a class="btn btn-primary" id="j-detail-edit" 
+									th:href="@{/pc/negotiation/showUpdate/} + ${negotiation.id}" th:if="${negotiation.editable}">
+									<i class="fa fa-pencil" aria-hidden="true"></i> 編集
+								</a>
+								<br />
+								<div style="margin-top:5px"></div>
+								<!-- <a class="btn btn-default" th:href="@{/pc/negotiation/list}">一覧に戻る</a> -->
+								<a class="btn btn-default" ng-click="negotiationController.back()">戻る</a>
+							</div>
+						</div>
+					</header>
+					<div class="content-detail-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div>
+									<!-- Nav tabs-->
+									<ul class="nav nav-tabs negotiation-detail-tabs" role="tablist">
+										<li class="active" role="presentation"><a href="#content"
+											aria-controls="content" role="tab" data-toggle="tab">内容</a></li>
+										<li role="presentation"><a href="#comment"
+											aria-controls="comment" role="tab" data-toggle="tab">コメント</a></li>
+										<li role="presentation"><a href="#notification"
+											aria-controls="notification" role="tab" data-toggle="tab">通知先</a></li>
+										<li role="presentation"><a href="#project"
+											aria-controls="building" role="tab" data-toggle="tab">案件</a></li>
+										<li role="presentation"><a href="#building"
+											aria-controls="building" role="tab" data-toggle="tab">館</a></li>
+										<li role="presentation"><a href="#related-negotiation"
+											aria-controls="related-negotiation" role="tab"
+											data-toggle="tab">関連商談</a></li>
+										<li role="presentation"><a href="#file"
+											aria-controls="key-information" role="tab" data-toggle="tab">ファイル</a></li>
+									</ul>
+									<!-- Tab panes-->
+									<div class="tab-content">
+										<div class="tab-pane fade in active" id="content" role="tabpanel" th:insert="pc/negotiation/tabs/content"></div>
+										<div class="tab-pane fade" id="comment" role="tabpanel" th:insert="pc/negotiation/tabs/comment"></div>
+										<div class="tab-pane fade notification" id="notification" role="tabpanel" th:insert="pc/negotiation/tabs/notification"></div>
+										<div class="tab-pane fade" id="project" role="tabpanel" th:insert="pc/negotiation/tabs/project"></div>
+										<div class="tab-pane fade" id="building" role="tabpanel" th:insert="pc/negotiation/tabs/building"></div>
+										<div class="tab-pane fade" id="related-negotiation" role="tabpanel" th:insert="pc/negotiation/tabs/related-negotiation"></div>
+										<div class="tab-pane fade" id="file" role="tabpanel" th:insert="pc/negotiation/tabs/file"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</html>

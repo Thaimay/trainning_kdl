@@ -1,0 +1,154 @@
+
+<div class="panel">
+	<div class="panel-body">
+
+		<div class="container-fluid">
+			<div class="row m-3">
+				<div class="col-md-12">
+					<button class="btn btn-primary" id="j-search" type="submit" ng-click="controller.onSubmit()">
+						検索
+					</button>
+					<button class="btn btn-default" id="j-search" type="button" ng-click="controller.clear()">
+						クリア
+					</button>
+					<label><input type="checkbox" id="negotiatoin-search-default" name="isDefaultSearch"/>デフォルトにする</label>
+				</div>
+			</div>
+			<br />
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-subject">件名</label>
+							</div>
+							<div class="col-md-10">
+								<input class="form-control" id="form-subject" type="text" placeholder="" th:field="*{title}">
+							</div>
+						</div>
+					</div>
+					<div id="jImplementationDate">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-md-2">
+									<label for="form-implementation-date">予定/実施日</label>
+								</div>
+								<div class="col-md-10">
+									<div class="row">
+										<div class="col-md-5">
+											<input class="form-control j-implementation-date-start" id="form-implementation-date" type="text" th:field="*{implementationStartDate}">
+										</div>
+										<div class="col-md-1">〜</div>
+										<div class="col-md-5">
+											<input class="form-control j-implementation-date-end" id="form-implementation-end-date" type="text" th:field="*{implementationEndDate}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-negotiation-building">館</label>
+							</div>
+							<div class="col-md-10">
+								<input class="form-control j-form-negotiation-building" id="form-negotiation-building" type="text"
+									th:value="*{buildingJson}">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-negotiation-shop">店舗</label>
+							</div>
+							<div class="col-md-10">
+								<input class="form-control j-form-negotiation-shop" id="form-negotiation-shop" type="text" th:value="*{shopJson}">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-meeting-corporation">法人</label>
+							</div>
+							<div class="col-md-10">
+								<input class="form-control j-form-meeting-corporation" id="form-meeting-corporation" type="text" th:value="*{corporationsJson}">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-meeting-person">面談者</label>
+							</div>
+							<div class="col-md-10">
+								<input class="form-control j-form-staff-interview" id="form-meeting-person" type="text" th:value="*{businessCardsJson}">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-visitor">訪問者</label>
+							</div>
+							<div class="col-md-10">
+								<input class="form-control j-form-visitor" id="form-visitor" type="text" th:value="*{accountsJson}">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-negotiation-update-account">更新者</label>
+							</div>
+							<div class="col-md-10">
+								<input class="form-control j-form-negotiation-update-account" id="form-negotiation-update-account" type="text" th:value="*{updateAccountJson}">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-division">区分</label>
+							</div>
+							<div class="col-md-10">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="division" value="NEGOTIATION" th:checked="*{division.contains('NEGOTIATION')}">商談
+									</label>
+									<label>
+										<input type="checkbox" name="division" value="INSPECTION" th:checked="*{division.contains('INSPECTION')}">現調
+									</label>
+									<label>
+										<input type="checkbox" name="division" value="GENERALMEETING" th:checked="*{division.contains('GENERALMEETING')}">総会
+									</label>
+									<label>
+										<input type="checkbox" name="division" value="OTHER" th:checked="*{division.contains('OTHER')}">その他
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-2">
+								<label for="form-division">並び順</label>
+							</div>
+							<div class="col-md-10">
+								<select class="form-control" id="negotiation-search-order" th:field="*{orderByOption}">
+						          <option value="UPDATE_DATETIME_DESC">更新日が新しい順</option>
+						          <option value="UPDATE_DATETIME_ASC">更新日が古い順</option>
+						          <option value="NEGOTIATION_DATETIME_DESC">商談日が新しい順</option>
+						          <option value="NEGOTIATION_DATETIME_ASC">商談日が古い順</option>
+						        </select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>

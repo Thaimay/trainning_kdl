@@ -1,0 +1,1 @@
+alter table project add column operation_division varchar(64);

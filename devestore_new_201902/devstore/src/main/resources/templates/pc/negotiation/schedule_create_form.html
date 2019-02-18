@@ -1,0 +1,502 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="/pc/layout">
+<head>
+<title>商談予定</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script type="text/javascript">
+	$(function() {
+		$("#file-view-area").prop("files", []);
+		
+		if ($('#j-star-container').length) {
+			var ratingValue = $('#j-star-container').data("value");
+			$('#j-star-container').rating();
+
+			$('#j-star-container').find(".rating").each(function() {
+
+			});
+		}
+		
+		$('a[href]:not([href*="#"],[target="_blank"])').click(function(e) {
+			if (!confirm('他のページに移動します。 内容が消えますがよろしいでしょうか？')) {
+				return false;
+			}
+		});
+		
+		$("#add-new-file").on("change", function() {
+			var file = this.files[0];
+			_addFileView(file);
+    	});
+	});
+</script>
+</head>
+<body data-ng-app="app">
+
+	<div layout:fragment="content">
+
+		<div class="container-fluid" ng-controller="NegotiationCreateController as controller"
+			ng-init="controller.initSuggest()">
+			<div id="myModal" class="modal fade" role="dialog" th:insert="/pc/negotiation/dialog-confirm.html"></div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-4 col-md-offset-8">
+						<div class="ta-r">
+							<div class="btns-sort-item">
+								<!--<button class="btn btn-primary btn-lg pull-right" ng-click="controller.create()" type="submit">登録</button>-->
+								<button type="button" class="btn btn-warning draft-button" ng-click="controller.draft()">下書き</button>
+								<button type="button" class="btn btn-primary register-button" data-toggle="modal" data-target="#myModal">登録</button>
+								<br />
+								<div style="margin-top:5px"></div>
+								<a class="btn btn-default" href="/negotiation.html" th:href="@{/pc/negotiation/index}" role="button" >一覧に戻る</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-content">
+				<!-- Nav tabs-->
+				<ul class="nav nav-tabs" role="tablist">
+					<li class="active" role="presentation"><a href="#date" aria-controls="date" role="tab" data-toggle="tab">予定</a></li>
+					<li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">ファイル</a></li>
+					<li role="presentation"><a href="#notification" aria-controls="notification" role="tab" data-toggle="tab">通知先</a></li>
+				</ul>
+				<form id="negotiation-form" th:action="@{/pc/negotiation/create/} + ${createType}" class="j-form-submit"
+					method="post" th:object="${form}" enctype="multipart/form-data" th:type="${createType}">
+
+
+					<!-- Tab panes-->
+					<div class="tab-content">
+						<div class="tab-pane fade in active" id="date" role="tabpanel">
+							<div class="form-group">
+								<div class="container-fluid">
+
+									<div class="row j-disable-form-item scheduled" id="jScheduledDate">
+										<div class="col-md-2">
+											<label for="scheduled-date">予定日時</label>
+										</div>
+										<div class="col-md-10">
+											<div class="row">
+												<div class="col-md-12">
+													<input class="form-control j-scheduled-date" name="schedule_date" id="scheduled-date" type="text"
+														placeholder="">
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-2">
+													<label>開始時間</label>
+												</div>
+												<div class="col-md-10">
+													<input class="form-control j-scheduled-time-start" id="schedule_start_time" type="text" placeholder=""
+														value="">
+												</div>
+												<div class="col-md-2">
+													<label>終了時間</label>
+												</div>
+												<div class="col-md-10">
+													<input class="form-control j-scheduled-time-end" name="schedule_end_time" type="text" placeholder="">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="implementation-date">区分</label>
+										</div>
+										<div class="col-md-10">
+											<div class="radio">
+												<label><input type="radio" name="division" value="NEGOTIATION" checked="checked">商談</label>
+												<label><input type="radio" name="division" value="INSPECTION">現調</label>
+												<label><input type="radio" name="division" value="GENERALMEETING">総会</label>
+												<label><input type="radio" name="division" value="OTHER">その他</label>
+												<div class="text-danger" th:if="${#fields.hasErrors('division')}" th:errors="*{division}"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-business-release">公開範囲</label>
+										</div>
+										<div class="col-md-10">
+											<select th:field="*{releaseLevel}">
+												<option value="NEGOTIATION_LV1">全員に公開</option>
+												<option value="NEGOTIATION_LV2">自社のみ公開</option>
+												<option value="NEGOTIATION_LV3">通知先のみに公開</option>
+											</select>
+											<div class="text-danger" th:if="${#fields.hasErrors('releaseLevel')}" th:errors="*{releaseLevel}"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="control-label">会社</label>
+										</div>
+										<div class="col-md-10">
+											<select th:field="*{companyCd}">
+												<option th:each="company : ${companys}" th:value="${company.value}" th:text="${company.label}"></option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="control-label">件名</label>
+										</div>
+										<div class="col-md-10">
+											<input class="form-control" type="text" th:field="*{title}">
+											<div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-case">目的</label>
+										</div>
+										<div class="col-md-10">
+											<textarea name="purpose" class="form-control" rows="6" th:field="*{purpose}"></textarea>
+											<div class="text-danger" th:if="${#fields.hasErrors('purpose')}" th:errors="*{purpose}"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-meeting-corporation">案件</label>
+										</div>
+										<div class="col-md-10">
+											<input class="form-control j-form-meeting-project" id="form-meeting-project" type="text"
+												placeholder="">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-meeting-corporation">面談先法人</label>
+										</div>
+										<div class="col-md-10">
+											<input class="form-control j-form-meeting-corporation" id="form-meeting-corporation" type="text"
+												placeholder="">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-meeting-place">面談先館</label>
+										</div>
+										<div class="col-md-10">
+											<input class="form-control j-meeting-building" id="form-meeting-building" type="text" placeholder="">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-business-card">面談者</label>
+										</div>
+										<div class="col-md-10">
+											<input class="form-control j-form-business-card" id="j-form-business-card" type="text" placeholder="">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-business-card-free">面談者(フリー)</label>
+										</div>
+										<div class="col-md-10">
+											<input
+											  class="form-control j-form-business-card-free"
+											  id="form-business-card-free"
+											  type="text"
+											  placeholder=""
+											  th:field="*{businessCardFree}"
+											>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-visitor">訪問者</label>
+										</div>
+										<div class="col-md-10">
+											<input
+											  class="form-control j-form-visitor"
+											  id="form-visitor"
+											  type="text"
+											  placeholder=""
+											>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-visitor-free">訪問者(フリー)</label>
+										</div>
+										<div class="col-md-10">
+											<input
+											  class="form-control j-form-visitor-free"
+											  id="form-visitor-free"
+											  type="text"
+											  placeholder=""
+											  th:field="*{interviewAccountFree}"
+											>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-brand">屋号</label>
+										</div>
+										<div class="col-md-10">
+											<input class="form-control j-form-brand" id="form-brand" type="text" placeholder="">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="form-venue">会場場所</label>
+										</div>
+										<div class="col-md-10">
+											<input class="form-control" id="form-venue" type="text" th:field="*{place}" placeholder="" name="place">
+											<div class="text-danger" th:if="${#fields.hasErrors('place')}" th:errors="*{place}"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-2">
+											<label for="">重要度</label>
+										</div>
+										<div class="col-md-10">
+											<div id="j-star-container" rating="0">
+												<input class="rating" type="radio" name="priority" value="1" style="display: none;">
+												<input class="rating" type="radio" name="priority" value="2" style="display: none;">
+												<input class="rating" type="radio" name="priority" value="3" style="display: none;">
+												<input class="rating" type="radio" name="priority" value="4" style="display: none;">
+												<input class="rating" type="radio" name="priority" value="5" style="display: none;">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div th:if="${canCreateImportant}">
+								<h3>重要情報</h3>
+								<div class="form-group">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-2">
+												<label for="form-brand">館</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control j-form-important-building" id="j-form-important-building" type="text"
+													placeholder="">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-2">
+												<label for="form-brand">法人</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control j-form-important-corporation" id="j-form-important-corporation" type="text"
+													placeholder="">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="container-fluid">
+										<div class="row j-disable-form-item showEndDate" id="jShowEndDate">
+											<div class="col-md-2">
+												<label for="implementation-date">実施日</label>
+											</div>
+											<div class="col-md-10">
+												<div class="row">
+													<div class="col-md-12">
+														<input class="form-control j-show-end-date" name="show-end-date" id="show-end-date" type="text"
+															placeholder="">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-md-2">
+												<label for="form-case">内容</label>
+											</div>
+											<div class="col-md-10">
+												<textarea class="form-control j-important-content" name="importantInformation.content" rows="6"></textarea>
+												<div class="text-danger" th:if="${#fields.hasErrors('importantInformation.content')}" th:errors="*{importantInformation.content}"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="file" role="tabpanel">
+							<div style="margin-top: 20px">
+								<label
+									style="color: #fff; background-color: #f00; padding: 6px; border-radius: 12px"> +ファイルを選択 
+									<input id="add-new-file" type="file" style="display: none" accept=".png, .gif, .jpg, .jpeg, .docx, .xlsx, .pptx, .pdf, .mp4, .mov">
+								</label>
+							</div>
+							<div id="file-view-area" class="file-list"></div>
+						</div>
+						<div class="tab-pane fade" id="notification" role="tabpanel">
+							<div class="form-group">
+								<div class="container-fluid" style="margin-top: 10px;">
+									<div class="row">
+										<div class="col-md-6">商談メールが通知されます</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div id="notification-type"></div>
+											<div id="notification-suggest" class="suggest-label-mode" style="width: 100%;">
+												<input class="form-control j-form-notification" id="notice-add-sample" placeholder="名前を入力して選択">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div id="file-upload-template" style="display: none">
+			<div>
+				<div class="row">
+					<div class="file-source col-md-2">
+						#file_source#
+					</div>
+					<div class="col-md-1"><button type="button" class="btn file-btn-close btn-default">×</button></div>					
+				</div>
+				<div class="container-fluid">
+					<div class="form-group">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-2">
+									<label for="file-building-suggest-#index#">館</label>
+								</div>
+								<div class="col-md-10">
+									<input class="form-control" id="file-building-suggest-#index#" type="text" placeholder="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-2">
+									<label for="file-shop-suggest-#index#">店舗</label>
+								</div>
+								<div class="col-md-10">
+									<input class="form-control" id="file-shop-suggest-#index#" type="text" placeholder="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-2">
+									<label for="file-project-suggest-#index#">案件</label>
+								</div>
+								<div class="col-md-10">
+									<input class="form-control" id="file-project-suggest-#index#" type="text" placeholder="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-2">
+									<label>ﾌｧｲﾙ区分</label>
+								</div>
+								<div class="col-md-10">
+									<select class="form-control" name="fileInformation[#index#].fileDivision">
+										<option th:each="division : ${fileDivisionList}" th:value="${division.fileDivisionCode}" th:text="${division.displayName}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<textarea name="fileInformation[#index#].comment" class="form-control file-comment" rows="2"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			let account = /*[[${loginAccount}]]*/'';
+			let visitorData = [ {
+				"id" : account.id,
+				"name" : account.name
+			} ];
+			let visitorValue = [account.id];
+		/*]]>*/
+		</script>
+	</div>
+
+</body>
+</html>

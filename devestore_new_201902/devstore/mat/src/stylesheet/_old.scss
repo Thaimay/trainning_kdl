@@ -1,0 +1,121 @@
+
+/* ========================
+    Component
+======================== */
+
+
+
+/* component */
+.main {
+  padding-top: 30px;  /* ToDo: 開閉サイドバーとヘッダー等の新レイアウトに変更したら削除 */
+}
+
+.refine-by-text * {
+  width: 100%;
+}
+
+.read-more {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.more-font {
+}
+
+
+
+.register-button-area {
+  margin-buttom: 30px;
+}
+
+.division-area {
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.option-title {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.option-edit-button {
+  margin-top: 10px;
+}
+
+.division-active {
+  background-color: "#00FFFF";
+}
+
+
+
+.line-up-button {
+  margin-right: 5px;
+  margin-top: 10px;
+}
+
+.filter-button {
+  margin-right: 15px;
+}
+
+.table-area {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.area-center {
+  text-align: center;
+  vertical-align: middle;
+  margin-top: 5px;
+}
+
+
+
+.basic-detail-tabs li a,
+.negotiation-detail-tabs li a,
+.building-meta > *  {
+  color: #991616;
+}
+
+.like-button {
+  position: relative;
+  z-index: 10;
+  text-align: right;
+  cursor: pointer;
+}
+
+.read-list,
+.sort-parts,
+.project-list,
+.building-basic-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sort-label {
+  background-color: #eee;
+  padding: 5px 16px;
+}
+.sort-parts + .sort-parts {
+  border-top: 1px solid #dddddd;
+}
+.sort-parts > * {
+  margin-left: 10px;
+}
+
+.list-group.project-list a {
+  color: #991616;
+}
+
+
+
+.j-disable-form-item.isDisabled {
+  background-color: #ccc;
+  pointer-events: none;
+}
+
+
+.j-dropdown {}
+
+.j-dropdown-header {}

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="/pc/layout">
+<head>
+<title>店舗一覧</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script th:src="@{/js/store/store-list.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div>
+					<!-- Nav tabs-->
+					<ul class="nav nav-tabs" role="tablist">
+						<li th:class="${findAdvancedDTO!=null && findAdvancedDTO.isAdvancedSearch()}? '':'active'" role="presentation"><a href="#list"
+							aria-controls="list" role="tab" data-toggle="tab">一覧</a></li>
+						<li th:class="${findAdvancedDTO!=null && findAdvancedDTO.isAdvancedSearch()}? 'active':''" role="presentation"><a href="#search"
+							aria-controls="search" role="tab" data-toggle="tab">検索</a></li>
+					</ul>
+					<!-- Tab panes-->
+					<div class="tab-content">
+						<div th:class="${findAdvancedDTO!=null && findAdvancedDTO.isAdvancedSearch()}? 'tab-pane fade':'tab-pane fade in active'" id="list" role="tabpanel" th:insert="/pc/store/list_content.html"></div>
+						<div th:class="${findAdvancedDTO!=null && findAdvancedDTO.isAdvancedSearch()}? 'tab-pane fade in active':'tab-pane fade'" id="search" role="tabpanel" th:insert="/pc/store/list_find_form.html"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

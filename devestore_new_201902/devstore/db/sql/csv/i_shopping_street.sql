@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_SHOPPING_STREET(shopping_street_id,client_code,valid_division,trading_start_date_open_date,trading_end_date_close_date,parent_account_code,parent_account_division,approval_flag,approver_code,approval_time,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action)FROM 'db/csv/I_SHOTENGAI.csv' WITH CSV;

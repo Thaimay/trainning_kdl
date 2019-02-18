@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <link rel="stylesheet" href="./css/my.css">
+  <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+</head>
+<body>
+  <ons-page>
+    <ons-toolbar>
+      <div class="left" style="margin-left: 10px">戻る</div>
+      <div class="center" style="text-align: center">商談予定</div>
+    </ons-toolbar>
+
+      <ons-list>
+        <ons-list-item>
+          <ons-segment style="width: 280px">
+            <button>商談内容</button>
+            <button>館</button>
+            <button>商談履歴</button>
+            <button>ファイル</button>
+            <button>コメント</button>
+          </ons-segment>
+        <ons-list-item>
+      </ons-list>
+
+      <ons-list>
+        <ons-list-header>
+          案件
+          <div style="float: right">
+            <ons-button style="height: 25px"><ons-icon icon="ion-plus-circled"></ons-icon></ons-button>
+          </div>
+        </ons-list-header>
+        <ons-list-item modifier="chevron tappable">打ち合わせ</ons-list-item>
+        <ons-list-item modifier="chevron tappable">打ち合わせ</ons-list-item>
+
+        <ons-list-item>
+          <button class="toolbar-button toolbar-button--outline">予約</button>
+          <button class="toolbar-button">実績</button>
+        </ons-list-item>
+
+        <ons-list-item tappable>
+          <ons-checkbox input-id="input1"></ons-checkbox>
+          <label for="input1">商談</label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <ons-checkbox input-id="input2"></ons-checkbox>
+          <label for="input2">訪問</label>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <ons-checkbox input-id="input3"></ons-checkbox>
+          <label for="input3">その他</label>
+        </ons-list-item>
+
+        <ons-list-item>
+          日時&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <ons-input modifier="underbar"></ons-input>
+        </ons-list-item>
+
+        <ons-list-item>
+          連絡先&nbsp;&nbsp;
+          <ons-input modifier="underbar"></ons-input>
+        </ons-list-item>
+
+        <ons-list-item>
+          重要度&nbsp;&nbsp;
+          <ons-input modifier="underbar"></ons-input>
+        </ons-list-item>
+
+        <ons-list-item>
+          面談内容
+          <textarea class="textarea" rows="3" style="width:90%"></textarea>
+        </ons-list-item>
+
+        <ons-list-item>
+          ネクストアクション
+          <textarea class="textarea" rows="3" style="width:90%"></textarea>
+        </ons-list-item>
+
+        <ons-list-item>
+          重要情報入力&nbsp;&nbsp;
+          <ons-input modifier="underbar"></ons-input>
+        </ons-list-item>
+
+      </ons-list>
+    </ons-page>
+
+  <ons-tabbar>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="ion-home"></ons-icon>
+    </ons-tab>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="ion-calendar"></ons-icon>
+    </ons-tab>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="address-card"></ons-icon>
+    </ons-tab>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="users"></ons-icon>
+    </ons-tab>
+    <ons-tab active="true">
+      <ons-icon size="20px" icon="window-maximize"></ons-icon>
+    </ons-tab>
+</ons-tabbar>
+</body>
+</html>

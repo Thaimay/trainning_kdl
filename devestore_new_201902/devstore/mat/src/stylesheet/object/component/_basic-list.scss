@@ -1,0 +1,13 @@
+.basic-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.basic-list-item {
+  padding: 20px 20px 10px;
+  border-bottom: 1px solid #dddddd;
+
+  label {
+    font-weight: 400;
+  }
+}

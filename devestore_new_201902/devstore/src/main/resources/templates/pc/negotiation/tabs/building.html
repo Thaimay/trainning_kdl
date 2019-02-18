@@ -1,0 +1,61 @@
+<div class="tab-content-body">
+	<div class="media-list" th:if="${negotiation.buildings.size() > 0}">
+		<div th:each="building : ${negotiation.buildings}">
+			<a class="media-list-item" style="text-decoration: none;"
+				th:href="@{'/pc/building/detail/' + ${building.id} + '#negotiation&negotiation/detail/' + ${negotiation.id}}"
+				target="_blank" rel="noopener">
+				<div class="row">
+					<div class="col-md-2">
+						<div class="img" th:if="${building.imagePath} != null">
+							<img th:src="@{/pc/building/} + ${building.imagePath}">
+						</div>
+						<div class="img" th:if="${building.imagePath} == null">
+							<img th:src="@{/pc/building/} + 'img/no_img.jpg'">
+						</div>
+					</div>
+					<div class="col-md-10">
+						<div class="inline-list building-meta">
+							<div class="buildingCd" th:text="${building.buildingCd}"></div>
+							<div class="name" th:text="${building.name}"></div>
+						</div>
+						<h4 class="media-heading"
+							th:text="${building.iCorporation?.iCorporationGroup?.corporationGpName}"></h4>
+						<div class="inline-list date">
+							OPEN:
+							<p class="open-date"
+								th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+								th:text="${building.openDate != null}? ${building.openDate.format(formatter.ofPattern('yyyy/MM/dd'))}:''"></p>
+							更新日:
+							<p class="update-date"
+								th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+								th:text="${building.updateDatetime != null}? ${building.updateDatetime.format(formatter.ofPattern('yyyy/MM/dd'))}:''"></p>
+						</div>
+						<div class="inline-list">
+							エリア:
+							<p th:text="${building.iArea?.areaName}"></p>
+							ブロック:
+							<p th:text="${building.iBlock?.blockName}"></p>
+						</div>
+						<div class="inline-list">
+							<p>
+								売上: <span th:text="${building.formatBuildingSales}"></span>
+							</p>
+						</div>
+						<div class="inline-list address">
+							<p th:text="${building.address}"></p>
+						</div>
+						<div class="inline-list">
+							<a style="font-size: 12px;" target="_blank"
+								th:if="${building.homepageUrl != null && building.homepageUrl != ''}"
+								th:href="${building.homepageUrl}"
+								th:text="${building.homepageUrl}"></a>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+	<div class="media-list" th:if="${negotiation.buildings.size() <= 0}">
+		<p>館の紐付けがありません</p>
+	</div>
+</div>

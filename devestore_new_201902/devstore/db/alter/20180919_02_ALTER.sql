@@ -1,0 +1,358 @@
+alter table PROJECT drop column article_review_result;
+alter table PROJECT drop column management_result;
+alter table PROJECT drop column investment_process_result;
+alter table PROJECT add column article_review_result_id bigint;
+alter table PROJECT add column management_result_id bigint;
+alter table PROJECT add column investment_process_result_id bigint;
+alter table PROJECT add column contract_progress varchar(256);
+alter table PROJECT add column m_project_action_status_id bigint;
+
+CREATE TABLE IF NOT EXISTS M_PROJECT_ACTION_STATUS(
+    "id" serial primary key,
+    "corporation_group" varchar(4) NOT NULL DEFAULT '001',
+    "project_category_id" bigint NOT NULL,
+    "sales_channel_id" bigint NOT NULL,
+    "name" varchar(64) NOT NULL,
+    "sort" int NOT NULL,
+    "company_status_code" varchar(32) NOT NULL,
+    "negotiation_status_code" varchar(32) NOT NULL,
+    "other_status_code" varchar(32) NOT NULL,
+    "schedule_use" boolean NOT NULL DEFAULT FALSE,
+    "schedule" varchar(4) NOT NULL,
+    "created_datetime" timestamp NOT NULL,
+    "update_datetime" timestamp NOT NULL,
+    "created_account_code" varchar(64) NOT NULL,
+    "update_account_code" varchar(64) NOT NULL,
+    "is_deleted" boolean NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS PROJECT_SCHEDULE(
+    "id" serial primary key,
+    "corporation_group" varchar(4) NOT NULL DEFAULT '001',
+    "project_id" bigint NOT NULL,
+    "m_project_action_status_id" bigint NOT NULL,
+    "schedule_date" date NOT NULL,
+    "created_datetime" timestamp NOT NULL,
+    "update_datetime" timestamp NOT NULL,
+    "created_account_code" varchar(64) NOT NULL,
+    "update_account_code" varchar(64) NOT NULL,
+    "is_deleted" boolean NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS M_PROJECT_PROGRESS_STATUS(
+    "id" serial primary key,
+    "corporation_group" varchar(4) NOT NULL DEFAULT '001',
+    "category" varchar(32),
+    "project_category_id" bigint,
+    "priority" int,
+    "code" varchar(256),
+    "name" varchar(256),
+    "created_datetime" timestamp NOT NULL,
+    "update_datetime" timestamp NOT NULL,
+    "created_account_code" varchar(64) NOT NULL,
+    "update_account_code" varchar(64) NOT NULL,
+    "is_deleted" boolean NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS M_PROJECT_MEETING_RESULT(
+  "id"                     serial primary key,
+  "corporation_group"      varchar(4) NOT NULL DEFAULT '001',
+  "name"                   varchar(32) NOT NULL,
+  "priority"               int NOT NULL,
+  "created_datetime"       timestamp   NOT NULL,
+  "update_datetime"        timestamp   NOT NULL,
+  "created_account_code"   varchar(64)  NOT NULL,
+  "update_account_code"    varchar(64)  NOT NULL,
+  "is_deleted"             boolean     NOT NULL DEFAULT FALSE
+);
+
+delete from m_project_progress_status;
+select setval ('m_project_progress_status_id_seq', 1, false);
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('COMPANY', 1, 1, 'BEFORE_CONSIDERATION', '部内検討前', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('COMPANY', 1, 2, 'UNDER_CONSIDERATION', '部内検討中', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('COMPANY', 1, 3, 'PROPERTY_CONSIDERATION_APPROVAL', '物件検討会承認', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('COMPANY', 1, 4, 'MANAGEMENT_MEETING_APPROVAL', '経営会議、投資委員会承認', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('NEGOTIATION', 1, 1, 'BEFORE_NEGOTIATION', '交渉前', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('NEGOTIATION', 1, 2, 'IN_NEGOTIATION', '交渉中', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('NEGOTIATION', 1, 3, 'AGREEMENT', '合意済(詳細交渉中)', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('NEGOTIATION', 1, 4, 'UNSATISFIED', '不成立', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('OTHER', 1, 1, 'NOT_INPUT', '未入力', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('OTHER', 1, 2, 'AREA_ENTERED', '坪数入力済', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('OTHER', 1, 3, 'SECTION_ENTERED', '区間入力済', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_progress_status (category, project_category_id, priority, code, name, created_datetime, update_datetime, created_account_code, update_account_code) values ('OTHER', 1, 4, 'OPENING_STORE', '出店日経過', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+
+
+
+delete from m_project_action_status;
+select setval ('m_project_action_status_id_seq', 1, false);
+insert into m_project_action_status (project_category_id, sales_channel_id, name, sort, company_status_code, negotiation_status_code, other_status_code, schedule_use, schedule, created_datetime, update_datetime, created_account_code, update_account_code) values (1, 1, '訪問前', 1, 'BEFORE_CONSIDERATION', '', '', false, '', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_action_status (project_category_id, sales_channel_id, name, sort, company_status_code, negotiation_status_code, other_status_code, schedule_use, schedule, created_datetime, update_datetime, created_account_code, update_account_code) values (1, 1, '商談済', 2, '', 'IN_NEGOTIATION', '', false, '', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_action_status (project_category_id, sales_channel_id, name, sort, company_status_code, negotiation_status_code, other_status_code, schedule_use, schedule, created_datetime, update_datetime, created_account_code, update_account_code) values (1, 1, '区画提示', 3, '', '', 'AREA_ENTERED', true, '8M', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_action_status (project_category_id, sales_channel_id, name, sort, company_status_code, negotiation_status_code, other_status_code, schedule_use, schedule, created_datetime, update_datetime, created_account_code, update_account_code) values (1, 1, '物件上程', 4, 'PROPERTY_CONSIDERATION_APPROVAL', '', '', true, '7M', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_action_status (project_category_id, sales_channel_id, name, sort, company_status_code, negotiation_status_code, other_status_code, schedule_use, schedule, created_datetime, update_datetime, created_account_code, update_account_code) values (1, 1, '基本合意', 5, '', 'AGREEMENT', '', true, '6M', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_action_status (project_category_id, sales_channel_id, name, sort, company_status_code, negotiation_status_code, other_status_code, schedule_use, schedule, created_datetime, update_datetime, created_account_code, update_account_code) values (1, 1, '契約開始', 6, 'DECIDED', '', '', true, '3M', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batach');
+insert into m_project_action_status (project_category_id, sales_channel_id, name, sort, company_status_code, negotiation_status_code, other_status_code, schedule_use, schedule, created_datetime, update_datetime, created_account_code, update_account_code) values (1, 1, '出店済み', 7, '', '', 'OPENING_STORE', false, '', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batach');
+insert into m_project_action_status (project_category_id, sales_channel_id, name, sort, company_status_code, negotiation_status_code, other_status_code, schedule_use, schedule, created_datetime, update_datetime, created_account_code, update_account_code) values (1, 1, '中止', 8, '', '', '', false, '', '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+
+delete from m_project_meeting_result;
+select setval ('m_project_meeting_result_id_seq', 1, false);
+insert into m_project_meeting_result (name, priority, created_datetime, update_datetime, created_account_code, update_account_code) values ('承認', 1, '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_meeting_result (name, priority, created_datetime, update_datetime, created_account_code, update_account_code) values ('条件付承認', 2, '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_meeting_result (name, priority, created_datetime, update_datetime, created_account_code, update_account_code) values ('再審議', 3, '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+insert into m_project_meeting_result (name, priority, created_datetime, update_datetime, created_account_code, update_account_code) values ('その他', 4, '2018-09-19 00:00:00', '2018-09-19 00:00:00', 'batch', 'batch');
+
+delete from project_switing_item_control;
+select setval ('project_switing_item_control_id_seq', 1, false);
+insert into project_switing_item_control (
+    project_category_id,
+    basic_building,
+    basic_channel,
+    basic_corporation_group,
+    basic_corporation,
+    basic_shop_name,
+    basic_shop,
+    basic_shop_cd,
+    basic_tsubo,
+    basic_management_form,
+    basic_brand,
+    basic_area,
+    basic_adopt_difficulty,
+    basic_block,
+    basic_prefectures,
+    basic_investment_discussion,
+    basic_work_division,
+    basic_sales_agency,
+    basic_affiliate_shop_corporation,
+    basic_in_house_progress,
+    basic_negotiation_progress,
+    basic_external_release_start_date,
+    basic_external_release_confirm,
+    basic_action_status,
+    basic_project_start_date,
+    basic_stop,
+    basic_stop_reason,
+    basic_description,
+    basic_plan,
+    basic_plan_implementation_date,
+    basic_plan_period,
+    basic_other_request,
+    basic_our_request,
+    basic_directionality_group,
+    basic_directionality_landing_directionality_name,
+    basic_directionality_landing_directionality_percent,
+    basic_directionality_requestor_name,
+    basic_directionality_requestor_status,
+    basic_directionality_landing_directionality_memo,
+    basic_directionality_rent_increase_decrease,
+    basic_directionality_tenancy,
+    basic_directionality_sales_prediction,
+    basic_directionality_tenancy_period,
+    basic_directionality_profit_rate,
+    basic_directionality_implementation_datetime,
+    basic_directionality_redecoration_last_sales_date,
+    basic_directionality_implementation_period,
+    basic_directionality_management_form,
+    basic_current_store_group,
+    basic_current_store_section,
+    basic_current_store_frontage,
+    basic_current_store_floor,
+    basic_current_store_contract_tsubo,
+    basic_current_store_business_hours,
+    basic_current_store_memo,
+    basic_current_store_building_expected_value,
+    basic_negotiation_store_group,
+    basic_negotiation_store_section,
+    basic_negotiation_store_floor,
+    basic_negotiation_store_contract_tsubo,
+    basic_negotiation_store_contract_tsubo_increase_decrease,
+    basic_negotiation_store_business_hours,
+    basic_negotiation_store_memo,
+    basic_negotiation_store_expected_value,
+    basic_current_contract_group,
+    basic_current_contract_form,
+    basic_current_contract_name,
+    basic_current_contract_start_date,
+    basic_current_contract_end_date,
+    basic_current_contract_year,
+    basic_current_contract_tenancy_expiration_period,
+    basic_current_contract_auto_update,
+    basic_current_contract_economic_condition,
+    basic_current_contract_rent_reduce_start_date,
+    basic_current_contract_rent_reduce_end_date,
+    basic_current_contract_memo,
+    basic_negotiation_contract_group,
+    basic_negotiation_contract_form,
+    basic_negotiation_contract_name,
+    basic_negotiation_contract_start_date,
+    basic_negotiation_contract_end_date,
+    basic_negotiation_contract_year,
+    basic_negotiation_contract_tenancy_expiration_period,
+    basic_negotiation_contract_auto_update,
+    basic_negotiation_contract_memo,
+    basic_current_related_corporation_group,
+    basic_current_related_corporation_sales_agency,
+    basic_current_related_corporation_sales_agency_start_date,
+    basic_current_related_corporation_sales_agency_end_date,
+    basic_current_related_corporation_sales_agency_year,
+    basic_current_related_corporation_affiliate_shop,
+    basic_negotiation_related_corporation_group,
+    basic_negotiation_related_corporation_sales_agency,
+    basic_negotiation_related_corporation_sales_agency_start_date,
+    basic_negotiation_related_corporation_sales_agency_end_date,
+    basic_negotiation_related_corporation_sales_agency_year,
+    basic_negotiation_related_corporation_affiliate_shop,
+    basic_branch_store_staff_opinion,
+    basic_branch_store_opinion,
+    basic_bu_opinion,
+    schedule_action_schedule_group,
+    schedule_article_review_datetime,
+    schedule_article_review_result,
+    schedule_article_review_result_comment,
+    schedule_management_datetime,
+    schedule_management_result,
+    schedule_management_result_comment,
+    schedule_investment_process_datetime,
+    schedule_investment_process_result,
+    schedule_investment_process_result_comment,
+    schedule_past_meeting_group,
+    schedule_person_store_development_team,
+    schedule_person_store_development,
+    schedule_person_branch_store_sales,
+    schedule_person_business,
+    schedule_person_franchise,
+    schedule_person_other,
+    negotiation_tab,
+    task_tab,
+    building_and_store_tab,
+    image_and_file_tab,
+    created_datetime,
+    update_datetime,
+    created_account_code,
+    update_account_code
+) values (
+    2,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    '2018-08-22 00:00:00', -- created_datetime
+    '2018-08-22 00:00:00', -- update_datetime
+    'batch', -- created_account_code
+    'batch' -- update_account_code
+);

@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="/pc/layout_minimal">
+	<head>
+		<title>ログイン</title>
+		<meta name="keywords" content="content1" />
+		<meta name="description" content="content1" />
+	</head>
+	<body>
+
+		<div layout:fragment="content">
+
+		  <form class="form-signin" th:action="@{/pc/login/process}" action="/pc/login/process" method="get">
+		    <header class="form-signin-header">
+		      <h2 class="form-signin-heading">店舗開発システム:ログイン</h2>
+		    </header>
+
+		    <div class="form-signin-body">
+		      <label for="inputCode" class="sr-only">従業員コード</label>
+		      <input class="form-control" id="inputCode" name="code" type="text" placeholder="従業員コード" required autofocus="">
+		      <button class="btn btn-lg btn-primary btn-block btn-login" type="submit">Sign in</button>
+		    </div>
+		  </form>
+		</div>
+	</body>
+</html>

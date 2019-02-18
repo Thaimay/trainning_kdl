@@ -1,0 +1,34 @@
+<form  action="/pc/sales/file/delete"  th:object="${file}" th:action="@{/pc/sales/file/delete}" method="post">	
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn btn-info j-add-file" type="button">新規ファイル追加</button>
+      <button class="btn btn-danger" type="submit">選択した項目を削除</button>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="edit"></th>
+            <th>ファイル名</th>
+            <th>サイズ</th>
+            <th>区分</th>
+            <th>コメント</th>
+            <th>登録者</th>
+            <th>登録日</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="file, state: ${files}" th:object="${file}">
+            <td class="edit">
+              <input type="checkbox" th:name="ids" th:value="${file.id}">
+            </td>
+            <td ><a th:text="*{displayName}" th:href="@{/pc/negotiation/sales/} + *{name}"></a></td>
+            <td th:text="*{size}">9.99MB</td>
+            <td th:text="*{division}"></td>
+            <td th:text="*{comment}"></td>
+            <td th:text="*{account.name}"></td>
+            <td th:text="*{createdDate}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>

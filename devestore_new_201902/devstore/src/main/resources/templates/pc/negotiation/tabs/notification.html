@@ -1,0 +1,38 @@
+<div class="tab-content-body">
+ 
+  <ul class="read-list" th:if="${negotiation.noticeDTO.accounts.size() > 0 }">
+  	  <div th:if="${negotiation.noticeDTO.toAccounts.size() > 0 }">
+  	  	<p>TO</p>
+      	<li th:each="account : ${negotiation.noticeDTO.toAccounts}">
+        	<div class="row">
+          		<div class="col-md-2">
+	            	<p th:text="${account.name}"></p>
+	          	</div>
+	          	<div class="col-md-10">
+	            	<p th:text="${account.readStatus}"></p>
+	          	</div>
+        	</div>
+      	</li>
+      	<br>
+  	  </div>
+  	  <div th:if="${negotiation.noticeDTO.ccAccounts.size() > 0 }">
+  	  	<p>CC</p>
+      	<li th:each="account : ${negotiation.noticeDTO.ccAccounts}">
+        	<div class="row">
+          		<div class="col-md-2">
+	            	<p th:text="${account.name}"></p>
+	          	</div>
+	          	<div class="col-md-10">
+	            	<p th:text="${account.readStatus}"></p>
+	          	</div>
+        	</div>
+      	</li>
+      	<br>
+  	  </div>
+  </ul>
+  <ul class="read-list" th:if="${negotiation.noticeDTO.accounts.size() <= 0 }">
+  	<p>
+  		通知先の設定はありません
+  	</p>
+  </ul>
+</div>

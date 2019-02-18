@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_PLACE (place_id,place_name,origin_building_id,postal_cd,jis_prefectures_cd,city_name,town_name_address,building_name,floor_num,sales_floor_address,tsubo_num,start_date,end_date,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action) FROM 'db/csv/I_PLACE.csv' WITH CSV;

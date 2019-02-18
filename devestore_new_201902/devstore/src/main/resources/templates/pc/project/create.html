@@ -1,0 +1,1417 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+
+<head>
+	<title>新規登録</title>
+	<meta name="keywords" content="content1" />
+	<meta name="description" content="content1" />
+	<script th:src="@{/js/project/project-create.js} + '?v=' + ${session.version}"></script>
+	<script th:src="@{/js/project/validation/create.js} + '?v=' + ${session.version}"></script>
+	<script th:src="@{/js/services/project/base.js} + '?v=' + ${session.version}"></script>
+	<script th:src="@{/js/controllers/project/create.js} + '?v=' + ${session.version}"></script>
+</head>
+
+<body data-ng-app="app">
+	<div layout:fragment="content" ng-controller="ProjectCreateController as controller" ng-init="controller.initData()">
+		<div class="row">
+			<div class="col-md-12">
+				<form id="project-form" th:object="${projectCreate}">
+					<header class="content-detail-header">
+						<div class="row">
+							<div class="col-md-2 col-md-offset-10 ta-r">
+								<a class="btn btn-primary" id="j-create"><i class="fa fa-pencil" aria-hidden="true"></i>登録する</a>
+								<br />
+								<div style="margin-top: 5px"></div>
+								<a class="btn btn-default" th:href="@{/pc/project/list}">一覧に戻る</a>
+							</div>
+						</div>
+					</header>
+					<div class="content-detail-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="building-detail-body">
+									<div>
+										<!-- Nav tabs-->
+										<ul class="nav nav-tabs basic-detail-tabs" role="tablist" id="j-scroll-target">
+											<li class="active" role="presentation"><a href="#basic" aria-controls="home"
+													role="tab" data-toggle="tab">基本情報</a></li>
+											<li role="presentation"><a href="#schedule" aria-controls="profile" role="tab"
+													data-toggle="tab">担当・SDL</a></li>
+											<!-- <li role="presentation"><a href="#negotiation"
+												aria-controls="profile" role="tab" data-toggle="tab">商談</a></li> -->
+											<li role="presentation"><a href="#task" ng-show="itemControl.taskTab"
+													aria-controls="profile" role="tab" data-toggle="tab">タスク</a></li>
+											<li role="presentation"><a href="#related-document" ng-show="itemControl.imageAndFileTab"
+													aria-controls="profile" role="tab" data-toggle="tab">関連資料</a></li>
+										</ul>
+										<!-- Tab panes-->
+										<div class="tab-content">
+											<div class="tab-pane fade in active" id="basic" role="tabpanel">
+												<div class="tab-content-body">
+													<input type="hidden" name="id" th:value="${project?.id}">
+													<ul class="building-basic-list">
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">案件</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th>
+																				  案件種別
+																				　<div class="form-head-note">
+																					<span class="text-danger">[初回必須]</span>
+																				  </div>
+																				</th>
+																				<td><select class="form-control" id="project-create-category"
+																						name="projectCategoryId">
+																						<option value=""></option>
+																						<option th:each="cate : *{getProjectCategory()}"
+																							th:value="${cate.id}"
+																							th:text="${cate.name}">
+																						</option>
+																					</select></td>
+																			</tr>
+																			<tr>
+																				<th>案件名
+																					<div class="form-head-note">
+																						<span class="help-block">自動作成<br>(出店、定借満了、契約期中）</span>
+																					</div>
+																				</th>
+																				<td>
+																					<textarea class="form-control"
+																						placeholder="案件を入力してください"
+																						name="title" id="project-create-title"></textarea>
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>非公開</th>
+																				<td>
+																					<ul class="list-inline" style="margin-left: 10px;">
+																						<li>
+																							<label class="switch display-float-left">
+																								<input type="checkbox" name="open"
+																									value="true" th:checked="${project?.open}">
+																								<span class="slider round"></span>
+																							</label>
+																						</li>
+																						<li style="vertical-align: text-bottom; line-height: 40px; width: 4em;">
+																							<span id="open"></span>
+																						</li>
+																						<li>
+																							<div class="row">
+																								<div class="col-md-1">
+																									<span style="color: #f00; font-size: 0.8em;">注)</span>
+																								</div>
+																								<div class="col-md-11">
+																									<span class="help-block">公開：すべてのユーザに公開<br>非公開：「担当・SDL」タブの「担当者」にのみ公開</span>
+																								</div>
+																							</div>
+																						</li>
+																					</ul>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicShop">
+																				<th>
+																					店舗名(仮)
+																					<div class="form-head-note">
+																						<span class="help-block">自動作成</span>
+																					</div>
+																				</th>
+																				<td>
+																					<input class="form-control" type="text"
+																						id="j-form-shop-name-temporary">
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicShopName">
+																				<th>
+																					店舗
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須(既存店)]</span>
+																				    </div>
+																				</th>
+																				<td><input class="form-control" type="text"
+																						placeholder="店舗CDまたは店舗名を入力してください。※既存店の場合はここから入力" id="j-form-shop">
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBrand">
+																				<th>
+																					屋号
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><span style="display: none" id="j-form-brand-label-span"></span>
+																					<select style="display: none" id="j-form-brand-label-option"
+																						class="form-control">
+																					</select> <input class="form-control"
+																						type="text" placeholder="屋号を入力してください。※出店の場合はここから入力"
+																						id="j-form-brand">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>事業名</th>
+																				<td><span id="j-form-business-card"></span></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicManagementForm">
+																				<th>運営形態</th>
+																				<td><span id="j-form-operation-form-label"></span>
+																					<select class="form-control" id="j-form-operation-form">
+																						<option value=""></option>
+																						<option th:each="shopType : ${listMShopType}"
+																							th:value="${shopType.name}"
+																							th:text="${shopType.name}">
+																						</option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBuilding">
+																				<th>
+																					館
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><span id="j-form-building-label"></span>
+																					<input class="form-control" type="text"
+																						placeholder="館を入力してください。※出店の場合はここから入力" id="j-form-building">
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicChannel">
+																				<th>チャネル</th>
+																				<td><span id="j-form-sales-channel-label"></span>
+																					<select class="form-control" id="j-form-sales-channel">
+																						<option value=""></option>
+																						<option th:each="sale : *{findISaleschannel()}"
+																							th:value="${sale.id}"
+																							th:text="${sale.salesChannelName}"></option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicCorporationGroup">
+																				<th>法人G</th>
+																				<td><span id="j-form-coporation-group-label"></span>
+																					<input class="form-control" type="text"
+																						placeholder="" id="j-form-coporation-group"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicCorporation">
+																				<th>法人</th>
+																				<td><span id="j-form-coporation-label"></span>
+																					<input class="form-control" type="text"
+																						id="j-form-coporation">
+																				</td>
+																			</tr>
+
+																			<tr ng-show="itemControl.basicArea">
+																				<th>エリア</th>
+																				<td><span id="j-form-area-label"></span>
+																					<input class="form-control" type="text"
+																						id="j-form-area">
+																				</td>
+																			</tr>
+
+																			<tr ng-show="itemControl.basicAdoptDifficulty">
+																				<th>採用難易度</th>
+																				<td><span id="project-create-building-adopt-difficulty"></span></td>
+																			</tr>
+
+																			<tr ng-show="itemControl.basicBlock">
+																				<th>ブロック</th>
+																				<td><span id="j-form-block-label"></span>
+																					<input class="form-control" type="text"
+																						id="j-form-block">
+																				</td>
+																			</tr>
+
+																			<tr ng-show="itemControl.basicPrefectures">
+																				<th>都道府県</th>
+																				<td><span id="j-form-prefectures-label"></span>
+																					<input class="form-control" type="text"
+																						id="j-form-prefectures">
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">ステータス、方向性</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr ng-show="itemControl.basicWorkDivision">
+																				<th>
+																					ステータス
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><select class="form-control" name="operationDivision"
+																						id="project_create_operation_division">
+																						<option value="進行中">進行中</option>
+																						<option value="中止">中止</option>
+																						<option value="終了">終了</option>
+																					</select></td>
+																			</tr>
+																			<tr id="project_create_stop_reason_area"
+																				ng-show="itemControl.basicStopReason">
+																				<th>中止理由</th>
+																				<td><select class="form-control" name="stopReasonId"
+																						id="project_create_stop_reason">
+																						<option value=""></option>
+																						<option th:each="item : ${suspensionClassificationList}"
+																							th:value="${item.id}"
+																							th:text="${item.name}"></option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicInHouseProgress">
+																				<th>
+																					社内進捗
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><select class="form-control" id="project-create-progress-company"
+																						name="officeProjectProgressId">
+																						<option th:each="cp : ${projectProgressCompany}"
+																							th:value="${cp.id}" th:text="${cp.name}">
+																						</option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationProgress">
+																				<th>
+																					交渉進捗
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><select class="form-control" id="project-create-progress-negotiation"
+																						name="negotiationProjectProgressId">
+																						<option th:each="cp : ${projectProgressNegotiation}"
+																							th:value="${cp.id}" th:text="${cp.name}">
+																						</option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityLandingDirectionalityName">
+																				<th>
+																					着地方向性
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><select class="form-control"
+																					id="project-create-landing-category-name"
+																					name="landingProjectCategoryId">
+																						<option value=""></option>
+																						<option th:each="item : ${landingClassificationList}"
+																							th:value="${item.id}"
+																							th:text="${item.name}"></option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityLandingDirectionalityPercent">
+																				<th>
+																					可能性
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><select class="form-control" id="project-create-conclusion-possibility-percent"
+																						name="conclusionPossibilityPercentId">
+																						<option value=""></option>
+																						<option th:each="item : ${landingPossibilityClassificationList}"
+																							th:value="${item.id}"
+																							th:text="${item.name}"></option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityLandingDirectionalityMemo">
+																				<th>着地補足</th>
+																				<td>
+																					<textarea rows="4" class="form-control"
+																						name="landingMemo"></textarea>
+																				</td>
+																			</tr>
+																			<tr class="j-form-implementation-datetime"
+																				ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityImplementationDatetime">
+																				<th>実施日</th>
+																				<td><input class="form-control" type="text"
+																						name="implementationDatetime"
+																						id="project_create_implementation_datetime"></td>
+																			</tr>
+																			<tr class="tr-no-top-border">
+																				<th>
+																					あいまい設定
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-sm-2">
+																							<input class="form-control"
+																								name="project_create_implementation_schedule_datetime_year"
+																								id="project_create_implementation_schedule_datetime_year"
+																								type="text" ng-model="controller.implementationScheduleDatetimeYear">
+																						</div>
+																						<div class="col-sm-2">
+																							<input class="form-control col-sm-2"
+																								name="project_create_implementation_schedule_datetime_month"
+																								id="project_create_implementation_schedule_datetime_month"
+																								type="text" ng-model="controller.implementationScheduleDatetimeMonth">
+																						</div>
+																						<div class="col-sm-2">
+																							<select class="form-control col-sm-2"
+																								name="project_create_implementation_schedule_datetime_day"
+																								id="project_create_implementation_schedule_datetime_day"
+																								ng-model="controller.implementationScheduleDatetimeDay">
+																								<option value=""></option>
+																								<option value="05">上旬</option>
+																								<option value="15">中旬</option>
+																								<option value="25">下旬</option>
+																							</select>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityTenancyPeriod">
+																				<th>
+																					定借満了
+																					<div class="form-head-note">
+																					  <span class="help-block">自動作成</span>
+																				    </div>
+																				</th>
+																				<td><select class="form-control" id="project-create-tenancy-period"
+																						name="tenancyPeriod">
+																						<option value=""></option>
+																						<option value="伴う">伴う</option>
+																						<option value="伴わない">伴わない</option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityRentIncreaseDecrease">
+																				<th>賃料</th>
+																				<td><select class="form-control" id="project-create-rent-increase-decrease"
+																						name="rentIncreaseDecrease">
+																						<option value=""></option>
+																						<option value="UP">UP</option>
+																						<option value="DOWN">DOWN</option>
+																						<option value="維持">維持</option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicExternalReleaseStartDate">
+																				<th>外部公開可能日</th>
+																				<td class="j-form-external-release-start-date-time">
+																					<input class="form-control" type="text"
+																						name="externalReleaseStartDate">
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicExternalReleaseConfirm">
+																				<th>確定</th>
+																				<td>
+																					<div class="row">
+																						<ul class="list-inline" style="margin-left: 10px;">
+																							<li>
+																								<label class="switch">
+																									<input id="j-form-external-release-confirm"
+																										type="checkbox"
+																										name="externalReleaseConfirm"
+																										value="true"> <span
+																										class="slider round"></span>
+																								</label>
+																							</li>
+																							<li style="vertical-align: text-bottom; line-height: 40px;">
+																								<span id="j-form-external-release-confirm-label">外部公開日未確定</span>
+																							</li>
+																						</ul>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr class="j-form-sales-end-date" ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityRedecorationLastSalesDate">
+																				<th>改装営業
+																				   	 終了日</th>
+																				<td><input class="form-control" type="text"
+																						name="salesEndDate" placeholder="※改装の場合のみ入力"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityRequestorName">
+																				<th>
+																					要望先
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><select class="form-control" id="project-create-requestor-name"
+																						name="requestorName">
+																						<option value=""></option>
+																						<option value="先方">先方</option>
+																						<option value="自社">自社</option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityRequestorStatus">
+																				<th>
+																					要望理由
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td>
+																					<select class="form-control" id="project-create-requestor-status"
+																						name="requestorStatus">
+																						<option value=""></option>
+																						<option th:each="item : ${projectRequestorReason}"
+																							th:value="${item.name}"
+																							th:text="${item.name}">
+																						</option>
+																					</select>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalitySalesPrediction">
+																				<th>売上予測</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								type="text" name="salesPrediction" placeholder="※出店の場合のみ入力">
+																						</div>
+																						<div class="col-md-2">
+																							<span style="line-height: 33px"
+																								class="display-float-left">（千円）</span>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicProfitExpectation">
+																				<th>店舗利益</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								type="text" name="profitExpectation" placeholder="※出店の場合のみ入力">
+																						</div>
+																						<div class="col-md-2">
+																							<span style="line-height: 33px"
+																								class="display-float-left">（千円）</span>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityProfitRate">
+																				<th>利益率</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								type="number" name="profitRate" placeholder="※出店の場合のみ入力">
+																						</div>
+																						<div class="col-md-2">
+																							<div style="line-height: 33px; text-align: center;"
+																								class="display-float-left">％</div>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<!-- <tr ng-show="itemControl.basicDescription">
+																				<th>案件概要</th>
+																				<td><input class="form-control"
+																					id="j-form-description" name="description"
+																					type="text" placeholder="案件概要を入力してください"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicProjectStartDate">
+																				<th>案件開始日</th>
+																				<td class="j-form-startdate-time"><input
+																					class="form-control" id="start-datetime"
+																					type="text" placeholder="案件開始日を入力してください"
+																					name="startDate"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicInvestmentDiscussion">
+																				<th>投資検討会</th>
+																				<td><label class="switch"> <input
+																						type="checkbox" name="investmentDiscussionTarget"
+																						value="true"> <span class="slider round"></span>
+																				</label></td>
+																			</tr> -->
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">店舗情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreFloor">
+																				<th>フロア</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								type="text" id="project-section-progress-negotiation-floor" placeholder="※既存店の場合は、変更時のみ入力">
+																						</div>
+																						<div class="col-md-2">
+																							<span style="text-align: center; line-height: 33px"
+																								class="display-float-left">Ｆ</span>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreContractTsubo">
+																				<th>坪</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								name="project_section_progress_negotiation_contracttsubo"
+																								id="project-section-progress-negotiation-contractTsubo"
+																								onkeyup="displayIDContractTsubo()"
+																								placeholder="※既存店の場合は、変更時のみ入力">
+																						</div>
+																						<div class="col-md-2">
+																							<span style="text-align: center; line-height: 33px"
+																								class="display-float-left">坪</span>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreContractTsuboIncreaseDecrease">
+																				<th>坪数増減</th>
+																				<td><span id="project_section_progress_negotiation_contracttsubo_id"></span></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreExpectedValue">
+																				<th>館期待値</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								type="text" id="project-section-progress-negotiation-building-expected-value" name="project_section_progress_negotiation_building_expected_value" placeholder="※既存店の場合は、変更時のみ入力">
+																						</div>
+																						<div class="col-md-2">
+																							<span style="text-align: center; line-height: 33px"
+																								class="display-float-left">（千円）</span>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreBusinessHours">
+																				<th>営業時間</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control" type="text"
+																							id="project-section-progress-negotiation-businessHours" placeholder="※既存店の場合は、変更時のみ入力">
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<!-- <tr
+																				ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityTenancy">
+																				<th>定借化</th>
+																				<td><label class="switch"> <input
+																						type="checkbox" name="tenancy" value="true"
+																						th:checked="${project?.tenancy}"> <span
+																						class="slider round"></span>
+																				</label></td>
+																			</tr>
+																			 -->
+
+																			<!-- 																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityRequestorStatus"> -->
+																			<!-- 																				<th>理由 (先方要望)</th> -->
+																			<!-- 																				<td><select class="form-control" id="project-create-requestor-status" -->
+																			<!-- 																					name="requestorStatus"> -->
+																			<!-- 																						<option value="">--</option> -->
+																			<!-- 																				</select></td> -->
+																			<!-- 																			</tr> -->
+
+
+																			<!-- <tr
+																				ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityImplementationPeriod">
+																				<th>実施期</th>
+																				<td><span
+																					id="project_create_implementation_period_label"></span>
+																				</td>
+																			</tr>
+
+																			<tr id="project-section-progress-current-title"
+																				ng-show="itemControl.basicCurrentStoreGroup">
+																				<th style="font-weight: bold">現区画情報</th>
+																				<td></td>
+																			</tr>
+																			<tr
+																				id="project-section-progress-current-section-area"
+																				ng-show="itemControl.basicCurrentStoreGroup && itemControl.basicCurrentStoreSection">
+																				<th>区画</th>
+																				<td><span
+																					id="project-section-progress-current-section-label"></span></td>
+																			</tr>
+																			<tr
+																				id="project-section-progress-current-frontage-area"
+																				ng-show="itemControl.basicCurrentStoreGroup && itemControl.basicCurrentStoreFrontage">
+																				<th>間口</th>
+																				<td><span
+																					id="project-section-progress-current-frontage-label"></span></td>
+																			</tr>
+																			<tr id="project-section-progress-current-floor-area"
+																				ng-show="itemControl.basicCurrentStoreGroup && itemControl.basicCurrentStoreFloor">
+																				<th>フロア</th>
+																				<td><span
+																					id="project-section-progress-current-floor-label"></span>
+																					<span>階</span></td>
+																			</tr>
+																			<tr
+																				id="project-section-progress-current-contract-tsubo-area"
+																				ng-show="itemControl.basicCurrentStoreGroup && itemControl.basicCurrentStoreContractTsubo">
+																				<th>坪数</th>
+																				<td><span
+																					id="project-section-progress-current-contract-tsubo-label"></span>
+																					<span>坪</span></td>
+																			</tr>
+																			<tr
+																				id="project-section-progress-current-business-hours-area"
+																				ng-show="itemControl.basicCurrentStoreGroup && itemControl.basicCurrentStoreBusinessHours">
+																				<th>営業時間</th>
+																				<td><span
+																					id="project-section-progress-current-business-hours-label"></span></td>
+																			</tr>
+																			<tr
+																				ng-show="itemControl.basicCurrentStoreGroup && itemControl.basicCurrentStoreMemo">
+																				<th>現条件メモ</th>
+																				<td><input class="form-control" type="text"
+																					id="project-section-progress-current-memo"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationStoreGroup">
+																				<th style="font-weight: bold">交渉中区画情報</th>
+																				<td></td>
+																			</tr>
+																			<tr
+																				ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreSection">
+																				<th>区画</th>
+																				<td><input class="form-control" type="text"
+																					id="project-section-progress-negotiation-section"></td>
+																			</tr>
+																			<tr
+																				ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreFrontage">
+																				<th>間口</th>
+																				<td><input class="form-control" type="text"
+																					id="project-section-progress-negotiation-frontage"></td>
+																			</tr>
+
+																			<tr
+																				ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreContractTsuboIncreaseDecrease">
+																				<th>坪数増減</th>
+																				<td><span
+																					id="project_section_progress_negotiation_contracttsubo_id"></span></td>
+																			</tr>
+
+																			<tr
+																				ng-show="itemControl.basicNegotiationStoreGroup && itemControl.basicNegotiationStoreMemo">
+																				<th>交渉中メモ</th>
+																				<td><input class="form-control" type="text"
+																					id="project-section-progress-negotiation-memo"></td>
+																			</tr> -->
+
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">契約情報</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr ng-show="itemControl.basicCurrentContractStartDate && itemControl.basicCurrentContractEndDate && itemControl.basicCurrentContractYear"
+																				style="background: #F3F3F3" id="project-contract-current-date-number-of-year-area">
+																				<th>契約期間</th>
+																				<td>
+																					<span id="project-contract-current-date-number-of-year-label"></span>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationContractGroup && itemControl.basicNegotiationContractForm">
+																				<th>契約形態</th>
+																				<td><select class="form-control" id="project-contract-progress-form">
+																						<option value=""></option>
+																						<option value="賃借（定借）">賃借（定借）</option>
+																						<option value="賃借（通常）">賃借（通常）</option>
+																						<option value="転借（定借）">転借（定借）</option>
+																						<option value="転借（通常）">転借（通常）</option>
+																						<option value="売仕">売仕</option>
+																						<option value="賃貸（定借）">賃貸（定借）</option>
+																						<option value="賃貸（通常）">賃貸（通常）</option>
+																						<option value="転貸（定借）">転貸（定借）</option>
+																						<option value="転貸（通常）">転貸（通常）</option>
+																					</select>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationContractGroup && itemControl.basicNegotiationContractName">
+																				<th>契約先名</th>
+																				<td><input class="form-control" type="text"
+																						id="project-contract-progress-contract-target-name"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationContractGroup && itemControl.basicNegotiationContractStartDate">
+																				<th>契約開始</th>
+																				<td class="j-implementation-date"><input class="form-control" type="text"
+																						id="project-contract-progress-start-date"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationContractGroup && itemControl.basicNegotiationContractEndDate">
+																				<th>
+																					契約終了
+																					<div class="form-head-note">
+																						<span class="help-block">契約年数を入れると自動計算</span>
+																					</div>
+																				</th>
+																				<td class="j-implementation-date"><input class="form-control" type="text"
+																						id="project-contract-progress-end-date">
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationContractGroup && itemControl.basicNegotiationContractYear">
+																				<th>契約年数</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								type="text" id="project-contract-progress-contract-number-of-year"
+																								name="project_contract_progress_contract_number_of_year"
+																								ng-change="controller.changeNumberOfYear()"
+																								ng-model="controller.projectProgress.numberOfYear">
+																							<input type="hidden" id="project-contract-progress-contract-number-of-year-hidden">
+																						</div>
+																						<div class="col-md-2">
+																							<span style="line-height: 33px; text-align: center"
+																								class="display-float-left">年</span>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationContractGroup && itemControl.basicNegotiationContractAutoUpdate">
+																				<th>自動更新</th>
+																				<td><select class="form-control" id="project-contract-progress-auto-update">
+																						<option value=""></option>
+																						<option value="true">あり</option>
+																						<option value="false">なし</option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicDirectionalityGroup && itemControl.basicDirectionalityManagementForm">
+																				<th>
+																					運営形態
+																					<div class="form-head-note">
+																					  <span class="text-danger">[初回必須]</span>
+																				    </div>
+																				</th>
+																				<td><select class="form-control" id="j-form-contract-progress-operation-form">
+																						<option value=""></option>
+																						<option th:each="shopType : ${listMShopType}"
+																							th:value="${shopType.name}"
+																							th:text="${shopType.name}">
+																						</option>
+																					</select>
+																					<span class="help-block" style="margin-bottom:0;">※出店の場合は必須</span>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.rentContractStartdateProgress">
+																				<th>賃料低減 契約開始</th>
+																				<td class="j-implementation-date">
+																					<input class="form-control" id="project_create_rent_contract_startdate_progress">
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.rentContractEnddateProgress">
+																				<th>
+																					賃料低減 契約終了
+																					<div class="form-head-note">
+																						<span class="help-block">契約年数を入れると自動計算</span>
+																					</div>
+																				</th>
+																				<td class="j-implementation-date">
+																					<input class="form-control" id="project_create_rent_contract_enddate_progress">
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.rentContractNumberOfYearProgress">
+																				<th>賃料低減 契約年数</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								id="project_create_rent_contract_number_of_year_progress"
+																								name="project_create_rent_contract_number_of_year_progress">
+																								<input type="hidden" id="project_create_rent_contract_number_of_year_progress_hidden">
+																						</div>
+																						<div class="col-md-2">
+																							<span style="line-height: 33px; text-align: center"
+																								class="display-float-left">年</span>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicCurrentContractGroup && itemControl.basicCurrentContractMemo">
+																				<th>現契約メモ</th>
+																				<td><input class="form-control" type="text" placeholder="運営系に関わる補足事項がある場合は記入"
+																					id="project-contract-progress-current-memo"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicNegotiationContractGroup && itemControl.basicNegotiationContractMemo">
+																				<th>交渉中契約メモ</th>
+																				<td><input class="form-control" type="text" placeholder="運営系に関わる補足事項がある場合は記入"
+																					id="project-contract-progress-memo"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">関連法人</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr ng-show="itemControl.basicCurrentRelatedCorporationSalesAgencyStartDate && itemControl.basicCurrentRelatedCorporationSalesAgencyEndDate && itemControl.basicCurrentRelatedCorporationSalesAgencyYear"
+																				style="background: #F3F3F3" id="project-create-i-sales-agency-target-curent-area">
+																				<th>販売代行
+																						契約期間</th>
+																				<td>
+																					<span id="project-create-i-sales-agency-contract-curent-date-number-of-year-label"></span>
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>販売代行先法人</th>
+																				<td><input class="form-control" type="text"
+																						id="project-create-i-sales-agency-target-progress" placeholder="※出店の場合は必須"></td>
+																			</tr>
+																			<tr>
+																				<th>販売代行契約開始</th>
+																				<td class="j-implementation-date">
+																					<input class="form-control" id="project-create-i-sales-agency-contract-startdate-progress" placeholder="※外部代行の場合は入力">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>
+																					販売代行契約終了
+																					<div class="form-head-note">
+																						<span class="help-block">契約年数を入れると自動計算</span>
+																					</div>
+																				</th>
+																				<td class="j-implementation-date">
+																					<input class="form-control" id="project-create-i-sales-agency-contract-enddate-progress" placeholder="※外部代行の場合は入力">
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>販売代行契約年数</th>
+																				<td>
+																					<div class="row">
+																						<div class="col-md-10">
+																							<input class="form-control display-float-left"
+																								id="project_create_i_sales_agency_contract_number_of_year_progress"
+																								name="project_create_i_sales_agency_contract_number_of_year_progress"
+																								placeholder="※外部代行の場合は入力">
+																								<input type="hidden" id="project_create_i_sales_agency_contract_number_of_year_progress_hidden">
+																						</div>
+																						<div class="col-md-2">
+																							<span style="line-height: 33px; text-align: center"
+																								class="display-float-left">年</span>
+																						</div>
+																					</div>
+																				</td>
+																			</tr>
+																			<tr>
+																				<th>加盟店</th>
+																				<td><input class="form-control" type="text"
+																						id="project-create-participating-store-corporation-progress"
+																						placeholder="※FC の場合は入力"></td>
+																			</tr>
+																			<!--
+																			<tr id="project-contract-current-form-area"
+																				ng-show="itemControl.basicCurrentContractGroup && itemControl.basicCurrentContractForm">
+																				<th>契約形態</th>
+																				<td><span
+																					id="project-contract-current-form-label"></span></td>
+																			</tr>
+																			<tr id="project-contract-current-target-name-area"
+																				ng-show="itemControl.basicCurrentContractGroup && itemControl.basicCurrentContractName">
+																				<th>契約先名</th>
+																				<td><span
+																					id="project-contract-current-target-name-label"></span></td>
+																			</tr>
+
+																			<tr id="project-contract-current-term-area"
+																				ng-show="itemControl.basicCurrentContractGroup && itemControl.basicCurrentContractTenancyExpirationPeriod">
+																				<th>定借満了期</th>
+																				<td><span
+																					id="project-contract-current-term-label"></span></td>
+																			</tr>
+																			<tr id="project-contract-current-auto-update-area"
+																				ng-show="itemControl.basicCurrentContractGroup && itemControl.basicCurrentContractAutoUpdate">
+																				<th>自動更新</th>
+																				<td><span
+																					id="project-contract-current-auto-update-label"></span></td>
+																			</tr>
+																			<tr
+																				id="project-contract-current-display-economy-area"
+																				ng-show="itemControl.basicCurrentContractGroup && itemControl.basicCurrentContractEconomicCondition">
+																				<th>経済条件</th>
+																				<td><span
+																					id="project-contract-current-display-economy-label"></span></td>
+																			</tr>
+
+																			<tr
+																				ng-show="itemControl.basicNegotiationContractGroup">
+																				<th style="font-weight: bold;">交渉中契約条件</th>
+																				<td></td>
+																			</tr>
+
+																			<tr
+																				ng-show="itemControl.basicNegotiationContractGroup && itemControl.basicNegotiationContractTenancyExpirationPeriod">
+																				<th>定借満了期</th>
+																				<td><span
+																					id="project-contract-progress-contract-term"></span></td>
+																			</tr>
+
+																			<tr id="project-create-current-plan-group-area"
+																				ng-show="itemControl.basicCurrentRelatedCorporationGroup">
+																				<th style="font-weight: bold;">現関連法人情報</th>
+																				<td></td>
+																			</tr>
+																			<tr
+																				id="project-create-i-sales-agency-target-curent-area"
+																				ng-show="itemControl.basicCurrentRelatedCorporationGroup && itemControl.basicCurrentRelatedCorporationSalesAgency">
+																				<th>販売代行先</th>
+																				<td><span
+																					id="project-create-i-sales-agency-target-curent-label"></span>
+																			</tr>
+
+																			<tr
+																				id="project-create-participating-store-corporation-curent-area"
+																				ng-show="itemControl.basicCurrentRelatedCorporationGroup && itemControl.basicCurrentRelatedCorporationAffiliateShop">
+																				<th>加盟店</th>
+																				<td><span
+																					id="project-create-participating-store-corporation-curent-label"></span>
+																			</tr> -->
+																			<tr ng-show="itemControl.basicBranchStoreOpinion">
+																				<th style="font-weight: bold;">支店見解</th>
+																				<td></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBranchStoreStaffOpinion">
+																				<th>コメント</th>
+																				<td>
+																					<textarea rows="3" class="form-control" id="j-form-file-relation-branch-person-comment"></textarea>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBranchStoreStaffOpinion">
+																				<th></th>
+																				<td>
+																					<label for="addFileRelationBranchPerson"
+																						style="width: 20%; float: left; color: white; border-radius: 3px; font-size: 14px; border-color: #2e6da4; font-weight: 400; line-height: 35px; text-align: center; background-color: #337ab7;">
+																					   	 ファイル選択 <input id="addFileRelationBranchPerson"
+																							type="file" style="display: none"
+																							accept=".png, .gif, .jpg, .jpeg, .docx, .xlsx, .pptx, .pdf, .mp4, .mov">
+																					</label>
+																					<div style="width: 5%; float: left;">&nbsp;</div>
+																					<div style="width: 75%; float: left; line-height: 35px"
+																						id="j-form-file-relation-branch-person">
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBranchStoreOpinion">
+																				<th style="font-weight: bold;">採用に関するコメント</th>
+																				<td></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBranchStoreOpinion">
+																				<th>コメント</th>
+																				<td>
+																					<textarea rows="3" class="form-control" id="j-form-file-relation-opinion-branch-comment"></textarea>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBranchStoreOpinion">
+																				<th></th>
+																				<td>
+																					<label for="addFileRelationOpinionBranch"
+																						style="width: 20%; float: left; color: white; border-radius: 3px; font-size: 14px; border-color: #2e6da4; font-weight: 400; line-height: 35px; text-align: center; background-color: #337ab7;">
+																					   		ファイル選択 <input id="addFileRelationOpinionBranch"
+																							type="file" style="display: none"
+																							accept=".png, .gif, .jpg, .jpeg, .docx, .xlsx, .pptx, .pdf, .mp4, .mov">
+																					</label>
+																					<div style="width: 5%; float: left;">&nbsp;</div>
+																					<div style="width: 75%; float: left; line-height: 35px"
+																						id="j-form-file-relation-opinion-branch">
+																					</div>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBuOpinion">
+																				<th style="font-weight: bold;">事業見解</th>
+																				<td></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBuOpinion">
+																				<th>コメント</th>
+																				<td>
+																					<textarea rows="3" class="form-control" id="j-form-file-relation-opinion-bu-comment"></textarea>
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicBuOpinion">
+																				<th></th>
+																				<td>
+																					<label for="addFileRelationOpinionBu"
+																						style="width: 20%; float: left; color: white; border-radius: 3px; font-size: 14px; border-color: #2e6da4; font-weight: 400; line-height: 35px; text-align: center; background-color: #337ab7;">
+																					   	 ファイル選択 <input id="addFileRelationOpinionBu"
+																							type="file" style="display: none"
+																							accept=".png, .gif, .jpg, .jpeg, .docx, .xlsx, .pptx, .pdf, .mp4, .mov">
+																					</label>
+																					<div style="width: 5%; float: left;">&nbsp;</div>
+																					<div style="width: 75%; float: left; line-height: 35px"
+																						id="j-form-file-relation-opinion-bu">
+																					</div>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="schedule" role="tabpanel">
+												<div class="tab-content-body">
+													<ul class="building-basic-list">
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown" ng-show="itemControl.scheduleActionScheduleGroup">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">スケジュール</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr>
+																				<th style="font-weight: bold">行動ステータス</th>
+																			</tr>
+																			<tr>
+																				<th>案件開始日</th>
+																				<td class="j-form-startdate-time"><input
+																						class="form-control" id="start-datetime"
+																						type="text" name="startDate"></td>
+																			</tr>
+																			<tr ng-show="itemControl.basicActionStatus">
+																				<th>行動ステータス</th>
+																				<td>{{controller.mProjectActionStatus.name}}
+																					<input id="project-create-action-status"
+																						name="mProjectActionStatusId"
+																						type="hidden" value="{{controller.mProjectActionStatus.id}}">
+																				</td>
+																			</tr>
+																			<tr ng-repeat="schedule in scheduleList">
+																				<th>{{ schedule.name }} <input type="hidden"
+																						class="schedule-status-id"
+																						value="{{ schedule.projectStatusId }}">
+																				</th>
+																				<td class="project-create-section-suggest-date j-implementation-date">
+																					<input class="form-control schedule-datepicker"
+																						type="text" value="{{ schedule.targetSchedule }}"
+																						placeholder="日程を入力してください"
+																						ng-model="scheduleList[$index].targetSchedule">
+																				</td>
+																			</tr>
+																			<tr ng-show="itemControl.basicInvestmentDiscussion">
+																				<th>投資検討会</th>
+																				<td><label class="switch"> <input type="checkbox"
+																							name="investmentDiscussionTarget"
+																							id="investmentDiscussionTarget"
+																							value="true"> <span class="slider round"></span>
+																					</label></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown" ng-show="itemControl.scheduleArticleReviewDatetime || itemControl.scheduleArticleReviewResult || itemControl.scheduleArticleReviewResultComment">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">物件検討会</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr ng-whow="itemControl.scheduleArticleReviewDatetime">
+																				<th>日程</th>
+																				<td class="project-create-article-review-datetime"><input
+																						class="form-control" type="text"
+																						name="articleReviewDate"></td>
+																			</tr>
+																			<tr ng-show="itemControl.scheduleArticleReviewResult">
+																				<th>結果</th>
+																				<td><select id="article-review-result-id"
+																						class="form-control" name="articleReviewResultId">
+																						<option value=""></option>
+																						<option th:each="result : ${projectMeetingResultList}"
+																							th:value="${result.id}"
+																							th:text="${result.name}"></option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.scheduleArticleReviewResultComment">
+																				<th>結果コメント</th>
+																				<td><input class="form-control" type="text"
+																						placeholder="結果コメントを入力してください"
+																						name="articleReviewResultComment"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+
+															<div class="building-basic-info j-dropdown" ng-show="itemControl.scheduleManagementDatetime || itemControl.scheduleManagementResult || itemControl.scheduleManagementResultComment">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">経営会議</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr ng-show="itemControl.scheduleManagementDatetime">
+																				<th>日程</th>
+																				<td class="project-create-article-management-datetime"><input
+																						class="form-control" type="text"
+																						name="managementDate"></td>
+																			</tr>
+																			<tr ng-show="itemControl.scheduleManagementResult">
+																				<th>結果</th>
+																				<td><select class="form-control" id="management-result-id"
+																						name="managementResultId">
+																						<option value=""></option>
+																						<option th:each="result : ${projectMeetingResultList}"
+																							th:value="${result.id}"
+																							th:text="${result.name}"></option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.scheduleManagementResultComment">
+																				<th>結果コメント</th>
+																				<td><input class="form-control" type="text"
+																						placeholder="結果コメントを入力してください"
+																						name="managementResultComment"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown">
+																<header ng-show="itemControl.scheduleInvestmentProcessDatetime || itemControl.scheduleInvestmentProcessResult || itemControl.scheduleInvestmentProcessResultComment"
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">投資上程</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr ng-show="itemControl.scheduleInvestmentProcessDatetime">
+																				<th>日程</th>
+																				<td class="project-create-article-investment-process-datetime"><input
+																						class="form-control" type="text"
+																						name="investmentProcessDate"></td>
+																			</tr>
+																			<tr ng-show="itemControl.scheduleInvestmentProcessResult">
+																				<th>結果</th>
+																				<td><select class="form-control" id="investment-process-result-id"
+																						name="investmentProcessResultId">
+																						<option value=""></option>
+																						<option th:each="result : ${projectMeetingResultList}"
+																							th:value="${result.id}"
+																							th:text="${result.name}"></option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.scheduleInvestmentProcessResultComment">
+																				<th>結果コメント</th>
+																				<td><input class="form-control" type="text"
+																						placeholder="結果コメントを入力してください"
+																						name="investmentProcessResultComment"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+															<div class="building-basic-info j-dropdown">
+																<header class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">担当者</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																			<tr ng-show="itemControl.schedulePersonStoreDevelopmentTeam">
+																				<th>店舗開発チーム</th>
+																				<td><select class="form-control" id="project-create-other-project-team">
+																						<option value=""></option>
+																						<option th:each="result : ${lstOtherProjectTeam}"
+																							th:value="${result.deptCd}"
+																							th:text="${result.deptName}"></option>
+																					</select></td>
+																			</tr>
+																			<tr ng-show="itemControl.schedulePersonStoreDevelopment">
+																				<th>店舗開発</th>
+																				<td><input class="form-control" id="project-create-other-account-store"
+																						type="text"></td>
+																			</tr>
+																			<tr ng-show="itemControl.schedulePersonBranchStoreSales">
+																				<th>支店</th>
+																				<td><input class="form-control" id="project-create-other-account-sales"
+																						type="text"></td>
+																			</tr>
+																			<tr ng-show="itemControl.schedulePersonBusiness">
+																				<th>事業</th>
+																				<td><input class="form-control" id="project-create-other-account-section"
+																						type="text"></td>
+																			</tr>
+																			<tr ng-show="itemControl.schedulePersonFranchise">
+																				<th>FC</th>
+																				<td><input class="form-control" id="project-create-other-account-fc"
+																						type="text"></td>
+																			</tr>
+																			<tr ng-show="itemControl.schedulePersonLeader">
+																				<th>人事リーダ</th>
+																				<td><input class="form-control" id="project-create-other-account-leader"
+																						type="text"></td>
+																			</tr>
+																			<tr ng-show="itemControl.schedulePersonOther">
+																				<th>その他</th>
+																				<td><input class="form-control" id="project-create-other-account-other"
+																						type="text"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- <div class="tab-pane fade" id="negotiation" role="tabpanel">
+												<div class="tab-content-body">
+													<ul class="building-basic-list">
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">商談</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">経営会議</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<li class="building-basic-list-item">
+															<div class="building-basic-info j-dropdown">
+																<header
+																	class="building-basic-info-header j-dropdown-header isOpen">
+																	<h3 class="title">投資上程</h3>
+																</header>
+																<div class="building-basic-info-body j-dropdown-body">
+																	<div class="j-dropdown-body-inner">
+																		<table class="table">
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div> -->
+											<div class="tab-pane fade" id="task" role="tabpanel">
+												<div class="tab-content-body">
+													<div class="row">
+														<div class="col-md-12">
+															<input class="btn btn-primary" id="addProjectTask" type="button"
+																value="新規タスク追加">
+															<br><br>
+														</div>
+													</div>
+													<div class="media-list"></div>
+												</div>
+											</div>
+											<div class="tab-pane fade" id="related-document" role="tabpanel">
+												<div class="tab-content-body">
+													<div class="row">
+														<div class="col-md-12">
+															<label style="color: #fff; background-color: #f00; padding: 6px; border-radius: 12px">
+																+ファイルを選択 <input id="add-new-file" type="file" style="display: none"
+																	accept=".png, .gif, .jpg, .jpeg, .docx, .xlsx, .pptx, .pdf, .mp4, .mov">
+															</label>
+														</div>
+														<div class="col-md-12">
+															<button style="margin-bottom: 6px; border-radius: 12px"
+																type="button" class="btn btn-primary" data-toggle="modal"
+																data-target="#addReferenceBuildingFileModal">+館から追加</button>
+														</div>
+														<div class="col-md-12">
+															<button style="margin-bottom: 6px; border-radius: 12px"
+																type="button" class="btn btn-primary" data-toggle="modal"
+																data-target="#addReferenceShopFileModal">+店舗から追加</button>
+														</div>
+													</div>
+													<div class="media-list"></div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="modal fade" id="addReferenceBuildingFileModal" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">案件 ﾌｧｲﾙ追加（館）</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+								<div class="media-list"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" data-dismiss="modal" id="add-reference-building-file">選択する</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal fade" id="addReferenceShopFileModal" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">案件ﾌｧｲﾙ追加(店舗)</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+								<div class="media-list"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" data-dismiss="modal" id="add-reference-shop-file">選択する</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="scrolltop" id="scrolltop" ng-click="controller.toScrollTop()">ページ上部へ</div>
+			<script th:inline="javascript">
+				/*<![CDATA[*/
+				let projectFileDivision = /*[[${projectFileDivision}]]*/'';
+				var userInfo =  /*[[${userInfo}]]*/'';
+			</script>
+		</div>
+	</div>
+</body>
+
+</html>

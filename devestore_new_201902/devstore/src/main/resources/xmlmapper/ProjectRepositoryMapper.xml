@@ -1,0 +1,2293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.world.storedevelopment.model.mapper.ProjectRepositoryMapper">
+	<resultMap id="listProject" type="Project">
+    </resultMap>
+    <resultMap id="count" type="int">
+		<result property="value" column="count"/>
+    </resultMap>
+    <resultMap id="countForSP" type="int">
+		<result property="value" column="count"/>
+    </resultMap>
+    <select id="findForSP" resultMap="listProject">
+		select p.*
+		from project p
+		left join project_contract_progress p_project_contract_progress_negotiation on p_project_contract_progress_negotiation.project_id = p.id and p_project_contract_progress_negotiation.category = 'CURRENT'
+		WHERE p.is_deleted = false
+			<if test="keyWord != null and keyWord != ''">
+				AND (
+						p.title like '%'||#{keyWord}||'%'
+						OR p.title like '%'||#{keyWordHankaku}||'%'
+						OR p.title like '%'||#{keyWordZenkaku}||'%'
+						OR p.project_category_id in (
+							select pc.id from project_category pc
+							where pc.is_deleted = false and pc.name like '%'||#{keyWord}||'%' OR pc.name like '%'||#{keyWordHankaku}||'%' OR pc.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.corporation_id in (
+							select ic.id from i_corporation ic
+							where ic.is_deleted = false and ic.corporation_name like '%'||#{keyWord}||'%' OR ic.corporation_name like '%'||#{keyWordHankaku}||'%' OR ic.corporation_name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.brand_id in (
+							select ib.id from i_brand_income_unit ib
+							where ib.is_deleted = false and ib.brand_income_unit_name like '%'||#{keyWord}||'%' OR ib.brand_income_unit_name like '%'||#{keyWordHankaku}||'%' OR ib.brand_income_unit_name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.landing_project_category_id in (
+							select pc.id from project_classification pc
+							  where pc.is_deleted = false and pc.name like '%'||#{keyWord}||'%' OR pc.name like '%'||#{keyWordHankaku}||'%' OR pc.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.office_project_progress_id in (
+							select pp.id from m_project_progress_status pp
+							where pp.category = 'COMPANY' and pp.project_category_id = p.project_category_id and pp.is_deleted = false and pp.name like '%'||#{keyWord}||'%' OR pp.name like '%'||#{keyWordHankaku}||'%' OR pp.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.negotiation_project_progress_id in (
+							select pp.id from m_project_progress_status pp
+							where pp.category = 'NEGOTIATION' and pp.project_category_id = p.project_category_id and pp.is_deleted = false and pp.name like '%'||#{keyWord}||'%' OR pp.name like '%'||#{keyWordHankaku}||'%' OR pp.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.m_project_action_status_id in (
+							select pas.id from m_project_action_status pas
+							where pas.project_category_id = p.project_category_id and pas.sales_channel_id = p.i_sales_channel_id and pas.is_deleted = false and pas.name like '%'||#{keyWord}||'%' OR pas.name like '%'||#{keyWordHankaku}||'%' OR pas.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR to_char(p.implementation_datetime, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p.implementation_schedule_datetime, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p.implementation_datetime between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p.implementation_datetime between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p.implementation_schedule_datetime between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p.implementation_schedule_datetime between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p_project_contract_progress_negotiation.contract_start_date, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p_project_contract_progress_negotiation.contract_end_date, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p_project_contract_progress_negotiation.contract_start_date between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p_project_contract_progress_negotiation.contract_start_date between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p_project_contract_progress_negotiation.contract_end_date between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p_project_contract_progress_negotiation.contract_end_date between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR p.id IN (
+						  select project_id from other_project_account where i_account_id in (
+						    select id from i_account where full_name like '%'||#{keyWord}||'%'
+						  )
+						)
+					)
+			</if>
+			<if test="iAreas != null and iAreas.size() > 0">
+				AND p.i_area_id in (
+						select ia.id
+						from i_area ia
+						where ia.is_deleted = false
+						and ia.id in
+						<foreach item = "iArea" index = "index" collection = "iAreas" open = "(" separator = "," close = ")">
+							#{iArea.id}
+						</foreach>
+					)
+			</if>
+			<if test="iBlocks != null and iBlocks.size() > 0">
+				AND p.i_block_id in (
+						select ib.id
+						from i_block ib
+						where ib.is_deleted = false
+						and ib.id in
+						<foreach item = "iBlock" index = "index" collection = "iBlocks" open = "(" separator = "," close = ")">
+							#{iBlock.id}
+						</foreach>
+					)
+			</if>
+			<if test="iPrefectures != null and iPrefectures.size() > 0">
+				AND p.i_prefectures_id in (
+						select ips.id
+						from i_prefectures ips
+						where ips.is_deleted = false
+						and ips.id in
+						<foreach item = "iPrefectures" index = "index" collection = "iPrefectures" open = "(" separator = "," close = ")">
+							#{iPrefectures.id}
+						</foreach>
+					)
+			</if>
+			<if test="iShopCompanies != null and iShopCompanies.size() > 0">
+				AND p.brand_id in (
+						select b.id
+						from i_brand_income_unit b
+						where b.is_deleted = false and b.income_unit_id in (
+									select ic.income_unit_id
+									from i_income_unit ic
+									where b.is_deleted = false  and ic.company_id in
+												<foreach item = "iShopCompany" index = "index" collection = "iShopCompanies" open = "(" separator = "," close = ")">
+													#{iShopCompany.id}
+												</foreach>
+								)
+					)
+			</if>
+			<if test="iBrands != null and iBrands.size() > 0">
+				AND p.brand_id in (
+						select ib.id
+						from i_brand_income_unit ib
+						where ib.is_deleted = false
+						and ib.id in
+						<foreach item = "iBrand" index = "index" collection = "iBrands" open = "(" separator = "," close = ")">
+							#{iBrand.id}
+						</foreach>
+					)
+			</if>
+			<if test="salesChannels != null and salesChannels.size() > 0">
+				AND p.i_sales_channel_id in (
+						select isc.id
+						from i_sales_channel isc
+						where isc.is_deleted = false
+						and isc.id in
+						<foreach item = "salesChannel" index = "index" collection = "salesChannels" open = "(" separator = "," close = ")">
+							#{salesChannel.id}
+						</foreach>
+					)
+			</if>
+			<if test="officeProjectProgresses != null and officeProjectProgresses.size() > 0">
+				AND p.office_project_progress_id IN (
+						select unnest(string_to_array(name, ','))::int8 from project_classification WHERE classification = 'PROJECT_PROGRESS_COMPANY_SEARCH_ITEM' AND
+						id in (select child_id from project_classificatoin_child_parent WHERE parent_id in
+						<foreach item = "officeProjectProgress" index = "index" collection = "officeProjectProgresses" open = "(" separator = "," close = ")">
+							#{officeProjectProgress.id}
+						</foreach>
+						)
+					)
+			</if>
+			<if test="negotiationProjectProgresses != null and negotiationProjectProgresses.size() > 0">
+				AND p.negotiation_project_progress_id IN (
+						select unnest(string_to_array(name, ','))::int8 from project_classification WHERE classification = 'PROJECT_PROGRESS_NEGOTIATION_SEARCH_ITEM' AND
+						id in (select child_id from project_classificatoin_child_parent WHERE parent_id in
+						<foreach item = "negotiationProjectProgress" index = "index" collection = "negotiationProjectProgresses" open = "(" separator = "," close = ")">
+							#{negotiationProjectProgress.id}
+						</foreach>
+						)
+					)
+			</if>
+			<if test="storeDevelopTeams != null and storeDevelopTeams.size() > 0">
+				AND p.id in (
+						select opt.project_id
+						from
+						other_project_team opt
+						where opt.is_deleted = false
+						and opt.dept_cd in
+						<foreach item = "storeDevelopTeam" index = "index" collection = "storeDevelopTeams" open = "(" separator = "," close = ")">
+							'${storeDevelopTeam.id}'
+						</foreach>
+					)
+			</if>
+			<if test="planPeriodUpDowns != null and planPeriodUpDowns.size() > 0">
+				AND (concat(p.plan_period, trim(p.plan_period_half)) in
+					<foreach item = "planPeriodUpDown" index = "index" collection = "planPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{planPeriodUpDown.id}
+					</foreach>
+				)
+			</if>
+			<if test="projectCategories != null and projectCategories.size() > 0">
+				AND (p.project_category_id in
+					<foreach item = "projectCategory" index = "index" collection = "projectCategories" open = "(" separator = "," close = ")">
+						#{projectCategory.id}
+					</foreach>
+				)
+			</if>
+			<if test="landingCategories != null and landingCategories.size() > 0">
+				AND (p.landing_project_category_id in
+					<foreach item = "landingCategory" index = "index" collection = "landingCategories" open = "(" separator = "," close = ")">
+						#{landingCategory.id}
+					</foreach>
+				)
+			</if>
+			<if test="operationForms != null and operationForms.size() > 0">
+				AND p.id in (
+						select pcp.project_id
+						from project_contract_progress pcp
+						where pcp.is_deleted = false
+						and pcp.category = 'PROGRESS'
+						and pcp.operation_form in
+					<foreach item = "operationForm" index = "index" collection = "operationForms" open = "(" separator = "," close = ")">
+						#{operationForm}
+					</foreach>
+				)
+			</if>
+			<if test="implementationPeriodUpDowns != null and implementationPeriodUpDowns.size() > 0">
+				AND (
+					COALESCE((select concat(period, '上期') from m_period where p.implementation_datetime between start_date and first_half_end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown.id}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '下期') from m_period where p.implementation_datetime between second_half_start_date and end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown.id}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '上期') from m_period where p.implementation_schedule_datetime between start_date and first_half_end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown.id}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '下期') from m_period where p.implementation_schedule_datetime between second_half_start_date and end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown.id}
+					</foreach>
+				)
+			</if>
+			<if test="expirationPeriodUpDowns != null and expirationPeriodUpDowns.size() > 0">
+				AND p.id in (
+						select pcp.project_id
+						from project_contract_progress pcp
+						where pcp.is_deleted = false
+						and pcp.category = 'CURRENT'
+						and pcp.auto_update = false
+						and (
+							COALESCE((select concat(period, '上期') from m_period where pcp.contract_end_date between start_date and first_half_end_date), '') in
+							<foreach item = "expirationPeriodUpDown" index = "index" collection = "expirationPeriodUpDowns" open = "(" separator = "," close = ")">
+								#{expirationPeriodUpDown.id}
+							</foreach>
+							OR
+							COALESCE((select concat(period, '下期') from m_period where pcp.contract_end_date between second_half_start_date and end_date), '') in
+							<foreach item = "expirationPeriodUpDown" index = "index" collection = "expirationPeriodUpDowns" open = "(" separator = "," close = ")">
+								#{expirationPeriodUpDown.id}
+							</foreach>
+						)
+					)
+			</if>
+			<if test="otherAccountStores != null and otherAccountStores.size() > 0">
+				AND p.id in (
+						select opa.project_id
+						from other_project_account opa
+						where opa.is_deleted = false
+						and opa.i_account_id in
+						<foreach item = "otherAccountStore" index = "index" collection = "otherAccountStores" open = "(" separator = "," close = ")">
+							#{otherAccountStore.id}
+						</foreach>
+					)
+			</if>
+			<if test="negotiationIds != null and negotiationIds.size() > 0">
+				AND p.id in (
+					select pn.project_id
+					from project_negotiation pn
+					where pn.is_deleted = false
+					and pn.negotiation_id in
+					<foreach item = "negotiationId" index = "index" collection = "negotiationIds" open = "(" separator = "," close = ")">
+						#{negotiationId}
+					</foreach>
+				)
+			</if>
+			<if test="buildingIds != null and buildingIds.size() > 0">
+				AND p.building_id IN
+				<foreach item = "buildingId" index = "index" collection = "buildingIds" open = "(" separator = "," close = ")">
+					#{buildingId}
+				</foreach>
+			</if>
+			<if test="isOwn != null and isOwn == true">
+				AND p.id in (SELECT opa.project_id
+							FROM other_project_account opa
+							WHERE opa.is_deleted = false
+							AND opa.i_account_id = #{accountId})
+			</if>
+			<if test="isReadLater != null and isReadLater == true">
+				AND p.id in (SELECT prla.project_id
+							FROM project_read_later_account prla
+							WHERE prla.is_deleted = false
+							AND prla.account_id = #{accountId})
+			</if>
+			<if test="isMonBefore != null and isMonBefore == true">
+				AND p.update_datetime >= date_trunc('week', date_trunc('week', localtimestamp)::date - 1)
+			</if>
+			<if test="isRunOnly != null and isRunOnly == true">
+				AND operation_division = '進行中'
+				<!-- AND
+					(
+						negotiation_project_progress_id IN (
+							SELECT id FROM m_project_progress_status WHERE code IN ('IN_NEGOTIATION', 'AGREEMENT', 'FINAL_AGREEMENT')
+							)
+					) -->
+			</if>
+			<if test="isNewShop != null and isNewShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name = 'STORE_OPENINGS'
+						)
+						<if test="isExistsShop != null and isExistsShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name IN (
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+						<if test="isOtherShop != null and isOtherShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name NOT IN (
+											'STORE_OPENINGS',
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+				)
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and isExistsShop != null and isExistsShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name IN (
+									'TEYCA_EXPIRATION',
+									'TEYCA_EXPIRATION_OTHER',
+									'RENT_EXPIRATION',
+									'TERMS_NEGOTIATION',
+									'SALES_AGENCY'
+								)
+						)
+						<if test="isOtherShop != null and isOtherShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name NOT IN (
+											'STORE_OPENINGS',
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+				)
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and (isExistsShop == null or isExistsShop == false) and isOtherShop != null and isOtherShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name NOT IN (
+									'STORE_OPENINGS',
+									'TEYCA_EXPIRATION',
+									'TEYCA_EXPIRATION_OTHER',
+									'RENT_EXPIRATION',
+									'TERMS_NEGOTIATION',
+									'SALES_AGENCY'
+								)
+						)
+				)
+			</if>
+			<!-- <if test="(landingIds != null and landingIds.size() > 0) or isLandingNothing">
+			    AND (
+			      <if test="isLandingNothing">
+			        p.landing_project_category_id is null
+			      </if>
+			      <if test="landingIds != null and landingIds.size() > 0 and isLandingNothing">
+			        OR
+			      </if>
+			      <if test="landingIds != null and landingIds.size() > 0">
+			        p.landing_project_category_id in
+					  <foreach item = "landingId" index = "index" collection = "landingIds" open = "(" separator = "," close = ")">
+						  #{landingId}
+					  </foreach>
+			      </if>
+			    )
+			</if> -->
+			<if test="(isNewShop == null or isNewShop == false) and (isExistsShop == null or isExistsShop == false) and (isOtherShop == null or isOtherShop == false) and (landingIds == null or landingIds.size() == 0)">
+				AND 1 = 0
+			</if>
+			AND (p.created_account_code = '${account.employeeCd}' OR p.update_account_code = '${account.employeeCd}' OR
+				('PROJECT_EDITABLE' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+				)
+				OR
+				(
+					('PROJECT' IN
+						<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+							#{role}
+						</foreach>
+					)AND p.open = false
+				)
+				<if test="account.getRole().isOnlyTargetArea()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					  SELECT id FROM i_area WHERE area_cd IN (
+					    SELECT area_cd FROM m_income_unit_area WHERE income_unit_cd IN (
+					      SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN (
+					        SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					      )
+					    )
+					  )
+					))
+
+					<if test="account.getSubAccount().isPresent()">
+					    OR p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					    SELECT id FROM i_area WHERE area_cd IN (${account.getSubAccount().get().areaCodes()})))
+					</if>
+
+					OR p.building_id is null) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyMyCompany()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+					(SELECT company_id FROM i_shop_company WHERE company_cd IN
+					(SELECT company_cd FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					)))))
+
+					<if test="account.getSubAccount().isPresent()">
+						OR p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+						(SELECT company_id FROM i_shop_company where company_cd IN (${account.getSubAccount().get().companyCodes()}))))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyIncomeUnit()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN
+					(SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}))))
+
+					<if test="account.getSubAccount().isPresent()">
+						AND p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN (${account.getSubAccount().get().incomeUnitCodes()})))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+				OR (
+					(p.id IN (SELECT project_id FROM other_project_account WHERE i_account_id = ${account.id}))
+				)
+			)
+        ORDER BY p.update_datetime DESC, id ASC
+		<if test="pagingSize != null and pagingSize > 0">
+			LIMIT #{pagingSize} OFFSET #{numberOfPage} * #{pagingSize}
+		</if>
+    </select>
+    <select id="getCountFindForSP" resultMap="countForSP">
+		select count(1) count
+		from project p
+		left join project_contract_progress p_project_contract_progress_negotiation on p_project_contract_progress_negotiation.project_id = p.id and p_project_contract_progress_negotiation.category = 'CURRENT'
+		WHERE p.is_deleted = false
+			<if test="keyWord != null and keyWord != ''">
+				AND (
+						p.title like '%'||#{keyWord}||'%'
+						OR p.title like '%'||#{keyWordHankaku}||'%'
+						OR p.title like '%'||#{keyWordZenkaku}||'%'
+						OR p.project_category_id in (
+							select pc.id from project_category pc
+							where pc.is_deleted = false and pc.name like '%'||#{keyWord}||'%' OR pc.name like '%'||#{keyWordHankaku}||'%' OR pc.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.corporation_id in (
+							select ic.id from i_corporation ic
+							where ic.is_deleted = false and ic.corporation_name like '%'||#{keyWord}||'%' OR ic.corporation_name like '%'||#{keyWordHankaku}||'%' OR ic.corporation_name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.brand_id in (
+							select ib.id from i_brand_income_unit ib
+							where ib.is_deleted = false and ib.brand_income_unit_name like '%'||#{keyWord}||'%' OR ib.brand_income_unit_name like '%'||#{keyWordHankaku}||'%' OR ib.brand_income_unit_name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.landing_project_category_id in (
+							select pc.id from project_classification pc
+							  where pc.is_deleted = false and pc.name like '%'||#{keyWord}||'%' OR pc.name like '%'||#{keyWordHankaku}||'%' OR pc.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.office_project_progress_id in (
+							select pp.id from m_project_progress_status pp
+							where pp.category = 'COMPANY' and pp.project_category_id = p.project_category_id and pp.is_deleted = false and pp.name like '%'||#{keyWord}||'%' OR pp.name like '%'||#{keyWordHankaku}||'%' OR pp.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.negotiation_project_progress_id in (
+							select pp.id from m_project_progress_status pp
+							where pp.category = 'NEGOTIATION' and pp.project_category_id = p.project_category_id and pp.is_deleted = false and pp.name like '%'||#{keyWord}||'%' OR pp.name like '%'||#{keyWordHankaku}||'%' OR pp.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.m_project_action_status_id in (
+							select pas.id from m_project_action_status pas
+							where pas.project_category_id = p.project_category_id and pas.sales_channel_id = p.i_sales_channel_id and pas.is_deleted = false and pas.name like '%'||#{keyWord}||'%' OR pas.name like '%'||#{keyWordHankaku}||'%' OR pas.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR to_char(p.implementation_datetime, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p.implementation_schedule_datetime, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p.implementation_datetime between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p.implementation_datetime between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p.implementation_schedule_datetime between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p.implementation_schedule_datetime between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p_project_contract_progress_negotiation.contract_start_date, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p_project_contract_progress_negotiation.contract_end_date, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p_project_contract_progress_negotiation.contract_start_date between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p_project_contract_progress_negotiation.contract_start_date between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p_project_contract_progress_negotiation.contract_end_date between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p_project_contract_progress_negotiation.contract_end_date between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR p.id IN (
+						  select project_id from other_project_account where i_account_id in (
+						    select id from i_account where full_name like '%'||#{keyWord}||'%'
+						  )
+						)
+					)
+			</if>
+
+			<if test="iAreas != null and iAreas.size() > 0">
+				AND p.i_area_id in (
+						select ia.id
+						from i_area ia
+						where ia.is_deleted = false
+						and ia.id in
+						<foreach item = "iArea" index = "index" collection = "iAreas" open = "(" separator = "," close = ")">
+							#{iArea.id}
+						</foreach>
+					)
+			</if>
+			<if test="iBlocks != null and iBlocks.size() > 0">
+				AND p.i_block_id in (
+						select ib.id
+						from i_block ib
+						where ib.is_deleted = false
+						and ib.id in
+						<foreach item = "iBlock" index = "index" collection = "iBlocks" open = "(" separator = "," close = ")">
+							#{iBlock.id}
+						</foreach>
+					)
+			</if>
+			<if test="iPrefectures != null and iPrefectures.size() > 0">
+				AND p.i_prefectures_id in (
+						select ips.id
+						from i_prefectures ips
+						where ips.is_deleted = false
+						and ips.id in
+						<foreach item = "iPrefectures" index = "index" collection = "iPrefectures" open = "(" separator = "," close = ")">
+							#{iPrefectures.id}
+						</foreach>
+					)
+			</if>
+			<if test="iShopCompanies != null and iShopCompanies.size() > 0">
+				AND p.brand_id in (
+						select b.id
+						from i_brand_income_unit b
+						where b.is_deleted = false and b.income_unit_id in (
+									select ic.income_unit_id
+									from i_income_unit ic
+									where b.is_deleted = false  and ic.company_id in
+												<foreach item = "iShopCompany" index = "index" collection = "iShopCompanies" open = "(" separator = "," close = ")">
+													#{iShopCompany.id}
+												</foreach>
+								)
+					)
+			</if>
+			<if test="iBrands != null and iBrands.size() > 0">
+				AND p.brand_id in (
+						select ib.id
+						from i_brand_income_unit ib
+						where ib.is_deleted = false
+						and ib.id in
+						<foreach item = "iBrand" index = "index" collection = "iBrands" open = "(" separator = "," close = ")">
+							#{iBrand.id}
+						</foreach>
+					)
+			</if>
+			<if test="salesChannels != null and salesChannels.size() > 0">
+				AND p.i_sales_channel_id in (
+						select isc.id
+						from i_sales_channel isc
+						where isc.is_deleted = false
+						and isc.id in
+						<foreach item = "salesChannel" index = "index" collection = "salesChannels" open = "(" separator = "," close = ")">
+							#{salesChannel.id}
+						</foreach>
+					)
+			</if>
+			<if test="officeProjectProgresses != null and officeProjectProgresses.size() > 0">
+				AND p.office_project_progress_id IN (
+						select unnest(string_to_array(name, ','))::int8 from project_classification WHERE classification = 'PROJECT_PROGRESS_COMPANY_SEARCH_ITEM' AND
+						id in (select child_id from project_classificatoin_child_parent WHERE parent_id in
+						<foreach item = "officeProjectProgress" index = "index" collection = "officeProjectProgresses" open = "(" separator = "," close = ")">
+							#{officeProjectProgress.id}
+						</foreach>
+						)
+					)
+			</if>
+			<if test="negotiationProjectProgresses != null and negotiationProjectProgresses.size() > 0">
+				AND p.negotiation_project_progress_id IN (
+						select unnest(string_to_array(name, ','))::int8 from project_classification WHERE classification = 'PROJECT_PROGRESS_NEGOTIATION_SEARCH_ITEM' AND
+						id in (select child_id from project_classificatoin_child_parent WHERE parent_id in
+						<foreach item = "negotiationProjectProgress" index = "index" collection = "negotiationProjectProgresses" open = "(" separator = "," close = ")">
+							#{negotiationProjectProgress.id}
+						</foreach>
+						)
+					)
+			</if>
+			<if test="storeDevelopTeams != null and storeDevelopTeams.size() > 0">
+				AND p.id in (
+						select opt.project_id
+						from
+						other_project_team opt
+						where opt.is_deleted = false
+						and opt.dept_cd in
+						<foreach item = "storeDevelopTeam" index = "index" collection = "storeDevelopTeams" open = "(" separator = "," close = ")">
+							'${storeDevelopTeam.id}'
+						</foreach>
+					)
+			</if>
+			<if test="planPeriodUpDowns != null and planPeriodUpDowns.size() > 0">
+				AND (concat(p.plan_period, trim(p.plan_period_half)) in
+					<foreach item = "planPeriodUpDown" index = "index" collection = "planPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{planPeriodUpDown.id}
+					</foreach>
+				)
+			</if>
+			<if test="projectCategories != null and projectCategories.size() > 0">
+				AND (p.project_category_id in
+					<foreach item = "projectCategory" index = "index" collection = "projectCategories" open = "(" separator = "," close = ")">
+						#{projectCategory.id}
+					</foreach>
+				)
+			</if>
+			<if test="landingCategories != null and landingCategories.size() > 0">
+				AND (p.landing_project_category_id in
+					<foreach item = "landingCategory" index = "index" collection = "landingCategories" open = "(" separator = "," close = ")">
+						#{landingCategory.id}
+					</foreach>
+				)
+			</if>
+			<if test="operationForms != null and operationForms.size() > 0">
+				AND p.id in (
+						select pcp.project_id
+						from project_contract_progress pcp
+						where pcp.is_deleted = false
+						and pcp.category = 'PROGRESS'
+						and pcp.operation_form in
+					<foreach item = "operationForm" index = "index" collection = "operationForms" open = "(" separator = "," close = ")">
+						#{operationForm}
+					</foreach>
+				)
+			</if>
+			<if test="implementationPeriodUpDowns != null and implementationPeriodUpDowns.size() > 0">
+				AND (
+					COALESCE((select concat(period, '上期') from m_period where p.implementation_datetime between start_date and first_half_end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown.id}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '下期') from m_period where p.implementation_datetime between second_half_start_date and end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown.id}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '上期') from m_period where p.implementation_schedule_datetime between start_date and first_half_end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown.id}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '下期') from m_period where p.implementation_schedule_datetime between second_half_start_date and end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown.id}
+					</foreach>
+				)
+			</if>
+			<if test="expirationPeriodUpDowns != null and expirationPeriodUpDowns.size() > 0">
+				AND p.id in (
+						select pcp.project_id
+						from project_contract_progress pcp
+						where pcp.is_deleted = false
+						and pcp.category = 'CURRENT'
+						and pcp.auto_update = false
+						and (
+							COALESCE((select concat(period, '上期') from m_period where pcp.contract_end_date between start_date and first_half_end_date), '') in
+							<foreach item = "expirationPeriodUpDown" index = "index" collection = "expirationPeriodUpDowns" open = "(" separator = "," close = ")">
+								#{expirationPeriodUpDown.id}
+							</foreach>
+							OR
+							COALESCE((select concat(period, '下期') from m_period where pcp.contract_end_date between second_half_start_date and end_date), '') in
+							<foreach item = "expirationPeriodUpDown" index = "index" collection = "expirationPeriodUpDowns" open = "(" separator = "," close = ")">
+								#{expirationPeriodUpDown.id}
+							</foreach>
+						)
+					)
+			</if>
+			<if test="otherAccountStores != null and otherAccountStores.size() > 0">
+				AND p.id in (
+						select opa.project_id
+						from other_project_account opa
+						where opa.is_deleted = false
+						and opa.i_account_id in
+						<foreach item = "otherAccountStore" index = "index" collection = "otherAccountStores" open = "(" separator = "," close = ")">
+							#{otherAccountStore.id}
+						</foreach>
+					)
+			</if>
+			<if test="negotiationIds != null and negotiationIds.size() > 0">
+				AND p.id in (
+					select pn.project_id
+					from project_negotiation pn
+					where pn.is_deleted = false
+					and pn.negotiation_id in
+					<foreach item = "negotiationId" index = "index" collection = "negotiationIds" open = "(" separator = "," close = ")">
+						#{negotiationId}
+					</foreach>
+				)
+			</if>
+			<if test="buildingIds != null and buildingIds.size() > 0">
+				AND p.building_id IN
+				<foreach item = "buildingId" index = "index" collection = "buildingIds" open = "(" separator = "," close = ")">
+					#{buildingId}
+				</foreach>
+			</if>
+			<if test="isOwn != null and isOwn == true">
+				AND p.id in (SELECT opa.project_id
+							FROM other_project_account opa
+							WHERE opa.is_deleted = false
+							AND opa.i_account_id = #{accountId})
+			</if>
+			<if test="isReadLater != null and isReadLater == true">
+				AND p.id in (SELECT prla.project_id
+							FROM project_read_later_account prla
+							WHERE prla.is_deleted = false
+							AND prla.account_id = #{accountId})
+			</if>
+			<if test="isMonBefore != null and isMonBefore == true">
+				AND p.update_datetime >= date_trunc('week', date_trunc('week', localtimestamp)::date - 1)
+			</if>
+			<if test="isRunOnly != null and isRunOnly == true">
+				AND operation_division = '進行中'
+				<!-- AND
+					(
+						negotiation_project_progress_id IN (
+							SELECT id FROM m_project_progress_status WHERE code IN ('IN_NEGOTIATION', 'AGREEMENT', 'FINAL_AGREEMENT')
+							)
+					) -->
+			</if>
+			<if test="isNewShop != null and isNewShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name = 'STORE_OPENINGS'
+						)
+						<if test="isExistsShop != null and isExistsShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name IN (
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+						<if test="isOtherShop != null and isOtherShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name NOT IN (
+											'STORE_OPENINGS',
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+				)
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and isExistsShop != null and isExistsShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name IN (
+									'TEYCA_EXPIRATION',
+									'TEYCA_EXPIRATION_OTHER',
+									'RENT_EXPIRATION',
+									'TERMS_NEGOTIATION',
+									'SALES_AGENCY'
+								)
+						)
+						<if test="isOtherShop != null and isOtherShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name NOT IN (
+											'STORE_OPENINGS',
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+				)
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and (isExistsShop == null or isExistsShop == false) and isOtherShop != null and isOtherShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name NOT IN (
+									'STORE_OPENINGS',
+									'TEYCA_EXPIRATION',
+									'TEYCA_EXPIRATION_OTHER',
+									'RENT_EXPIRATION',
+									'TERMS_NEGOTIATION',
+									'SALES_AGENCY'
+								)
+						)
+				)
+			</if>
+			<!-- <if test="(landingIds != null and landingIds.size() > 0) or isLandingNothing">
+			    AND (
+			      <if test="isLandingNothing">
+			        p.landing_project_category_id is null
+			      </if>
+			      <if test="landingIds != null and landingIds.size() > 0 and isLandingNothing">
+			        OR
+			      </if>
+			      <if test="landingIds != null and landingIds.size() > 0">
+			        p.landing_project_category_id in
+					  <foreach item = "landingId" index = "index" collection = "landingIds" open = "(" separator = "," close = ")">
+						  #{landingId}
+					  </foreach>
+			      </if>
+			    )
+			</if> -->
+			<if test="(isNewShop == null or isNewShop == false) and (isExistsShop == null or isExistsShop == false) and (isOtherShop == null or isOtherShop == false) and (landingIds == null or landingIds.size() == 0)">
+				AND 1 = 0
+			</if>
+			AND (p.created_account_code = '${account.employeeCd}' OR p.update_account_code = '${account.employeeCd}' OR
+				('PROJECT_EDITABLE' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+				)
+				OR
+				(
+					('PROJECT' IN
+						<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+							#{role}
+						</foreach>
+					)AND p.open = false
+				)
+				<if test="account.getRole().isOnlyTargetArea()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					  SELECT id FROM i_area WHERE area_cd IN (
+					    SELECT area_cd FROM m_income_unit_area WHERE income_unit_cd IN (
+					      SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN (
+					        SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					      )
+					    )
+					  )
+					))
+
+					<if test="account.getSubAccount().isPresent()">
+					    OR p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					    SELECT id FROM i_area WHERE area_cd IN (${account.getSubAccount().get().areaCodes()})))
+					</if>
+
+					OR p.building_id is null) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyMyCompany()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+					(SELECT company_id FROM i_shop_company WHERE company_cd IN
+					(SELECT company_cd FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					)))))
+
+					<if test="account.getSubAccount().isPresent()">
+						OR p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+						(SELECT company_id FROM i_shop_company where company_cd IN (${account.getSubAccount().get().companyCodes()}))))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyIncomeUnit()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN
+					(SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}))))
+
+					<if test="account.getSubAccount().isPresent()">
+						AND p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN (${account.getSubAccount().get().incomeUnitCodes()})))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+				OR (
+					(p.id IN (SELECT project_id FROM other_project_account WHERE i_account_id = ${account.id}))
+				)
+			)
+    </select>
+	<select id="findForPC" resultMap="listProject">
+	select distinct p.id, p.*,
+ 	  p_i_area.area_cd                              as order_by_area_cd,
+	  p_i_block.block_cd                            as order_by_block_cd,
+  	  p_i_sales_channel.sales_channel_cd            as order_by_sales_channel_cd,
+      p_building.building_cd                        as order_by_building_cd,
+      p_i_shop.shop_cd                              as order_by_shop_cd,
+      p_m_shop_type.disp_order                      as order_by_shop_type,
+      p_i_shop_company.company_cd                   as order_by_company_cd,
+      LTRIM(p_i_dept.income_unit_cd_1, '0')         as order_by_income_unit_cd,
+      p_other_project_team.dept_cd                  as order_by_other_project_team,
+      p_project_contract_progress.rent_end_date     as order_by_current_rent_end_date,
+      i_account.kana_full_name <if test="isNotLocal">COLLATE "ja_JP.utf8"</if> as order_by_other_project_team_name,
+      case when p_project_contract_progress.contract_end_date = '9999-12-31' then null else p_project_contract_progress.contract_end_date end as order_by_current_contract_end_date,
+      COALESCE(p.implementation_datetime, p.implementation_schedule_datetime) as order_by_implementation_datetime, i_account.full_name
+    from project as p
+      left join i_area p_i_area on p_i_area.id = p.i_area_id
+      left join i_block p_i_block on p_i_block.id = p.i_block_id
+      left join i_sales_channel p_i_sales_channel on p_i_sales_channel.id = p.i_sales_channel_id
+      left join building p_building on p_building.id = p.building_id
+      left join i_shop p_i_shop on p_i_shop.id = p.i_shop_id
+      left join i_brand_income_unit p_i_brand_income_unit on p_i_brand_income_unit.brand_income_unit_id = p.brand_id
+      left join i_income_unit p_i_income_unit on p_i_income_unit.income_unit_id = p_i_brand_income_unit.income_unit_id
+      left join i_shop_company p_i_shop_company on p_i_shop_company.company_id = p_i_income_unit.company_id
+      left join i_shop_admin p_i_shop_admin on p_i_shop_admin.shop_id = p_i_shop.shop_id
+      left join m_shop_type p_m_shop_type on p_i_shop_admin.shop_type_id = p_m_shop_type.id  
+      left join other_project_team p_other_project_team on p_other_project_team.project_id = p.id
+      left join i_dept p_i_dept on p_i_dept.dept_cd = p_other_project_team.dept_cd
+      left join project_contract_progress p_project_contract_progress on p_project_contract_progress.project_id = p.id and p_project_contract_progress.category = 'CURRENT'
+      left join project_contract_progress p_project_contract_progress_negotiation on p_project_contract_progress_negotiation.project_id = p.id and p_project_contract_progress_negotiation.category = 'NEGOTIATION'
+	  LEFT JOIN i_account ON i_account.id = (SELECT opa.i_account_id FROM other_project_account AS opa where opa.project_id = p.id AND opa.category = 'STORE' ORDER BY opa.id limit 1)
+	  WHERE p.is_deleted = false
+			<if test="iAreaIds != null and iAreaIds.size() > 0">
+				AND p.i_area_id in (
+						select ia.id
+						from i_area ia
+						where ia.is_deleted = false
+						and ia.id in
+						<foreach item = "iAreaId" index = "index" collection = "iAreaIds" open = "(" separator = "," close = ")">
+							#{iAreaId}
+						</foreach>
+					)
+			</if>
+			<if test="iBlockIds != null and iBlockIds.size() > 0">
+				AND p.i_block_id in (
+						select ib.id
+						from i_block ib
+						where ib.is_deleted = false
+						and ib.id in
+						<foreach item = "iBlockId" index = "index" collection = "iBlockIds" open = "(" separator = "," close = ")">
+							#{iBlockId}
+						</foreach>
+					)
+			</if>
+			<if test="iPrefectureIds != null and iPrefectureIds.size() > 0">
+				AND p.i_prefectures_id in (
+						select ips.id
+						from i_prefectures ips
+						where ips.is_deleted = false
+						and ips.id in
+						<foreach item = "iPrefectureId" index = "index" collection = "iPrefectureIds" open = "(" separator = "," close = ")">
+							#{iPrefectureId}
+						</foreach>
+					)
+			</if>
+			<if test="iShopCompanieIds != null and iShopCompanieIds.size() > 0">
+				AND p.brand_id in (
+						select b.id
+						from i_brand_income_unit b
+						where b.is_deleted = false and b.income_unit_id in (
+									select ic.income_unit_id
+									from i_income_unit ic
+									where b.is_deleted = false  and ic.company_id in
+												<foreach item = "iShopCompanieId" index = "index" collection = "iShopCompanieIds" open = "(" separator = "," close = ")">
+													#{iShopCompanieId}
+												</foreach>
+								)
+					)
+			</if>
+			<if test="iBrandIds != null and iBrandIds.size() > 0">
+				AND p.brand_id in (
+						select ib.id
+						from i_brand_income_unit ib
+						where ib.is_deleted = false
+						and ib.id in
+						<foreach item = "iBrandId" index = "index" collection = "iBrandIds" open = "(" separator = "," close = ")">
+							#{iBrandId}
+						</foreach>
+					)
+			</if>
+			<if test="salesChannelIds != null and salesChannelIds.size() > 0">
+				AND p.i_sales_channel_id in (
+						select isc.id
+						from i_sales_channel isc
+						where isc.is_deleted = false
+						and isc.id in
+						<foreach item = "salesChannelId" index = "index" collection = "salesChannelIds" open = "(" separator = "," close = ")">
+							#{salesChannelId}
+						</foreach>
+					)
+			</if>
+			<if test="officeProjectProgressIds != null and officeProjectProgressIds.size() > 0">
+				AND p.office_project_progress_id IN (
+						select unnest(string_to_array(name, ','))::int8 from project_classification WHERE classification = 'PROJECT_PROGRESS_COMPANY_SEARCH_ITEM' AND
+						id in (select child_id from project_classificatoin_child_parent WHERE parent_id in
+						<foreach item = "officeProjectProgressId" index = "index" collection = "officeProjectProgressIds" open = "(" separator = "," close = ")">
+							#{officeProjectProgressId}
+						</foreach>
+						)
+					)
+			</if>
+			<if test="negotiationProjectProgressIds != null and negotiationProjectProgressIds.size() > 0">
+				AND p.negotiation_project_progress_id IN (
+						select unnest(string_to_array(name, ','))::int8 from project_classification WHERE classification = 'PROJECT_PROGRESS_NEGOTIATION_SEARCH_ITEM' AND
+						id in (select child_id from project_classificatoin_child_parent WHERE parent_id in
+						<foreach item = "negotiationProjectProgressId" index = "index" collection = "negotiationProjectProgressIds" open = "(" separator = "," close = ")">
+							#{negotiationProjectProgressId}
+						</foreach>
+						)
+					)
+			</if>
+			<if test="storeDevelopTeamCds != null and storeDevelopTeamCds.size() > 0">
+				AND p.id in (
+						select opt.project_id
+						from
+						other_project_team opt
+						where opt.is_deleted = false
+						and opt.dept_cd in
+						<foreach item = "storeDevelopTeamCd" index = "index" collection = "storeDevelopTeamCds" open = "(" separator = "," close = ")">
+							#{storeDevelopTeamCd}
+						</foreach>
+					)
+			</if>
+			<if test="planPeriodUpDowns != null and planPeriodUpDowns.size() > 0">
+				AND (concat(p.plan_period, trim(p.plan_period_half)) in
+					<foreach item = "planPeriodUpDown" index = "index" collection = "planPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{planPeriodUpDown}
+					</foreach>
+				)
+			</if>
+			<if test="projectCategoryIds != null and projectCategoryIds.size() > 0">
+				AND (p.project_category_id in
+					<foreach item = "projectCategoryId" index = "index" collection = "projectCategoryIds" open = "(" separator = "," close = ")">
+						#{projectCategoryId}
+					</foreach>
+				)
+			</if>
+			<if test="landingCategoryIds != null and landingCategoryIds.size() > 0">
+				AND (p.landing_project_category_id in
+					<foreach item = "landingCategoryId" index = "index" collection = "landingCategoryIds" open = "(" separator = "," close = ")">
+						#{landingCategoryId}
+					</foreach>
+				)
+			</if>
+			<if test="operationForms != null and operationForms.size() > 0">
+				AND p.id in (
+						select pcp.project_id
+						from project_contract_progress pcp
+						where pcp.is_deleted = false
+						and pcp.category = 'PROGRESS'
+						and pcp.operation_form in
+					<foreach item = "operationForm" index = "index" collection = "operationForms" open = "(" separator = "," close = ")">
+						#{operationForm}
+					</foreach>
+				)
+			</if>
+			<if test="implementationPeriodUpDowns != null and implementationPeriodUpDowns.size() > 0">
+				AND (
+					COALESCE((select concat(period, '上期') from m_period where p.implementation_datetime between start_date and first_half_end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '下期') from m_period where p.implementation_datetime between second_half_start_date and end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '上期') from m_period where p.implementation_schedule_datetime between start_date and first_half_end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '下期') from m_period where p.implementation_schedule_datetime between second_half_start_date and end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown}
+					</foreach>
+				)
+			</if>
+			<if test="expirationPeriodUpDowns != null and expirationPeriodUpDowns.size() > 0">
+				AND p.id in (
+						select pcp.project_id
+						from project_contract_progress pcp
+						where pcp.is_deleted = false
+						and pcp.category = 'CURRENT'
+						and pcp.auto_update = false
+						and (
+							COALESCE((select concat(period, '上期') from m_period where pcp.contract_end_date between start_date and first_half_end_date), '') in
+							<foreach item = "expirationPeriodUpDown" index = "index" collection = "expirationPeriodUpDowns" open = "(" separator = "," close = ")">
+								#{expirationPeriodUpDown}
+							</foreach>
+							OR
+							COALESCE((select concat(period, '下期') from m_period where pcp.contract_end_date between second_half_start_date and end_date), '') in
+							<foreach item = "expirationPeriodUpDown" index = "index" collection = "expirationPeriodUpDowns" open = "(" separator = "," close = ")">
+								#{expirationPeriodUpDown}
+							</foreach>
+						)
+					)
+			</if>
+			<if test="otherAccountStoreIds != null and otherAccountStoreIds.size() > 0">
+				AND p.id in (
+						select opa.project_id
+						from other_project_account opa
+						where opa.is_deleted = false
+						and opa.i_account_id in
+						<foreach item = "otherAccountStoreId" index = "index" collection = "otherAccountStoreIds" open = "(" separator = "," close = ")">
+							#{otherAccountStoreId}
+						</foreach>
+					)
+			</if>
+			<if test="salesAchievementFrom != null and salesAchievementFrom != '' or salesAchievementTo != null and salesAchievementTo != ''">
+				and to_number(p.shop_cd, '000000') in (
+					select to_number(issloy.shop_cd,'000000') from i_shop_sales_latest_one_year issloy
+					where issloy.is_deleted = false and coalesce(issloy.shop_cd,'') != ''
+					<if test="salesAchievementFrom != null and salesAchievementFrom != ''">
+						and issloy.sales_achievement >= ${salesAchievementFrom} * cast(1000 as bigint)
+					</if>
+					<if test="salesAchievementTo != null and salesAchievementTo != ''">
+						and ${salesAchievementTo} * cast(1000 as bigint) >= issloy.sales_achievement
+					</if>
+				)
+			</if>
+			<if test="salesAchievementYearToYearFrom != null and salesAchievementYearToYearFrom != '' or salesAchievementYearToYearTo != null and salesAchievementYearToYearTo != ''">
+				and to_number(p.shop_cd, '000000') in (
+					select to_number(issloy.shop_cd, '000000')
+					from i_shop_sales_latest_one_year issloy
+					where issloy.is_deleted = false and coalesce(issloy.shop_cd,'') != ''
+					<if test="salesAchievementYearToYearFrom != null and salesAchievementYearToYearFrom != ''">
+						and issloy.sales_achievement_year_to_year >= ${salesAchievementYearToYearFrom}
+					</if>
+					<if test="salesAchievementYearToYearTo != null and salesAchievementYearToYearTo != ''">
+						and ${salesAchievementYearToYearTo} >= issloy.sales_achievement_year_to_year
+					</if>
+				)
+			</if>
+			<if test="operatingProfitAchievementFrom != null and operatingProfitAchievementFrom != '' or operatingProfitAchievementTo != null and operatingProfitAchievementTo != ''">
+				and to_number(p.shop_cd, '000000') in (
+					select to_number(issloy.shop_cd, '000000')
+					from i_shop_sales_latest_one_year issloy
+					where issloy.is_deleted = false and coalesce(issloy.shop_cd,'') != ''
+					<if test="operatingProfitAchievementFrom != null and operatingProfitAchievementFrom != ''">
+						and issloy.operating_profit_achievement >= ${operatingProfitAchievementFrom} * cast(1000 as bigint)
+					</if>
+					<if test="operatingProfitAchievementTo != null and operatingProfitAchievementTo != ''">
+						and ${operatingProfitAchievementTo} * cast(1000 as bigint) >= issloy.operating_profit_achievement
+					</if>
+				)
+			</if>
+			<if test="operatingProfitAchievementCompositionFrom != null and operatingProfitAchievementCompositionFrom != '' or operatingProfitAchievementCompositionTo != null and operatingProfitAchievementCompositionTo != ''">
+				and to_number(p.shop_cd, '000000') in (
+					select to_number(issloy.shop_cd, '000000')
+					from i_shop_sales_latest_one_year issloy
+					where issloy.is_deleted = false and coalesce(issloy.shop_cd,'') != ''
+					<if test="operatingProfitAchievementCompositionFrom != null and operatingProfitAchievementCompositionFrom != ''">
+						and issloy.operating_profit_achievement_composition >= ${operatingProfitAchievementCompositionFrom}
+					</if>
+					<if test="operatingProfitAchievementCompositionTo != null and operatingProfitAchievementCompositionTo != ''">
+						and ${operatingProfitAchievementCompositionTo} >= issloy.operating_profit_achievement_composition
+					</if>
+				)
+			</if>
+			<if test="buildingExpectedValueFrom != null and buildingExpectedValueFrom != '' or buildingExpectedValueTo != null and buildingExpectedValueTo != ''">
+				and p.i_shop_id in (
+				  select a.id from i_shop a
+				  left join shop b ON a.id = b.i_shop_id
+				  left join i_shop_sales_latest_one_year c ON a.shop_cd = c.shop_cd
+				  where a.is_deleted = false
+				  and b.building_expected_value is not null
+				  and c.month_area_sales_achievement is not null
+				  <if test="buildingExpectedValueFrom != null and buildingExpectedValueFrom != ''">
+	                and ((c.month_area_sales_achievement * 1000) / cast(b.building_expected_value as bigint)) * 100 >= ${buildingExpectedValueFrom}
+                  </if>
+				  <if test="buildingExpectedValueTo != null and buildingExpectedValueTo != ''">
+                    and ${buildingExpectedValueTo} >= ((c.month_area_sales_achievement * 1000) / cast(b.building_expected_value as bigint)) * 100
+                  </if>
+				)
+			</if>
+			<if test="negotiationIds != null and negotiationIds.size() > 0">
+				AND p.id in (
+					select pn.project_id
+					from project_negotiation pn
+					where pn.is_deleted = false
+					and pn.negotiation_id in
+					<foreach item = "negotiationId" index = "index" collection = "negotiationIds" open = "(" separator = "," close = ")">
+						#{negotiationId}
+					</foreach>
+				)
+			</if>
+			<if test="buildingIds != null and buildingIds.size() > 0">
+				AND p.building_id IN
+				<foreach item = "buildingId" index = "index" collection = "buildingIds" open = "(" separator = "," close = ")">
+					#{buildingId}
+				</foreach>
+			</if>
+			<if test="updateDatetimeFrom != null and updateDatetimeFrom != ''">
+				AND p.update_datetime::date >= #{updateDatetimeFrom}::date
+			</if>
+			<if test="updateDatetimeTo != null and updateDatetimeTo != ''">
+				AND #{updateDatetimeTo}::date >= p.update_datetime::date
+			</if>
+			<if test="updateDayTo != null and updateDayTo != ''">
+				AND p.update_datetime >= date_trunc('day', NOW() - interval '${updateDayTo} day')
+			</if>
+			<if test="keyWord != null and keyWord != ''">
+				AND (
+						p.title like '%'||#{keyWord}||'%'
+						OR p.title like '%'||#{keyWordHankaku}||'%'
+						OR p.title like '%'||#{keyWordZenkaku}||'%'
+						OR p.project_category_id in (
+							select pc.id from project_category pc
+							where pc.is_deleted = false and pc.name like '%'||#{keyWord}||'%' OR pc.name like '%'||#{keyWordHankaku}||'%' OR pc.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.corporation_id in (
+							select ic.id from i_corporation ic
+							where ic.is_deleted = false and ic.corporation_name like '%'||#{keyWord}||'%' OR ic.corporation_name like '%'||#{keyWordHankaku}||'%' OR ic.corporation_name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.brand_id in (
+							select ib.id from i_brand_income_unit ib
+							where ib.is_deleted = false and ib.brand_income_unit_name like '%'||#{keyWord}||'%' OR ib.brand_income_unit_name like '%'||#{keyWordHankaku}||'%' OR ib.brand_income_unit_name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.landing_project_category_id in (
+							select pc.id from project_classification pc
+							  where pc.is_deleted = false and pc.name like '%'||#{keyWord}||'%' OR pc.name like '%'||#{keyWordHankaku}||'%' OR pc.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.office_project_progress_id in (
+							select pp.id from m_project_progress_status pp
+							where pp.category = 'COMPANY' and pp.project_category_id = p.project_category_id and pp.is_deleted = false and pp.name like '%'||#{keyWord}||'%' OR pp.name like '%'||#{keyWordHankaku}||'%' OR pp.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.negotiation_project_progress_id in (
+							select pp.id from m_project_progress_status pp
+							where pp.category = 'NEGOTIATION' and pp.project_category_id = p.project_category_id and pp.is_deleted = false and pp.name like '%'||#{keyWord}||'%' OR pp.name like '%'||#{keyWordHankaku}||'%' OR pp.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.m_project_action_status_id in (
+							select pas.id from m_project_action_status pas
+							where pas.project_category_id = p.project_category_id and pas.sales_channel_id = p.i_sales_channel_id and pas.is_deleted = false and pas.name like '%'||#{keyWord}||'%' OR pas.name like '%'||#{keyWordHankaku}||'%' OR pas.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR to_char(p.implementation_datetime, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p.implementation_schedule_datetime, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p.implementation_datetime between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p.implementation_datetime between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p.implementation_schedule_datetime between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p.implementation_schedule_datetime between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p_project_contract_progress.contract_start_date, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p_project_contract_progress.contract_end_date, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p_project_contract_progress.contract_start_date between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p_project_contract_progress.contract_start_date between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p_project_contract_progress.contract_end_date between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p_project_contract_progress.contract_end_date between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR p.id IN (
+						  select project_id from other_project_account where i_account_id in (
+						    select id from i_account where full_name like '%'||#{keyWord}||'%'
+						  )
+						)
+					)
+			</if>
+			<if test="isOwn != null and isOwn == true">
+				AND p.id in (SELECT opa.project_id
+							FROM other_project_account opa
+							WHERE opa.is_deleted = false
+							AND opa.i_account_id = #{accountId})
+			</if>
+			<if test="isReadLater != null and isReadLater == true">
+				AND p.id in (SELECT prla.project_id
+							FROM project_read_later_account prla
+							WHERE prla.is_deleted = false
+							AND prla.account_id = #{accountId})
+			</if>
+			<if test="isMonBefore != null and isMonBefore == true">
+				AND p.update_datetime >= date_trunc('week', date_trunc('week', localtimestamp)::date - 1)
+			</if>
+			<if test="isRunOnly != null and isRunOnly == true">
+				AND operation_division = '進行中'
+				<!-- AND
+					(
+						negotiation_project_progress_id IN (
+							SELECT id FROM m_project_progress_status WHERE code IN ('IN_NEGOTIATION', 'AGREEMENT', 'FINAL_AGREEMENT')
+						)
+					) -->
+			</if>
+			<if test="isNewShop != null and isNewShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name = 'STORE_OPENINGS'
+						)
+						<if test="isExistsShop != null and isExistsShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name IN (
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+						<if test="isOtherShop != null and isOtherShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name NOT IN (
+											'STORE_OPENINGS',
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+				)
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and isExistsShop != null and isExistsShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name IN (
+									'TEYCA_EXPIRATION',
+									'TEYCA_EXPIRATION_OTHER',
+									'RENT_EXPIRATION',
+									'TERMS_NEGOTIATION',
+									'SALES_AGENCY'
+								)
+						)
+						<if test="isOtherShop != null and isOtherShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name NOT IN (
+											'STORE_OPENINGS',
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+				)
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and (isExistsShop == null or isExistsShop == false) and isOtherShop != null and isOtherShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name NOT IN (
+									'STORE_OPENINGS',
+									'TEYCA_EXPIRATION',
+									'TEYCA_EXPIRATION_OTHER',
+									'RENT_EXPIRATION',
+									'TERMS_NEGOTIATION',
+									'SALES_AGENCY'
+								)
+						)
+				)
+			</if>
+			<if test="(landingIds != null and landingIds.size() > 0) or isLandingNothing">
+			    AND (
+			      <if test="isLandingNothing">
+			        p.landing_project_category_id is null
+			      </if>
+			      <if test="landingIds != null and landingIds.size() > 0 and isLandingNothing">
+			        OR
+			      </if>
+			      <if test="landingIds != null and landingIds.size() > 0">
+			        p.landing_project_category_id in
+					  <foreach item = "landingId" index = "index" collection = "landingIds" open = "(" separator = "," close = ")">
+						  #{landingId}
+					  </foreach>
+			      </if>
+			    )
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and (isExistsShop == null or isExistsShop == false) and (isOtherShop == null or isOtherShop == false) and (landingIds == null or landingIds.size() == 0)">
+				AND 1 = 0
+			</if>
+
+			AND (p.created_account_code = '${account.employeeCd}' OR p.update_account_code = '${account.employeeCd}' OR
+				('PROJECT_EDITABLE' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+				)
+				OR
+				(
+					('PROJECT' IN
+						<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+							#{role}
+						</foreach>
+					)AND p.open = false
+				)
+				<if test="account.getRole().isOnlyTargetArea()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					  SELECT id FROM i_area WHERE area_cd IN (
+					    SELECT area_cd FROM m_income_unit_area WHERE income_unit_cd IN (
+					      SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN (
+					        SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					      )
+					    )
+					  )
+					))
+
+					<if test="account.getSubAccount().isPresent()">
+					    OR p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					    SELECT id FROM i_area WHERE area_cd IN (${account.getSubAccount().get().areaCodes()})))
+					</if>
+
+					OR p.building_id is null) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyMyCompany()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+					(SELECT company_id FROM i_shop_company WHERE company_cd IN
+					(SELECT company_cd FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					)))))
+
+					<if test="account.getSubAccount().isPresent()">
+						OR p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+						(SELECT company_id FROM i_shop_company where company_cd IN (${account.getSubAccount().get().companyCodes()}))))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyIncomeUnit()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN
+					(SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}))))
+
+					<if test="account.getSubAccount().isPresent()">
+						AND p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN (${account.getSubAccount().get().incomeUnitCodes()})))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+				OR (
+					(p.id IN (SELECT project_id FROM other_project_account WHERE i_account_id = ${account.id}))
+				)
+			)
+		<if test="orderByOption == null or orderByOption == '' or orderByOption == 'ORDER_BY_1'">
+        	ORDER BY order_by_area_cd <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last,
+        			order_by_block_cd <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last,
+        			order_by_sales_channel_cd <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last,
+        			order_by_building_cd <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last,
+        			order_by_shop_type <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last,
+        			order_by_company_cd <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last,
+        			order_by_income_unit_cd <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last
+        </if>
+        <if test="orderByOption != null and orderByOption == 'ORDER_BY_2'">
+        	ORDER BY order_by_implementation_datetime <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last
+        </if>
+        <if test="orderByOption != null and orderByOption == 'ORDER_BY_3'">
+        	ORDER BY p.conclusion_possibility_percent_id <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last
+        </if>
+        <if test="orderByOption != null and orderByOption == 'ORDER_BY_4'">
+        	ORDER BY order_by_current_contract_end_date <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last
+        </if>
+        <if test="orderByOption != null and orderByOption == 'ORDER_BY_5'">
+        	ORDER BY order_by_current_rent_end_date <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last
+        </if>
+        <if test="orderByOption != null and orderByOption == 'ORDER_BY_6'">
+        	ORDER BY p.operation_division <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last
+        </if>
+        <if test="orderByOption != null and orderByOption == 'ORDER_BY_7'">
+        	ORDER BY p_other_project_team.dept_cd <if test="orderByDesc != null and orderByDesc == true">DESC</if>, 
+        	order_by_other_project_team_name <if test="orderByDesc != null and orderByDesc == true">DESC</if> nulls last
+        </if>
+		<if test="pagingSize != null and pagingSize > 0">
+			LIMIT #{pagingSize} OFFSET #{numberOfPage} * #{pagingSize}
+		</if>
+    </select>
+    <select id="getCountFindForPC" resultMap="count">
+		SELECT count(1) count
+		from project p
+		left join project_contract_progress p_project_contract_progress_negotiation on p_project_contract_progress_negotiation.project_id = p.id and p_project_contract_progress_negotiation.category = 'CURRENT'
+		
+		WHERE p.is_deleted = false
+			<if test="iAreaIds != null and iAreaIds.size() > 0">
+				AND p.i_area_id in (
+						select ia.id
+						from i_area ia
+						where ia.is_deleted = false
+						and ia.id in
+						<foreach item = "iAreaId" index = "index" collection = "iAreaIds" open = "(" separator = "," close = ")">
+							#{iAreaId}
+						</foreach>
+					)
+			</if>
+			<if test="iBlockIds != null and iBlockIds.size() > 0">
+				AND p.i_block_id in (
+						select ib.id
+						from i_block ib
+						where ib.is_deleted = false
+						and ib.id in
+						<foreach item = "iBlockId" index = "index" collection = "iBlockIds" open = "(" separator = "," close = ")">
+							#{iBlockId}
+						</foreach>
+					)
+			</if>
+			<if test="iPrefectureIds != null and iPrefectureIds.size() > 0">
+				AND p.i_prefectures_id in (
+						select ips.id
+						from i_prefectures ips
+						where ips.is_deleted = false
+						and ips.id in
+						<foreach item = "iPrefectureId" index = "index" collection = "iPrefectureIds" open = "(" separator = "," close = ")">
+							#{iPrefectureId}
+						</foreach>
+					)
+			</if>
+			<if test="iShopCompanieIds != null and iShopCompanieIds.size() > 0">
+				AND p.brand_id in (
+						select b.id
+						from i_brand_income_unit b
+						where b.is_deleted = false and b.income_unit_id in (
+									select ic.income_unit_id
+									from i_income_unit ic
+									where b.is_deleted = false  and ic.company_id in
+												<foreach item = "iShopCompanieId" index = "index" collection = "iShopCompanieIds" open = "(" separator = "," close = ")">
+													#{iShopCompanieId}
+												</foreach>
+								)
+					)
+			</if>
+			<if test="iBrandIds != null and iBrandIds.size() > 0">
+				AND p.brand_id in (
+						select ib.id
+						from i_brand_income_unit ib
+						where ib.is_deleted = false
+						and ib.id in
+						<foreach item = "iBrandId" index = "index" collection = "iBrandIds" open = "(" separator = "," close = ")">
+							#{iBrandId}
+						</foreach>
+					)
+			</if>
+			<if test="salesChannelIds != null and salesChannelIds.size() > 0">
+				AND p.i_sales_channel_id in (
+						select isc.id
+						from i_sales_channel isc
+						where isc.is_deleted = false
+						and isc.id in
+						<foreach item = "salesChannelId" index = "index" collection = "salesChannelIds" open = "(" separator = "," close = ")">
+							#{salesChannelId}
+						</foreach>
+					)
+			</if>
+			<if test="officeProjectProgressIds != null and officeProjectProgressIds.size() > 0">
+				AND p.office_project_progress_id IN (
+						select unnest(string_to_array(name, ','))::int8 from project_classification WHERE classification = 'PROJECT_PROGRESS_COMPANY_SEARCH_ITEM' AND
+						id in (select child_id from project_classificatoin_child_parent WHERE parent_id in
+						<foreach item = "officeProjectProgressId" index = "index" collection = "officeProjectProgressIds" open = "(" separator = "," close = ")">
+							#{officeProjectProgressId}
+						</foreach>
+						)
+					)
+			</if>
+			<if test="negotiationProjectProgressIds != null and negotiationProjectProgressIds.size() > 0">
+				AND p.negotiation_project_progress_id IN (
+						select unnest(string_to_array(name, ','))::int8 from project_classification WHERE classification = 'PROJECT_PROGRESS_NEGOTIATION_SEARCH_ITEM' AND
+						id in (select child_id from project_classificatoin_child_parent WHERE parent_id in
+						<foreach item = "negotiationProjectProgressId" index = "index" collection = "negotiationProjectProgressIds" open = "(" separator = "," close = ")">
+							#{negotiationProjectProgressId}
+						</foreach>
+						)
+					)
+			</if>
+			<if test="storeDevelopTeamCds != null and storeDevelopTeamCds.size() > 0">
+				AND p.id in (
+						select opt.project_id
+						from
+						other_project_team opt
+						where opt.is_deleted = false
+						and opt.dept_cd in
+						<foreach item = "storeDevelopTeamCd" index = "index" collection = "storeDevelopTeamCds" open = "(" separator = "," close = ")">
+							#{storeDevelopTeamCd}
+						</foreach>
+					)
+			</if>
+			<if test="planPeriodUpDowns != null and planPeriodUpDowns.size() > 0">
+				AND (concat(p.plan_period, trim(p.plan_period_half)) in
+					<foreach item = "planPeriodUpDown" index = "index" collection = "planPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{planPeriodUpDown}
+					</foreach>
+				)
+			</if>
+			<if test="projectCategoryIds != null and projectCategoryIds.size() > 0">
+				AND (p.project_category_id in
+					<foreach item = "projectCategoryId" index = "index" collection = "projectCategoryIds" open = "(" separator = "," close = ")">
+						#{projectCategoryId}
+					</foreach>
+				)
+			</if>
+			<if test="landingCategoryIds != null and landingCategoryIds.size() > 0">
+				AND (p.landing_project_category_id in
+					<foreach item = "landingCategoryId" index = "index" collection = "landingCategoryIds" open = "(" separator = "," close = ")">
+						#{landingCategoryId}
+					</foreach>
+				)
+			</if>
+			<if test="operationForms != null and operationForms.size() > 0">
+				AND p.id in (
+						select pcp.project_id
+						from project_contract_progress pcp
+						where pcp.is_deleted = false
+						and pcp.category = 'PROGRESS'
+						and pcp.operation_form in
+					<foreach item = "operationForm" index = "index" collection = "operationForms" open = "(" separator = "," close = ")">
+						#{operationForm}
+					</foreach>
+				)
+			</if>
+			<if test="implementationPeriodUpDowns != null and implementationPeriodUpDowns.size() > 0">
+				AND (
+					COALESCE((select concat(period, '上期') from m_period where p.implementation_datetime between start_date and first_half_end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '下期') from m_period where p.implementation_datetime between second_half_start_date and end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '上期') from m_period where p.implementation_schedule_datetime between start_date and first_half_end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown}
+					</foreach>
+					OR
+					COALESCE((select concat(period, '下期') from m_period where p.implementation_schedule_datetime between second_half_start_date and end_date), '') in
+					<foreach item = "implementationPeriodUpDown" index = "index" collection = "implementationPeriodUpDowns" open = "(" separator = "," close = ")">
+						#{implementationPeriodUpDown}
+					</foreach>
+				)
+			</if>
+			<if test="expirationPeriodUpDowns != null and expirationPeriodUpDowns.size() > 0">
+				AND p.id in (
+						select pcp.project_id
+						from project_contract_progress pcp
+						where pcp.is_deleted = false
+						and pcp.category = 'CURRENT'
+						and pcp.auto_update = false
+						and (
+							COALESCE((select concat(period, '上期') from m_period where pcp.contract_end_date between start_date and first_half_end_date), '') in
+							<foreach item = "expirationPeriodUpDown" index = "index" collection = "expirationPeriodUpDowns" open = "(" separator = "," close = ")">
+								#{expirationPeriodUpDown}
+							</foreach>
+							OR
+							COALESCE((select concat(period, '下期') from m_period where pcp.contract_end_date between second_half_start_date and end_date), '') in
+							<foreach item = "expirationPeriodUpDown" index = "index" collection = "expirationPeriodUpDowns" open = "(" separator = "," close = ")">
+								#{expirationPeriodUpDown}
+							</foreach>
+						)
+					)
+			</if>
+			<if test="otherAccountStoreIds != null and otherAccountStoreIds.size() > 0">
+				AND p.id in (
+						select opa.project_id
+						from other_project_account opa
+						where opa.is_deleted = false
+						and opa.i_account_id in
+						<foreach item = "otherAccountStoreId" index = "index" collection = "otherAccountStoreIds" open = "(" separator = "," close = ")">
+							#{otherAccountStoreId}
+						</foreach>
+					)
+			</if>
+			<if test="salesAchievementFrom != null and salesAchievementFrom != '' or salesAchievementTo != null and salesAchievementTo != ''">
+				and to_number(p.shop_cd, '000000') in (
+					select to_number(issloy.shop_cd, '000000') from i_shop_sales_latest_one_year issloy
+					where issloy.is_deleted = false and coalesce(issloy.shop_cd,'') != ''
+					<if test="salesAchievementFrom != null and salesAchievementFrom != ''">
+						and issloy.sales_achievement >= ${salesAchievementFrom} * cast(1000 as bigint)
+					</if>
+					<if test="salesAchievementTo != null and salesAchievementTo != ''">
+						and ${salesAchievementTo} * cast(1000 as bigint) >= issloy.sales_achievement
+					</if>
+				)
+			</if>
+			<if test="salesAchievementYearToYearFrom != null and salesAchievementYearToYearFrom != '' or salesAchievementYearToYearTo != null and salesAchievementYearToYearTo != ''">
+				and to_number(p.shop_cd, '000000') in (
+					select to_number(issloy.shop_cd, '000000')
+					from i_shop_sales_latest_one_year issloy
+					where issloy.is_deleted = false and coalesce(issloy.shop_cd,'') != ''
+					<if test="salesAchievementYearToYearFrom != null and salesAchievementYearToYearFrom != ''">
+						and issloy.sales_achievement_year_to_year >= ${salesAchievementYearToYearFrom}
+					</if>
+					<if test="salesAchievementYearToYearTo != null and salesAchievementYearToYearTo != ''">
+						and ${salesAchievementYearToYearTo} >= issloy.sales_achievement_year_to_year
+					</if>
+				)
+			</if>
+			<if test="operatingProfitAchievementFrom != null and operatingProfitAchievementFrom != '' or operatingProfitAchievementTo != null and operatingProfitAchievementTo != ''">
+				and to_number(p.shop_cd, '000000') in (
+					select to_number(issloy.shop_cd, '000000')
+					from i_shop_sales_latest_one_year issloy
+					where issloy.is_deleted = false and coalesce(issloy.shop_cd,'') != ''
+					<if test="operatingProfitAchievementFrom != null and operatingProfitAchievementFrom != ''">
+						and issloy.operating_profit_achievement >= ${operatingProfitAchievementFrom} * cast(1000 as bigint)
+					</if>
+					<if test="operatingProfitAchievementTo != null and operatingProfitAchievementTo != ''">
+						and ${operatingProfitAchievementTo} * cast(1000 as bigint) >= issloy.operating_profit_achievement
+					</if>
+				)
+			</if>
+			<if test="operatingProfitAchievementCompositionFrom != null and operatingProfitAchievementCompositionFrom != '' or operatingProfitAchievementCompositionTo != null and operatingProfitAchievementCompositionTo != ''">
+				and to_number(p.shop_cd, '000000') in (
+					select to_number(issloy.shop_cd, '000000')
+					from i_shop_sales_latest_one_year issloy
+					where issloy.is_deleted = false and coalesce(issloy.shop_cd,'') != ''
+					<if test="operatingProfitAchievementCompositionFrom != null and operatingProfitAchievementCompositionFrom != ''">
+						and issloy.operating_profit_achievement_composition >= ${operatingProfitAchievementCompositionFrom}
+					</if>
+					<if test="operatingProfitAchievementCompositionTo != null and operatingProfitAchievementCompositionTo != ''">
+						and ${operatingProfitAchievementCompositionTo} >= issloy.operating_profit_achievement_composition
+					</if>
+				)
+			</if>
+			<if test="buildingExpectedValueFrom != null and buildingExpectedValueFrom != '' or buildingExpectedValueTo != null and buildingExpectedValueTo != ''">
+				and p.i_shop_id in (
+				  select a.id from i_shop a
+				  left join shop b ON a.id = b.i_shop_id
+				  left join i_shop_sales_latest_one_year c ON a.shop_cd = c.shop_cd
+				  where a.is_deleted = false
+				  and b.building_expected_value is not null
+				  and c.month_area_sales_achievement is not null
+				  <if test="buildingExpectedValueFrom != null and buildingExpectedValueFrom != ''">
+	                and ((c.month_area_sales_achievement * cast(1000 as bigint)) / cast(b.building_expected_value as bigint)) * 100 >= ${buildingExpectedValueFrom}
+                  </if>
+				  <if test="buildingExpectedValueTo != null and buildingExpectedValueTo != ''">
+                    and ${buildingExpectedValueTo} >= ((c.month_area_sales_achievement * cast(1000 as bigint)) / cast(b.building_expected_value as bigint)) * 100
+                  </if>
+				)
+			</if>
+			<if test="negotiationIds != null and negotiationIds.size() > 0">
+				AND p.id in (
+					select pn.project_id
+					from project_negotiation pn
+					where pn.is_deleted = false
+					and pn.negotiation_id in
+					<foreach item = "negotiationId" index = "index" collection = "negotiationIds" open = "(" separator = "," close = ")">
+						#{negotiationId}
+					</foreach>
+				)
+			</if>
+			<if test="buildingIds != null and buildingIds.size() > 0">
+				AND p.building_id IN
+				<foreach item = "buildingId" index = "index" collection = "buildingIds" open = "(" separator = "," close = ")">
+					#{buildingId}
+				</foreach>
+			</if>
+			<if test="updateDatetimeFrom != null and updateDatetimeFrom != ''">
+				AND p.update_datetime::date >= #{updateDatetimeFrom}::date
+			</if>
+			<if test="updateDatetimeTo != null and updateDatetimeTo != ''">
+				AND #{updateDatetimeTo}::date >= p.update_datetime::date
+			</if>
+			<if test="updateDayTo != null and updateDayTo != ''">
+				AND p.update_datetime >= date_trunc('day', NOW() - interval '${updateDayTo} day')
+			</if>
+			
+			<if test="keyWord != null and keyWord != ''">
+				AND (
+						p.title like '%'||#{keyWord}||'%'
+						OR p.title like '%'||#{keyWordHankaku}||'%'
+						OR p.title like '%'||#{keyWordZenkaku}||'%'
+						OR p.project_category_id in (
+							select pc.id from project_category pc
+							where pc.is_deleted = false and pc.name like '%'||#{keyWord}||'%' OR pc.name like '%'||#{keyWordHankaku}||'%' OR pc.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.corporation_id in (
+							select ic.id from i_corporation ic
+							where ic.is_deleted = false and ic.corporation_name like '%'||#{keyWord}||'%' OR ic.corporation_name like '%'||#{keyWordHankaku}||'%' OR ic.corporation_name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.brand_id in (
+							select ib.id from i_brand_income_unit ib
+							where ib.is_deleted = false and ib.brand_income_unit_name like '%'||#{keyWord}||'%' OR ib.brand_income_unit_name like '%'||#{keyWordHankaku}||'%' OR ib.brand_income_unit_name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.landing_project_category_id in (
+							select pc.id from project_classification pc
+							  where pc.is_deleted = false and pc.name like '%'||#{keyWord}||'%' OR pc.name like '%'||#{keyWordHankaku}||'%' OR pc.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.office_project_progress_id in (
+							select pp.id from m_project_progress_status pp
+							where pp.category = 'COMPANY' and pp.project_category_id = p.project_category_id and pp.is_deleted = false and pp.name like '%'||#{keyWord}||'%' OR pp.name like '%'||#{keyWordHankaku}||'%' OR pp.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.negotiation_project_progress_id in (
+							select pp.id from m_project_progress_status pp
+							where pp.category = 'NEGOTIATION' and pp.project_category_id = p.project_category_id and pp.is_deleted = false and pp.name like '%'||#{keyWord}||'%' OR pp.name like '%'||#{keyWordHankaku}||'%' OR pp.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR p.m_project_action_status_id in (
+							select pas.id from m_project_action_status pas
+							where pas.project_category_id = p.project_category_id and pas.sales_channel_id = p.i_sales_channel_id and pas.is_deleted = false and pas.name like '%'||#{keyWord}||'%' OR pas.name like '%'||#{keyWordHankaku}||'%' OR pas.name like '%'||#{keyWordZenkaku}||'%'
+							)
+						OR to_char(p.implementation_datetime, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p.implementation_schedule_datetime, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p.implementation_datetime between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p.implementation_datetime between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p.implementation_schedule_datetime between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p.implementation_schedule_datetime between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p_project_contract_progress_negotiation.contract_start_date, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR to_char(p_project_contract_progress_negotiation.contract_end_date, 'yyyy/mm/dd') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p_project_contract_progress_negotiation.contract_start_date between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p_project_contract_progress_negotiation.contract_start_date between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '上期') from m_period where p_project_contract_progress_negotiation.contract_end_date between start_date and first_half_end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR COALESCE((select concat(period, '下期') from m_period where p_project_contract_progress_negotiation.contract_end_date between second_half_start_date and end_date), '') LIKE '%'||#{keyWord}||'%'
+						OR p.id IN (
+						  select project_id from other_project_account where i_account_id in (
+						    select id from i_account where full_name like '%'||#{keyWord}||'%'
+						  )
+						)
+					)
+			</if>
+			<if test="isOwn != null and isOwn == true">
+				AND p.id in (SELECT opa.project_id
+							FROM other_project_account opa
+							WHERE opa.is_deleted = false
+							AND opa.i_account_id = #{accountId})
+			</if>
+			<if test="isReadLater != null and isReadLater == true">
+				AND p.id in (SELECT prla.project_id
+							FROM project_read_later_account prla
+							WHERE prla.is_deleted = false
+							AND prla.account_id = #{accountId})
+			</if>
+			<if test="isMonBefore != null and isMonBefore == true">
+				AND p.update_datetime >= date_trunc('week', date_trunc('week', localtimestamp)::date - 1)
+			</if>
+			<if test="isRunOnly != null and isRunOnly == true">
+				AND operation_division = '進行中'
+				<!-- AND
+					(
+						negotiation_project_progress_id IN (
+							SELECT id FROM m_project_progress_status WHERE code IN ('IN_NEGOTIATION', 'AGREEMENT', 'FINAL_AGREEMENT')
+							)
+					) -->
+			</if>
+			<if test="isNewShop != null and isNewShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name = 'STORE_OPENINGS'
+						)
+						<if test="isExistsShop != null and isExistsShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name IN (
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+						<if test="isOtherShop != null and isOtherShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name NOT IN (
+											'STORE_OPENINGS',
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+				)
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and isExistsShop != null and isExistsShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name IN (
+									'TEYCA_EXPIRATION',
+									'TEYCA_EXPIRATION_OTHER',
+									'RENT_EXPIRATION',
+									'TERMS_NEGOTIATION',
+									'SALES_AGENCY'
+								)
+						)
+						<if test="isOtherShop != null and isOtherShop == true">
+							OR p.project_category_id in (
+									select id
+									from project_category pc
+									where pc.is_deleted = false
+									and pc.category_name NOT IN (
+											'STORE_OPENINGS',
+											'TEYCA_EXPIRATION',
+											'TEYCA_EXPIRATION_OTHER',
+											'RENT_EXPIRATION',
+											'TERMS_NEGOTIATION',
+											'SALES_AGENCY'
+										)
+								)
+						</if>
+				)
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and (isExistsShop == null or isExistsShop == false) and isOtherShop != null and isOtherShop == true">
+				AND (
+					p.project_category_id in (
+							select id
+							from project_category pc
+							where pc.is_deleted = false
+							and pc.category_name NOT IN (
+									'STORE_OPENINGS',
+									'TEYCA_EXPIRATION',
+									'TEYCA_EXPIRATION_OTHER',
+									'RENT_EXPIRATION',
+									'TERMS_NEGOTIATION',
+									'SALES_AGENCY'
+								)
+						)
+				)
+			</if>
+			<if test="(landingIds != null and landingIds.size() > 0) or isLandingNothing">
+			    AND (
+			      <if test="isLandingNothing">
+			        p.landing_project_category_id is null
+			      </if>
+			      <if test="landingIds != null and landingIds.size() > 0 and isLandingNothing">
+			        OR
+			      </if>
+			      <if test="landingIds != null and landingIds.size() > 0">
+			        p.landing_project_category_id in
+					  <foreach item = "landingId" index = "index" collection = "landingIds" open = "(" separator = "," close = ")">
+						  #{landingId}
+					  </foreach>
+			      </if>
+			    )
+			</if>
+			<if test="(isNewShop == null or isNewShop == false) and (isExistsShop == null or isExistsShop == false) and (isOtherShop == null or isOtherShop == false) and (landingIds == null or landingIds.size() == 0)">
+				AND 1 = 0
+			</if>
+
+			AND (p.created_account_code = '${account.employeeCd}' OR p.update_account_code = '${account.employeeCd}' OR
+				('PROJECT_EDITABLE' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+				)
+				OR
+				(
+					('PROJECT' IN
+						<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+							#{role}
+						</foreach>
+					)AND p.open = false
+				)
+				<if test="account.getRole().isOnlyTargetArea()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					  SELECT id FROM i_area WHERE area_cd IN (
+					    SELECT area_cd FROM m_income_unit_area WHERE income_unit_cd IN (
+					      SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN (
+					        SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					      )
+					    )
+					  )
+					))
+
+					<if test="account.getSubAccount().isPresent()">
+					    OR p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					    SELECT id FROM i_area WHERE area_cd IN (${account.getSubAccount().get().areaCodes()})))
+					</if>
+
+					OR p.building_id is null) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyMyCompany()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+					(SELECT company_id FROM i_shop_company WHERE company_cd IN
+					(SELECT company_cd FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					)))))
+
+					<if test="account.getSubAccount().isPresent()">
+						OR p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+						(SELECT company_id FROM i_shop_company where company_cd IN (${account.getSubAccount().get().companyCodes()}))))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyIncomeUnit()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN
+					(SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}))))
+
+					<if test="account.getSubAccount().isPresent()">
+						AND p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN (${account.getSubAccount().get().incomeUnitCodes()})))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+				OR (
+					(p.id IN (SELECT project_id FROM other_project_account WHERE i_account_id = ${account.id}))
+				)
+			)
+    </select>
+	<select id="findByNameForNegotiationFile" resultMap="listProject">
+		SELECT *
+		FROM project
+		WHERE is_deleted IS false
+		<if test="params != null and params.size() > 0">
+			AND id IN
+			<foreach item = "param" index = "index" collection = "params" open = "(" separator = "," close = ")">
+				#{param}
+			</foreach>
+		</if>
+		<if test="text != null and text != '' and hankaku != null and hankaku != ''">
+			AND ( title LIKE '%${text}%'
+			OR title LIKE '%${hankaku}%' )
+		</if>
+		<if test="limit != null">
+			limit #{limit}
+		</if>
+	</select>
+	<select id="findForSuggest" resultMap="listProject">
+		select p.*
+		from project p
+		WHERE p.is_deleted = false
+			<if test="text != null and textHankaku != null">
+				AND (p.title like'%${text}%' or title like '%${textHankaku}%')
+			</if>
+			<if test="(buildingIds != null and buildingIds.size() > 0) or (corporationIds != null and corporationIds.size() > 0) or (brandIds != null and brandIds.size() > 0)">
+			AND (
+				1=0
+				<if test="buildingIds != null and buildingIds.size() > 0">
+					OR p.building_id in
+						<foreach item = "buildingId" index = "index" collection = "buildingIds" open = "(" separator = "," close = ")">
+							#{buildingId}
+						</foreach>
+				</if>
+				<if test="corporationIds != null and corporationIds.size() > 0">
+					OR p.corporation_id in
+						<foreach item = "corporationId" index = "index" collection = "corporationIds" open = "(" separator = "," close = ")">
+							#{corporationId}
+						</foreach>
+				</if>
+				<if test="brandIds != null and brandIds.size() > 0">
+					OR p.brand_id in
+						<foreach item = "brandId" index = "index" collection = "brandIds" open = "(" separator = "," close = ")">
+							#{brandId}
+						</foreach>
+				</if>
+				)
+			</if>
+			AND (p.created_account_code = '${account.employeeCd}' OR p.update_account_code = '${account.employeeCd}' OR
+				('PROJECT_EDITABLE' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+				)
+				OR
+				(
+					('PROJECT' IN
+						<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+							#{role}
+						</foreach>
+					)AND p.open = false
+				)
+				<if test="account.getRole().isOnlyTargetArea()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					  SELECT id FROM i_area WHERE area_cd IN (
+					    SELECT area_cd FROM m_income_unit_area WHERE income_unit_cd IN (
+					      SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN (
+					        SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					      )
+					    )
+					  )
+					))
+
+					<if test="account.getSubAccount().isPresent()">
+					    OR p.building_id IN (SELECT id FROM building WHERE i_area_id IN (
+					    SELECT id FROM i_area WHERE area_cd IN (${account.getSubAccount().get().areaCodes()})))
+					</if>
+
+					OR p.building_id is null) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyMyCompany()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+					(SELECT company_id FROM i_shop_company WHERE company_cd IN
+					(SELECT company_cd FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}
+					)))))
+
+					<if test="account.getSubAccount().isPresent()">
+						OR p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE company_id IN
+						(SELECT company_id FROM i_shop_company where company_cd IN (${account.getSubAccount().get().companyCodes()}))))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+
+				<if test="account.getRole().isOnlyIncomeUnit()">
+				OR ('PROJECT_LIMITED' IN
+					<foreach item = "role" index = "index" collection = "account.getRole().getPermissions()" open = "(" separator = "," close = ")">
+						#{role}
+					</foreach>
+
+					AND (p.brand_id IN
+					(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+					(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN
+					(SELECT income_unit_cd_1 FROM i_dept WHERE dept_cd IN
+					(SELECT expenses_department_cd FROM i_account WHERE id = ${account.id}))))
+
+					<if test="account.getSubAccount().isPresent()">
+						AND p.brand_id IN
+						(SELECT id FROM i_brand_income_unit WHERE income_unit_id IN
+						(SELECT income_unit_id FROM i_income_unit WHERE income_unit_cd IN (${account.getSubAccount().get().incomeUnitCodes()})))
+					</if>
+					) AND p.open = false
+				)
+				</if>
+				OR (
+					(p.id IN (SELECT project_id FROM other_project_account WHERE i_account_id = ${account.id}))
+				)
+			)
+        ORDER BY p.update_datetime DESC
+		<if test="pagingSize != null and pagingSize > 0">
+			LIMIT #{pagingSize} OFFSET #{numberOfPage} * #{pagingSize}
+		</if>
+    </select>
+</mapper>

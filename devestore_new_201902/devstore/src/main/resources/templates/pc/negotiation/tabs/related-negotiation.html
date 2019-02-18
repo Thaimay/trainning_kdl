@@ -1,0 +1,168 @@
+<div class="tab-content-body">
+	<ul class="building-basic-list" ng-if="relatedData.existRelatedCorporation || relatedData.existRelatedBusinessCard || relatedData.existRelatedBusinessCardFree || relatedData.existRelatedBuilding || relatedData.existRelatedBrand">
+		<li class="building-basic-list-item">
+			<div class="building-basic-info j-dropdown">
+				<header class="building-basic-info-header j-dropdown-header">
+					<h3 class="title row">
+						<span class="col-md-2">絞り込み</span> <span class="col-md-10">
+							<span ng-if="relatedData.existRelatedCorporation"> <span
+								ng-if="!relatedData.existFindRelatedCorporation">法人</span> <span
+								ng-if="relatedData.existFindRelatedCorporation"><b>法人</b></span>
+						</span> <span
+							ng-if="relatedData.existRelatedCorporation && (relatedData.existRelatedBusinessCard || relatedData.existRelatedBusinessCardFree || relatedData.existRelatedBuilding || relatedData.existRelatedBrand)">/</span>
+							<span ng-if="relatedData.existRelatedBusinessCard"> <span
+								ng-if="!relatedData.existFindRelatedBusinessCard">面談者</span> <span
+								ng-if="relatedData.existFindRelatedBusinessCard"><b>面談者</b></span>
+						</span> <span
+							ng-if="relatedData.existRelatedBusinessCard && (relatedData.existRelatedBusinessCardFree || relatedData.existRelatedBuilding || relatedData.existRelatedBrand)">/</span>
+							<span ng-if="relatedData.existRelatedBusinessCardFree"> <span
+								ng-if="!relatedData.existFindRelatedBusinessCardFree">面談者(フリー)</span>
+								<span ng-if="relatedData.existFindRelatedBusinessCardFree"><b>面談者(フリー)</b></span>
+						</span> <span
+							ng-if="relatedData.existRelatedBusinessCardFree && (relatedData.existRelatedBuilding || relatedData.existRelatedBrand)">/</span>
+							<span ng-if="relatedData.existRelatedBuilding"> <span
+								ng-if="!relatedData.existFindRelatedBuilding">館</span> <span
+								ng-if="relatedData.existFindRelatedBuilding"><b>館</b></span>
+						</span> <span
+							ng-if="relatedData.existRelatedBuilding && relatedData.existRelatedBrand">/</span>
+							<span ng-if="relatedData.existRelatedBrand"> <span
+								ng-if="!relatedData.existFindRelatedBrand">屋号</span> <span
+								ng-if="relatedData.existFindRelatedBrand"><b>屋号</b></span>
+						</span>
+						</span>
+					</h3>
+				</header>
+				<div class="building-basic-info-body j-dropdown-body">
+					<div class="j-dropdown-body-inner">
+						<div class="basic-list-item"
+							ng-if="relatedData.relatedOptionCorporations.length > 0">
+							<p>［法人］</p>
+							<ul class="inline-list sort-parts">
+								<li ng-repeat="item in relatedData.relatedOptionCorporations"
+									ng-class="item.only == true ? 'checkbox-disable':''"><label><input
+										class="negotiatoin-related-corporation" type="checkbox"
+										ng-value="{{item.id}}" ng-disabled="{{item.only}}"
+										ng-checked="{{!item.only && relatedData.findDTO.corporationIds.indexOf(item.id) !== -1}}" />{{item.name}}</label></li>
+							</ul>
+						</div>
+						<div class="basic-list-item"
+							ng-if="relatedData.relatedOptionBusinessCards.length > 0">
+							<p>［面談者］</p>
+							<ul class="inline-list sort-parts">
+								<li ng-repeat="item in relatedData.relatedOptionBusinessCards"
+									ng-class="item.only  == true ? 'checkbox-disable':''"><label><input
+										class="negotiatoin-related-business-card" type="checkbox"
+										ng-value="{{item.id}}" ng-disabled="{{item.only}}"
+										ng-checked="{{!item.only && relatedData.findDTO.interviewBusinessCardIds.indexOf(item.id) !== -1}}" />{{item.name}}</label></li>
+							</ul>
+						</div>
+						<div class="basic-list-item"
+							ng-if="relatedData.relatedOptionBusinessCardFree.trim() != ''">
+							<p>［面談者(フリー)］</p>
+							<ul class="inline-list sort-parts">
+								<li
+									ng-class="relatedData.existRelatedBusinessCardFree == true? '':'checkbox-disable'"><label><input
+										id="negotiatoin-related-business-card-free" type="checkbox"
+										value="{{relatedData.relatedOptionBusinessCardFree}}"
+										ng-disabled="relatedData.existRelatedBusinessCardFree == false"
+										ng-checked="{{relatedData.existRelatedBusinessCardFree && relatedData.findDTO.interviewBusinessCardFree != '' && relatedData.findDTO.interviewBusinessCardFree === relatedData.relatedOptionBusinessCardFree}}" />{{relatedData.relatedOptionBusinessCardFree}}</label></li>
+							</ul>
+						</div>
+						<div class="basic-list-item"
+							ng-if="relatedData.relatedOptionBuildings.length > 0">
+							<p>［館］</p>
+							<ul class="inline-list sort-parts">
+								<li ng-repeat="item in relatedData.relatedOptionBuildings"
+									ng-class="item.only  == true ? 'checkbox-disable':''"><label><input
+										class="negotiatoin-related-building" type="checkbox"
+										ng-value="{{item.id}}" ng-disabled="{{item.only}}"
+										ng-checked="{{!item.only && relatedData.findDTO.buildingIds.indexOf(item.id) !== -1}}" />{{item.name}}</label></li>
+							</ul>
+						</div>
+						<div class="basic-list-item"
+							ng-if="relatedData.relatedOptionBrands.length > 0">
+							<p>［屋号］</p>
+							<ul class="inline-list sort-parts">
+								<li ng-repeat="item in relatedData.relatedOptionBrands"
+									ng-class="item.only == true ? 'checkbox-disable':''"><label><input
+										class="negotiatoin-related-brand" type="checkbox"
+										ng-value="{{item.id}}" ng-disabled="{{item.only}}"
+										ng-checked="{{!item.only && relatedData.findDTO.brandIds.indexOf(item.id) !== -1}}" />{{item.name}}</label></li>
+							</ul>
+						</div>
+						<div class="basic-list-item">
+							<div class="row">
+								<label><input id="negotiatoin-related-latest-2-year"
+									type="checkbox" value="false"
+									ng-checked="{{relatedData.findDTO.latest2Year == false}}" />２年より前も検索する</label>
+							</div>
+						</div>
+						<div class="basic-list-item">
+							<div class="row">
+								<div class="col-md-2 col-md-offset-5">
+									<button class="btn btn-primary btn-lg btn-block"
+										id="j-search-related"
+										ng-click="negotiationController.findRelation()">
+										<i class="fa fa-search"></i>反映
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+	<ul class="project-list" ng-if="relatedData.findRelated.length > 0">
+		<div ng-repeat="negotiation in relatedData.findRelated">
+			<li class="project-list-item">
+				<!-- <a class="project-detail" th:href="@{/pc/negotiation/detail/} + '{{ negotiation.id }}'" target="_blank" rel="noopener"> -->
+				<a class="project-detail" th:href="@{/pc/negotiation/detail/} + '{{ negotiation.id }}' + '#negotiation&negotiation/detail/' + ${negotiation.id}" target="_blank" rel="noopener">
+					<header class="project-detail-header">
+						<div class="content-meta">
+							<span class="label label-primary">{{
+								negotiation.statusLabel }}</span>
+							<span class="label label-danger"
+								ng-if="!negotiation.isOpened">未読</span>
+							<span ng-if="negotiation.isDraft" class="negotiation-label negotiation-label-draft">下書き</span>
+						</div>
+						<h3 class="title">{{ negotiation.title }}</h3>
+						<div class="registered-data">
+							<span class="created-date">{{ negotiation.scheduleDate }}</span>
+						</div>
+					</header>
+					<div class="project-detail-body">
+						<p>{{ negotiation.place }}</p>
+						<div
+							ng-repeat="corporation in negotiation.corporations track by $index">
+							<p>{{ corporation }}</p>
+						</div>
+						<div
+							ng-repeat="businessCard in negotiation.interviewBusinessCard track by $index">
+							<p>{{ businessCard }}</p>
+						</div>
+						<div
+							ng-repeat="account in negotiation.interviewAccounts track by $index">
+							<p>{{ account }}</p>
+						</div>
+
+						<p>{{ negotiation.content }}</p>
+					</div> <footer class="project-detail-footer">
+						<div class="inline-list">
+							<div>
+								<i class="fa fa-picture-o" aria-hidden="true"
+									ng-if="negotiation.hasImage">写真あり</i>
+							</div>
+							<div>
+								<i class="fa fa-comment-o" aria-hidden="true">{{
+									negotiation.numberOfComment }}</i>コメント
+							</div>
+						</div>
+					</footer>
+			</a></li>
+		</div>
+	</ul>
+	<ul ng-if="relatedData.findRelated.length <= 0">
+		<p>関連する商談はありません</p>
+	</ul>
+</div>

@@ -1,0 +1,314 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="/pc/layout">
+<head>
+<title>店舗更新</title>
+<meta name="keywords" content="content1" />
+<meta name="description" content="content1" />
+<script th:src="@{/js/store/store-edit.js}"></script>
+<script th:src="@{/js/store/validation/edit.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-12">
+				<form id="store-update-form">
+					<div class="content-detail negotiation">
+						<header class="content-detail-header">
+							<div class="row">
+								<div class="col-md-2 col-md-offset-10 ta-r">
+									<button type="button" class="btn btn-primary" id="j-update">
+										<i class="fa fa-edit"></i> 登録
+									</button>
+									<br />
+									<div style="margin-top:5px"></div>
+									<a class="btn btn-default" th:href="@{/pc/store/detail/} + ${iShop.id}">詳細に戻る</a>
+								</div>
+							</div>
+						</header>
+						<div class="content-detail-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="building-detail-body">
+										<div>
+											<!-- Nav tabs-->
+											<ul class="nav nav-tabs basic-detail-tabs" role="tablist">
+												<li class="active" role="presentation"><a href="#basic"
+													aria-controls="home" role="tab" data-toggle="tab">基本情報</a></li>
+												<li th:if="${iShop.isDisplayEconomy()}" role="presentation"><a
+													href="#economy" aria-controls="settings" role="tab"
+													data-toggle="tab">経済条件</a></li>
+												<li role="presentation"><a href="#image"
+													aria-controls="settings" role="tab" data-toggle="tab">画像</a></li>
+											</ul>
+											<!-- Tab panes-->
+											<div class="tab-content">
+												<div class="tab-pane fade in active" id="basic"
+													role="tabpanel">
+													<div class="tab-content-body">
+														<ul class="store-basic-list">
+															<li class="store-basic-list-item">
+																<div class="store-basic-info j-dropdown">
+																	<header
+																		class="store-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">館企業情報</h3>
+																	</header>
+																	<div class="store-basic-info-body j-dropdown-body">
+																		<input class="form-control" type="hidden"
+																			placeholder="" name="id"
+																			th:value="${iShop.shop!=null}? ${iShop.shop.id}:'0'">
+																		<input class="form-control" type="hidden"
+																			placeholder="" name="iShopId" th:value="${iShop.id}">
+																		<table class="table">
+																			<tr>
+																				<th>会社</th>
+																				<td th:text="${iShop.iShopCompany!=null}? ${iShop.iShopCompany.companyCd + ' ' + iShop.iShopCompany.companyName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>館</th>
+																				<td th:text="${iShop.building!=null}? ${iShop.building.id + ' ' + iShop.building.name}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>区画</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="section"
+																					th:value="${iShop.shop!=null}? ${iShop.shop.section}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>坪数</th>
+																				<td th:text="${iShop.contractTsubo}"></td>
+																			</tr>
+																			<tr>
+																				<th>間口</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="frontage"
+																					th:value="${iShop.shop!=null}? ${iShop.shop.frontage}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>販売代行先</th>
+																				<td><input class="form-control"
+																					id="j-form-sales-agency-target" type="text"
+																					placeholder="販売代行先"></td>
+																			</tr>
+																			<tr>
+																				<th>加盟店（FCのみ）</th>
+																				<td><input class="form-control"
+																					id="j-form-participating-store-corporation"
+																					type="text" placeholder="加盟店（FCのみ）"></td>
+																			</tr>
+																			<tr>
+																				<th>エリア</th>
+																				<td
+																					th:text="${iShop?.building?.iArea?.areaCd!=null && iShop?.building?.iArea?.areaName!=null}? ${iShop?.building?.iArea?.areaCd + ' ' + iShop?.building?.iArea?.areaName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>利益単位CD</th>
+																				<td
+																					th:text="${iShop.iIncomeUnit!=null}? ${iShop.iIncomeUnit.incomeUnitCd}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>利益単位名</th>
+																				<td
+																					th:text="${iShop.iIncomeUnit!=null}? ${iShop.iIncomeUnit.incomeUnitName}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>オープン日</th>
+																				<td
+																					th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																					th:text="${iShop.openDate!=null}? ${iShop.openDate.format(formatter.ofPattern('yyyy/MM/dd'))}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>クローズ日</th>
+																				<td
+																					th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+																					th:text="${iShop.closeDate!=null}? ${iShop.closeDate.format(formatter.ofPattern('yyyy/MM/dd'))}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>館期待値(月坪売上)</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="buildingExpectedValue"
+																					th:value="${iShop.shop!=null}? ${iShop.shop.buildingExpectedValue}:''"></td>
+																			</tr>
+																			<tr>
+																				<th>営業時間</th>
+																				<td><input class="form-control" type="text"
+																					placeholder="" name="businessHours"
+																					th:value="${iShop.shop!=null}? ${iShop.shop.businessHours}:''"></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+															<li class="store-basic-list-item">
+																<div class="store-basic-info j-dropdown">
+																	<header
+																		class="store-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">備考</h3>
+																	</header>
+																	<div class="store-basic-info-body j-dropdown-body">
+																		<table class="table">
+																			<tr>
+																				<th>備考</th>
+																				<td><textarea class="form-control"
+																						name="remarks" rows="5"
+																						th:text="${iShop.shop!=null}? ${iShop.shop.remarks}:''"></textarea></td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="economy" role="tabpanel">
+													<div class="tab-content-body">
+														<ul class="store-basic-list">
+															<li class="store-basic-list-item">
+																<div class="store-basic-info j-dropdown">
+																	<header
+																		class="store-basic-info-header j-dropdown-header isOpen">
+																		<h3 class="title">館基本情報</h3>
+																	</header>
+																	<div class="store-basic-info-body j-dropdown-body">
+																		<div class="j-dropdown-body-inner">
+																			<table class="table">
+																				<tr>
+																					<th>賃料低減開始日</th>
+																					<td class="j-implementation-date">
+																						<input class="form-control" id="store_edit_rent_start_date" name="rentStartDate" th:value="${iShop.shop?.rentStartDate}">
+																					</td>
+																				</tr>
+																				<tr>
+																					<th>賃料低減終了日</th>
+																					<td class="j-implementation-date">
+																						<input class="form-control" id="store_edit_rent_end_date" name="rentEndDate" th:value="${iShop.shop?.rentEndDate}">
+																					</td>
+																				</tr>
+																				<tr>
+																					<th>賃料低減年数</th>
+																					<td>
+																						<div class="row">
+																							<div class="col-md-10">
+																								<input class="form-control display-float-left" id="store_edit_rent_year_view" name="store_edit_rent_year" 
+																									th:value="${iShop.shop?.rentYear != null ? #numbers.formatDecimal(iShop.shop?.rentYear, 1, 'COMMA', 2, 'POINT'):''}">
+																								<input type="hidden" name="rentYear" id="store_edit_rent_year_value" th:value="${iShop.shop?.rentYear}">
+																							</div>
+																							<div class="col-md-2">
+																								<span style="line-height: 33px; text-align: center" class="display-float-left">年</span>
+																							</div>
+																						</div>
+																					</td>
+																				</tr>
+																			</table>
+																		</div>
+																	</div>
+																</div>
+															</li>
+														</ul>
+													</div>
+												</div>
+												<div class="tab-pane fade" id="image" role="tabpanel">
+													<div class="tab-content-body">
+														<div class="row">
+															<div class="col-md-12">
+																<div class="add-media-list">
+																	<input class="btn btn-primary" type="button"
+																		id="addImage" value="追加">
+																</div>
+															</div>
+														</div>
+														<div class="media-list" objectName="shopImageDto">
+															<div class="media-list-item" th:if="${iShop.shop != null}">
+																<div class="media-list-item has-trash present-item"
+																	th:each="image : ${iShop.shop.shopImages}">
+																	<div class="row">
+																		<input class="object-property" type="hidden"
+																			propertyName="id" th:value="${image.id}">
+																		<div class="col-md-2">
+																			<div class="img">
+																				<a th:if="${image.path} != null" target="_blank" th:href="@{/pc/building/} + ${image.path}">
+																					<img class="media-object img-rounded" th:src="@{/pc/building/} + ${image.path}" alt="">
+																				</a>
+																				<a th:if="${image.path} == null" target="_blank" th:href="@{/pc/building/} + 'img/no_img.jpg'">
+																					<img class="media-object img-rounded" th:src="@{/pc/building/} + 'img/no_img.jpg'" alt="no_img">
+																				</a>
+																			</div>
+																		</div>
+																		<div class="col-md-10">
+																			<div class="form-group">
+																				<div class="row">
+																					<div class="col-md-2">
+																						<label>ファイル</label>
+																					</div>
+																					<div class="col-md-9">
+																						<p th:text="${image.name}">
+																					</div>
+																				</div>
+																			</div>
+																			<div class="form-group">
+																				<div class="row">
+																					<div class="col-md-2">
+																						<label>サイズ</label>
+																					</div>
+																					<div class="col-md-9">
+																						<label class="sizefile"
+																							th:text="${#numbers.formatDecimal(image.size/1024, 0, 0)} + 'KB'"></label>
+																					</div>
+																					<div class="col-md-1">
+																						<div class="trash j-delete-item"
+																							onclick="deleteParent($(this))">
+																							<i class="fa fa-trash"></i>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																			<div class="form-group">
+																				<div class="row">
+																					<div class="col-md-2">
+																						<label>コメント</label>
+																					</div>
+																					<div class="col-md-9">
+																						<input class="form-control" propertyName="comment" placeholder="コメント"
+																							th:value="${image.comment}">
+																					</div>
+																				</div>
+																			</div>
+																			<div class="form-group">
+																				<div class="row">
+																					<div class="col-md-2">
+																					</div>
+																					<div class="col-md-9 radio">
+																						<label><input type="checkbox" class="isDefaultImage" propertyName="isDefaultImage"
+																							th:value="${iShop.shop!=null && image.path == iShop.shop.imagePath}? 'true':'false'"
+																							th:checked="${iShop.shop!=null && image.path == iShop.shop.imagePath}? 'true':'false'">一覧表示に使用</label>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<script th:inline="javascript">
+					/*<![CDATA[*/
+					let iShop = /*[[${iShop}]]*/'';
+					/*]]>*/
+					resetDefaultImage();
+				</script>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

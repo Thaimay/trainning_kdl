@@ -1,0 +1,30 @@
+/* 詳細ページメインコンテンツ */
+
+.content-detail, .content-detail-header {}
+
+.content-detail-body {
+  margin-top: 40px;
+}
+
+.content-detail.negotiation .title {
+  color: #991616;
+  span {
+    color: #333333;
+  }
+}
+
+.content-meta {
+  text-align: left;
+  > {
+    .label {
+      font-size: 1.2em;
+      + .label {
+        margin-left: 0.5em;
+      }
+    }
+    * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+}

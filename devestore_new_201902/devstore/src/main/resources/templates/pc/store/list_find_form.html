@@ -1,0 +1,153 @@
+<div class="row">
+	<div class="col-md-12">
+		<form class="form-horizontal" id="store-form" action="/pc/store/find"
+			th:action="@{/pc/store/find}" method="post" accept-charset="UTF-8">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="store-form">
+						<div class="store-form-body">
+							<ul class="basic-list">
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>店舗名</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text" id="j-form-shop">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>会社名</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text"
+													id="j-form-shop-company">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-2">
+												<label>エリア</label>
+											</div>
+											<div class="col-md-10">
+												<input class="form-control" type="text" id="j-form-area">
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<button class="btn btn-primary btn-lg btn-block" id="j-search">
+						<i class="fa fa-search"></i>検索する
+					</button>
+				</div>
+			</div>
+		</form>
+		<div class="detail-table">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-wrapper">
+						<table class="table">
+							<colgroup span="5"></colgroup>
+							<colgroup span="3"></colgroup>
+							<colgroup span="2"></colgroup>
+							<colgroup span="1"></colgroup>
+							<colgroup span="7"></colgroup>
+							<colgroup span="3"></colgroup>
+							<colgroup span="4"></colgroup>
+							<colgroup span="5"></colgroup>
+							<colgroup span="1"></colgroup>
+							<thead>
+								<tr>
+									<th>店舗名</th>
+									<th>会社ID</th>
+									<th>会社名</th>
+									<th>館ID</th>
+									<th>館名</th>
+									<th>坪数</th>
+									<th>エリア</th>
+									<th>屋号</th>
+									<th>事業名</th>
+									<th>オープン日</th>
+									<th>館期待値(月坪売上)</th>
+									<th>写真・画像</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="iShop : ${shopAdvanceds}">
+									<td><a th:href="@{/pc/store/detail/} + ${iShop?.id}"
+										th:text="${iShop?.shopNameZenkaku}"></a></td>
+									<td th:text="${iShop?.iShopCompany?.companyCd}"></td>
+									<td th:text="${iShop?.iShopCompany?.companyName}"></td>
+									<td th:text="${iShop?.building?.buildingCd}"></td>
+									<td th:text="${iShop?.building?.name}"></td>
+									<td
+										th:text="${iShop?.contractTsubo!=null && iShop?.contractTsubo!=''}? ${iShop?.contractTsubo + '坪'}:''"></td>
+									<td th:text="${iShop?.building?.iArea?.areaName}"></td>
+									<td th:text="${iShop?.iIncomeUnit?.incomeUnitCd}"></td>
+									<td th:text="${iShop?.iIncomeUnit?.incomeUnitName}"></td>
+									<td
+										th:with="formatter=${T(java.time.format.DateTimeFormatter)}"
+										th:text="${iShop?.openDate!=null}? ${iShop?.openDate?.format(formatter.ofPattern('yyyy/MM/dd'))}:''"></td>
+									<td th:text="${#numbers.formatDecimal(iShop?.shop?.buildingExpectedValue, 1, 'COMMA', 0, 'DEFAULT')}"></td>
+									<td>
+										<a th:if="${iShop?.shop?.imagePath} != null" target="_blank" th:href="@{/pc/building/} + ${iShop.shop.imagePath}">
+											<img class="img-responsive" height="50" width="50" th:src="@{/pc/building/} + ${iShop.shop.imagePath}" alt="">
+										</a>
+										<a th:if="${iShop?.shop?.imagePath} == null" target="_blank" th:href="@{/pc/building/} + 'img/no_img.jpg'">
+											<img class="img-responsive" height="50" width="50" th:src="@{/pc/building/} + 'img/no_img.jpg'" alt="no_img">
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<nav class="pagination-area is-centered"
+					aria-label="Page navigation">
+					<ul id="paginationAdvanced" class="pagination">
+					</ul>
+					<input type="hidden" id="currentPageAdvanced"
+						th:value="${findAdvancedDTO.numberOfPage}" /> <input
+						type="hidden" id="pageCountAdvanced"
+						th:value="${pageCountAdvanced}" />
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	let findAdvancedDTO = /*[[${findAdvancedDTO}]]*/'';
+	var shopData = JSON.parse(findAdvancedDTO.jsonCurrentShop);
+	var shopCompanyData = JSON.parse(findAdvancedDTO.jsonCurrentShopCompany);
+	var areaData = JSON.parse(findAdvancedDTO.jsonCurrentArea);
+
+	var shopIds = findAdvancedDTO.shopIds;
+	var iShopCompanyIds = findAdvancedDTO.iShopCompanyIds;
+	var iAreaIds = findAdvancedDTO.iAreaIds;
+
+	var suggestShop = createSuggest('#j-form-shop', shopData, shopIds, false);
+	var suggestShopCompany = createSuggest('#j-form-shop-company',
+			shopCompanyData, iShopCompanyIds, false);
+	var suggestArea = createSuggest('#j-form-area', areaData, iAreaIds, false);
+	/*]]>*/
+</script>

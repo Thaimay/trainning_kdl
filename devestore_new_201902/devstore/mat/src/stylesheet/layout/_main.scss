@@ -1,0 +1,9 @@
+.main-contents {
+  width: 100%;
+  transition: 0.2s ease 0s;
+}
+
+.main-contents.is-sidebar-show {
+  width: 86%;
+  margin-left: 14%;
+}

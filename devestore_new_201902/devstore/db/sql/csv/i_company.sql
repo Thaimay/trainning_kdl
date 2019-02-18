@@ -1,0 +1,3 @@
+\c store_development_dev;
+
+\COPY I_COMPANY(company_code,company_kana_name,company_kanji_name,address_kanji_1,address_kanji_2,address_kanji_3,address_kana_1,address_kana_2,address_kana_3,postal_code,phone_number,company_division,flag_non_target_appropriating,lock_number,registrant_code,registration_time,registration_pgid,registration_transaction_id,coordination_creator,coordination_creation_time,coordination_deleting_flag,coordination_applying_date,coordination_updater,coordination_update_time) FROM 'db/csv/I_COMPANY.csv' WITH CSV;

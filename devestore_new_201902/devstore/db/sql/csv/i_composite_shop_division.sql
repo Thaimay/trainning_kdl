@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_COMPOSITE_SHOP_DIVISION(composite_shop_division_id,composite_shop_division_cd,composite_shop_division_name,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action) FROM 'db/csv/I_COMPOSITE_SHOP_DIVISION.csv' WITH CSV;

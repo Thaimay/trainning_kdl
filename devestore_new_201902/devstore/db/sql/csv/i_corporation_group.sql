@@ -1,0 +1,2 @@
+\c store_development_dev;
+\COPY I_CORPORATION_GROUP(corporation_gp_id,corporation_gp_cd,corporation_gp_name,corporation_gp_name_kana,coordination_created_datetime,coordination_created_account_code,coordination_update_datetime,coordination_update_account_code,action) FROM 'db/csv/I_COMPANY_GROUP.csv' WITH CSV;

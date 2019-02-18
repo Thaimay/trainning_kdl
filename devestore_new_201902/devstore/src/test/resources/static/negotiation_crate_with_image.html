@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<form action="http://localhost:8080/sp/negotiation/spike/create" method="post" enctype="multipart/form-data">
+  <input type="file" name="files" accept="image/*" multiple="multiple">
+  <textarea name="json" cols="32" rows="32">
+{"accountIds": [1,2],"unmanagedInterviewName":"free name","brandIds": [],"corporationIds": [2],"noticeIds": [],"importantBuildingId": "1","division": "negotiation","implementationEndDatetime": "2018-01-17 15:00","implementationStartDatetime": "2018-01-17 10:00","scheduleEndDatetime": "2018-01-16 15:00",
+"scheduleStartDatetime": "2018-01-16 10:00", "content": "コンテンツ","nextActionContent": "ネクスト","priority": "3","release": false,"title": "title2"}
+  </textarea>
+  <input type="submit">
+</form>
+</body>
+</html>

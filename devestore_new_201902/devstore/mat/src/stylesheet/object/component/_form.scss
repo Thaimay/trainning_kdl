@@ -1,0 +1,35 @@
+.form-content {
+  margin-top: 20px;
+}
+
+.form-item-utility {
+  padding: 0;
+
+  a {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 20px;
+    text-decoration: none;
+    color: #333;
+
+    &:hover {
+      background-color: #eeeeee;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-bottom: 2px solid #dddddd;
+      border-right: 2px solid #dddddd;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      margin-top: -5px;
+      margin-right: 2%;
+      transform: rotate(-45deg);
+    }
+  }
+}

@@ -1,0 +1,84 @@
+<div class="tab-content-body">
+	<div class="media-list" th:if="${negotiation.relatedProjectViewModels.size() > 0}">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="detail-table">
+					<div class="row project-detail">
+						<div class="col-md-12 project-detail">
+							<div class="project-detail-table-wrapper project-detail " th:each="project : ${negotiation.relatedProjectViewModels}">
+								<div style="width: 100%" class="project-detail project-list-item">
+									<a th:href="@{/pc/project/detail/} + ${project.id} + '#negotiation&negotiation/detail/' + ${negotiation.id}" target="_blank" rel="noopener" style="text-decoration: none">
+										<div class="project-list-items-header project-detail" style="width: 100%; color:black">
+											<span style="color: rgb(0, 112, 192); line-height: 28px; border: 1px solid; border-radius: 2px; padding: 3px;" th:if="${project?.projectClassificationCategoryShortName != null}"
+											 th:text="${project?.projectClassificationCategoryShortName}"></span>
+											<span style="width: 75px; border: 1px solid #0080FF; border-radius: 2px; background: #0080FF; text-align: center; padding: 3px; color: white"
+											 th:if="${project?.projectClassificationChild != null}" th:text="${project?.projectClassificationChild}"></span>
+											<span style="border: 1px solid gray; border-radius: 2px; background: gray; text-align: center; padding: 3px; color: white"
+											 th:if="${project?.operationDivision != null && project?.operationDivision == '中止'}" th:text="${project?.operationDivision}"></span>
+											<span style="line-height: 30px; font-size: 0.8em;" th:if="${project?.open != true}">[公開]</span>
+											<span style="line-height: 30px; font-size: 0.8em;" th:if="${project?.open == true}">[非公開]</span>
+											<!-- <span class="negotiation-read-alter-yet read-later-position" th:if="${project.hasReadLater}">
+											<ons-icon class="negotiation-read-later-icon" icon="ion-ios-eye" size="20px"></ons-icon>ウォッチ
+										</span> -->
+											<!-- <span style="color: grey" class="negotiation-read-alter-yet read-later-position" th:if="${project.hasReadLater == false}">
+											<ons-icon class="negotiation-read-later-icon" icon="ion-ios-eye" size="20px"></ons-icon>ウォッチ
+										</span> -->
+										</div>
+										<div class="project-list-left" style="color:black">
+											<div>
+												<div style="color: #006400;">
+													<p th:if="${project?.title != null}" th:text="${project?.title}"></p>
+												</div>
+												<div th:if="${project?.projectProgressOffice != null || project?.projectProgressNegotiation != null}">
+													<span th:text="'社内進捗： ' + ${project?.projectProgressOffice}"></span>
+
+													<span th:text="${ '&nbsp; 交渉進捗： '+ project?.projectProgressNegotiation}"></span>
+												</div>
+												<div th:if="${project?.projectLandingCategory != null || project?.conclusionPossibilityPercent != null}">
+													着地方向：  
+													<span th:text="${project?.projectLandingCategory?.name}"></span> &nbsp;
+													<span th:text="'可能性 : '+${project?.conclusionPossibilityPercent} "></span>
+												</div>
+												<div th:if="${project?.implementationDatetime != null || project?.projectActionStatus != null}">
+													実施日： 
+													<span th:with="formatter=${T(java.time.format.DateTimeFormatter)}" th:text="${project!=null && project?.implementationDatetime!=null}? ${project?.implementationDatetime.format(formatter.ofPattern('yyyy/MM/dd'))}"></span>
+													<span th:if="${project?.projectActionStatus == 'FINAL_AGREEMENT'}" th:text="'確定'"></span>
+													<span th:if="${project?.projectActionStatus != 'FINAL_AGREEMENT'}" th:text="'未確定'"></span>
+												</div>
+												<div th:if="${project?.progressProjectContractProgress?.contractEndDate != null || project?.planPeriodHalf != null}">
+													定借満了:
+													<span th:text="${project?.progressProjectContractProgress?.contractEndDate}"></span> &nbsp;
+													<span th:text="${project?.planPeriod}"></span> &nbsp;
+													<span th:text="${project?.planPeriodHalf}"></span>
+
+												</div>
+												<div>
+												</div>
+												<div th:if="${project?.iAccount != null}">
+													<p th:text="'担当者 : '+ ${project?.iAccount}"></p>
+												</div>
+											</div>
+										</div>
+										<div style="clear: both"></div>
+										<!-- <div style="width:100%; text-align:right">
+										<span class="negotiation-read-alter" style="color: black">
+											<a style="color: black"  th:href="@{/pc/negotiation/showCreate/schedule}">
+												<i class="fa fa-pencil" aria-hidden="true">商談作成</i>
+											</a>
+
+										</span>
+									</div> -->
+										<hr style="margin-bottom: 0px">
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="media-list" th:if="${negotiation.relatedProjectViewModels.size() <= 0}">
+		<p>案件の紐付けがありません</p>
+	</div>
+</div>

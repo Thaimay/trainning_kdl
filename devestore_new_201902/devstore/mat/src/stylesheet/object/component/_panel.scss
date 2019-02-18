@@ -1,0 +1,51 @@
+.top-panels {
+  .panel-body {
+    max-height: 436px;
+    height: 100%;
+    overflow: auto;
+  }
+}
+
+.top-panels {
+  display: flex;
+  flex-wrap: wrap;
+  .panel {
+    width: 48%;
+    margin: 10px 1%;
+  }
+}
+
+.panel-header {
+  padding: 15px 15px 0;
+  &.information {
+    border-top: 4px solid purple;
+  }
+  &.task {
+    border-top: 4px solid #ff0000;
+  }
+  &.task-compleate {
+    border-top: 4px solid #00f200;
+  }
+  &.task-my {
+    border-top: 4px solid yellow;
+  }
+  &.existing-store {
+    border-top: 4px solid lightblue;
+  }
+  &.opening-store {
+    border-top: 4px solid #f442e8;
+  }
+  &.commission {
+    border-top: 4px solid #ffc6fb;
+  }
+  .title {
+    margin: 0;
+    font-size: 21px;
+  }
+}
+
+.panel-meta > *,
+.panel-footer > * {
+  display: inline-block;
+  vertical-align: middle;
+}

@@ -1,0 +1,480 @@
+
+<div class="row">
+	<div class="col-md-12">
+		<form class="form-horizontal" id="project-form"
+			action="/pc/project/find" th:action="@{/pc/project/find}"
+			method="post" accept-charset="UTF-8">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="project-form">
+						<div class="building-form-body">
+							<div class="search-controller" data-j-sticky-area>
+								<div class="search-controller-body sticky-panel" data-j-sticky-item>
+									<button class="btn btn-primary" id="j-search" type="submit">
+										検索
+									</button>
+									<button class="btn btn-default" id="j-clear" type="button">
+										クリア
+									</button>
+									<label><input type="checkbox" value="true" name="isDefaultSearch"/>デフォルトにする</label>
+								</div>
+							</div>
+							<ul class="basic-list">
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>並び順</label>
+											</div>
+											<div class="col-md-5">
+												<select class="form-control" id="project-search-order-by-option" name="orderByOption">
+													<option value="ORDER_BY_1" th:selected="${findKeywordDTO.orderByOption.equals('ORDER_BY_1')}">ｴﾘｱCD・ﾌﾞﾛｯｸCD・ﾁｬﾈﾙCD・館CD・店舗形態・事業会社CD・主管利益ⅠCD</option>
+													<option value="ORDER_BY_2" th:selected="${findKeywordDTO.orderByOption.equals('ORDER_BY_2')}">実施日順</option>
+													<option value="ORDER_BY_3" th:selected="${findKeywordDTO.orderByOption.equals('ORDER_BY_3')}">可能性順</option>
+													<option value="ORDER_BY_4" th:selected="${findKeywordDTO.orderByOption.equals('ORDER_BY_4')}">現契約：契約終了日順</option>
+													<option value="ORDER_BY_5" th:selected="${findKeywordDTO.orderByOption.equals('ORDER_BY_5')}">現契約：賃料低減満了日順</option>
+													<option value="ORDER_BY_6" th:selected="${findKeywordDTO.orderByOption.equals('ORDER_BY_6')}">稼動区分順</option>
+													<option value="ORDER_BY_7" th:selected="${findKeywordDTO.orderByOption.equals('ORDER_BY_7')}">店舗開発チーム×担当順</option>
+												</select>
+											</div>
+											<div class="col-md-2">
+												<select class="form-control" id="project-search-order-by-desc" name="orderByDesc">
+													<option value="false" th:selected="${!findKeywordDTO.orderByDesc}">昇順</option>
+													<option value="true" th:selected="${findKeywordDTO.orderByDesc}">降順</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>事業会社・屋号</label>
+											</div>
+											<div class="col-md-5">
+												<button style="width:100%" type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-brand-search">
+													<span id="label-brand-search" style="float: left">未設定</span>
+													<span style="float: right"><i class="ui-icon ui-icon-triangle-1-e"></i></span>
+												</button>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>エリア・ブロック・都道府県</label>
+											</div>
+											<div class="col-md-5">
+												<button style="width:100%" type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-block-search">
+													<span id="label-block-search" style="float: left">未設定</span>
+													<span style="float: right"><i class="ui-icon ui-icon-triangle-1-e"></i></span>
+												</button>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-xs-6 col-md-3">
+												<label for="project-search-plan-period">計画・計画期</label>
+												<select multiple id="project-search-plan-period" name="planPeriodUpDowns" class="form-control">
+													<option value=""></option>
+													<option th:each="period : ${listPlanPeriod}" th:value="${period.checkId}" th:text="${period.name}" th:selected="${findKeywordDTO.planPeriodUpDowns.contains(period.checkId)}"></option>
+												</select>
+											</div>
+
+											<div class="col-xs-6 col-md-3">
+												<label for="project-search-implementation-period">実施期</label>
+												<select multiple id="project-search-implementation-period" name="implementationPeriodUpDowns" class="form-control">
+													<option value=""></option>
+													<option th:each="period : ${listImplementationPeriod}" th:value="${period.checkId}" th:text="${period.name}" th:selected="${findKeywordDTO.implementationPeriodUpDowns.contains(period.checkId)}"></option>
+												</select>
+											</div>
+
+											<div class="col-xs-6 col-md-3">
+												<label for="project-search-landing-category">着地方向性</label>
+												<select multiple id="project-search-landing-category" name="landingCategoryIds" class="form-control">
+													<option value=""></option>
+													<option th:each="category : ${landingPossibilityClassification}" th:value="${category.id}" th:text="${category.name}" th:selected="${findKeywordDTO.landingCategoryIds.contains(category.id)}"></option>
+												</select>
+											</div>
+
+											<div class="col-xs-6 col-md-3">
+												<label for="project-search-management-form">運営形態</label>
+												<select multiple id="project-search-management-form" name="operationForms" class="form-control">
+													<option value=""></option>
+													<option th:each="shopType : ${listMShopType}"
+														th:value="${shopType.name}" th:text="${shopType.name}"
+														th:selected="${findKeywordDTO.operationForms.contains(shopType.name)}">
+													</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-xs-6 col-md-3">
+												<label for="project-search-project-category">案件種別</label>
+												<select multiple id="project-search-project-category" name="projectCategoryIds" class="form-control">
+													<option value=""></option>
+													<option th:each="category : ${listProjectCategory}" th:value="${category.id}" th:text="${category.name}" th:selected="${findKeywordDTO.projectCategoryIds.contains(category.id)}"></option>
+												</select>
+											</div>
+
+											<div class="col-xs-6 col-md-3">
+												<label for="project-search-expiration-period">満了期</label>
+												<select multiple id="project-search-expiration-period"  name="expirationPeriodUpDowns" class="form-control">
+													<option value=""></option>
+													<option th:each="period : ${listExpirationPeriod}" th:value="${period.checkId}" th:text="${period.name}" th:selected="${findKeywordDTO.expirationPeriodUpDowns.contains(period.checkId)}"></option>
+												</select>
+											</div>
+
+											<div class="col-xs-6 col-md-3">
+												<label for="project-search-inhouse-progress">社内進捗</label>
+												<select multiple id="project-search-inhouse-progress" name="officeProjectProgressIds" class="form-control">
+													<option value=""></option>
+													<option th:each="office : ${projectClassificationProgressCompany}" th:value="${office.id}" th:text="${office.name}" th:selected="${findKeywordDTO.officeProjectProgressIds.contains(office.id)}"></option>
+												</select>
+											</div>
+
+											<div class="col-xs-6 col-md-3">
+												<label for="project-search-negotiation-progress">交渉進捗</label>
+												<select multiple id="project-search-negotiation-progress" name="negotiationProjectProgressIds" class="form-control">
+													<option value=""></option>
+													<option th:each="negotiation : ${projectClassificationProgressNegotiation}" th:value="${negotiation.id}" th:text="${negotiation.name}" th:selected="${findKeywordDTO.negotiationProjectProgressIds.contains(negotiation.id)}"></option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label for="project-search-sales-channel">チャネル</label>
+											</div>
+											<div class="col-md-9">
+												<div class="check-list">
+													<label class="checkbox-inline" th:each="result : ${lstSalesChannel}">
+													  <input type="checkbox"
+													  	name="salesChannelIds"
+													  	th:value="${result.id}"
+													  	th:text="${result.salesChannelName}"
+													  	th:checked="${findKeywordDTO.salesChannelIds.contains(result.id)}" />
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label for="project-search-store-develop-team">店舗開発チーム（課）</label>
+											</div>
+											<div class="col-md-7">
+												<div class="check-list">
+													<label class="checkbox-inline" th:each="team : ${listStoreDevelopTeam}">
+													  <input type="checkbox"
+													  	name="storeDevelopTeamCds"
+													  	th:value="${team.deptCd}"
+													  	th:text="${team.deptName}"
+													  	th:checked="${findKeywordDTO.storeDevelopTeamCds.contains(team.deptCd)}" />
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label for="project-search-other-account-store">担当者</label>
+											</div>
+											<div class="col-md-7">
+												<input class="form-control" type="text" id="project-search-other-account-store">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>更新日</label>
+											</div>
+											<div class="col-md-2">
+												<input class="form-control" type="text"
+														th:value="${findKeywordDTO!=null && findKeywordDTO.updateDatetimeFrom!=null && findKeywordDTO.updateDatetimeFrom!=''}? ${findKeywordDTO.updateDatetimeFrom}:''"
+														name="updateDatetimeFrom" id="j-form-update-from">
+											</div>
+											<div class="col-md-1" style="text-align: center;">～</div>
+											<div class="col-md-2">
+												<input class="form-control" type="text"
+														th:value="${findKeywordDTO!=null && findKeywordDTO.updateDatetimeTo!=null && findKeywordDTO.updateDatetimeTo!=''}? ${findKeywordDTO.updateDatetimeTo}:''"
+														name="updateDatetimeTo" id="j-form-update-to">
+											</div>
+											<div class="col-md-1 text-center">/</div>
+
+											<div class="col-md-1">
+												<input class="form-control" type="number"
+														th:value="${findKeywordDTO!=null && findKeywordDTO.updateDayTo!=null && findKeywordDTO.updateDayTo!=''}? ${findKeywordDTO.updateDayTo}:''"
+														name="updateDayTo" id="j-form-update-day-to">
+											</div>
+											<div class="col-md-2"><label>日以内</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>直近年間売上(千円)</label>
+											</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number" id="project-search-sales-achievement-from" name="salesAchievementFrom"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.salesAchievementFrom!=null && findKeywordDTO.salesAchievementFrom!=''}? ${findKeywordDTO.salesAchievementFrom}:''">
+											</div>
+											<div class="col-md-1 text-center">～</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number"  id="project-search-sales-achievement-to" name="salesAchievementTo"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.salesAchievementTo!=null && findKeywordDTO.salesAchievementTo!=''}? ${findKeywordDTO.salesAchievementTo}:''">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>年間売上前年比(％)</label>
+											</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number" id="project-search-sales-achievement-year-to-year-from" name="salesAchievementYearToYearFrom"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.salesAchievementYearToYearFrom!=null && findKeywordDTO.salesAchievementYearToYearFrom!=''}? ${findKeywordDTO.salesAchievementYearToYearFrom}:''">
+											</div>
+											<div class="col-md-1" style="text-align: center;">～</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number"  id="project-search-sales-achievement-year-to-year-to" name="salesAchievementYearToYearTo"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.salesAchievementYearToYearTo!=null && findKeywordDTO.salesAchievementYearToYearTo!=''}? ${findKeywordDTO.salesAchievementYearToYearTo}:''">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>年間利益額(千円)</label>
+											</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number" id="project-search-operating-profit-achievement-from" name="operatingProfitAchievementFrom"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.operatingProfitAchievementFrom!=null && findKeywordDTO.operatingProfitAchievementFrom!=''}? ${findKeywordDTO.operatingProfitAchievementFrom}:''">
+											</div>
+											<div class="col-md-1" style="text-align: center;">～</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number"  id="project-search-operating-profit-achievement-to" name="operatingProfitAchievementTo"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.operatingProfitAchievementTo!=null && findKeywordDTO.operatingProfitAchievementTo!=''}? ${findKeywordDTO.operatingProfitAchievementTo}:''">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>年間利益率(％)</label>
+											</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number" id="project-search-operating-profit-achievement-composition-from" name="operatingProfitAchievementCompositionFrom"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.operatingProfitAchievementCompositionFrom!=null && findKeywordDTO.operatingProfitAchievementCompositionFrom!=''}? ${findKeywordDTO.operatingProfitAchievementCompositionFrom}:''">
+											</div>
+											<div class="col-md-1" style="text-align: center;">～</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number"  id="project-search-operating-profit-achievement-composition-to" name="operatingProfitAchievementCompositionTo"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.operatingProfitAchievementCompositionTo!=null && findKeywordDTO.operatingProfitAchievementCompositionTo!=''}? ${findKeywordDTO.operatingProfitAchievementCompositionTo}:''">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="basic-list-item">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-md-3">
+												<label>館期待値比(％)</label>
+											</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number" name="buildingExpectedValueFrom" id="buildingExpectedValueFrom"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.buildingExpectedValueFrom!=null && findKeywordDTO.buildingExpectedValueFrom!=''}? ${findKeywordDTO.buildingExpectedValueFrom}:''">
+											</div>
+											<div class="col-md-1" style="text-align: center;">～</div>
+											<div class="col-md-2">
+												<input class="form-control" type="number" name="buildingExpectedValueTo" id="buildingExpectedValueTo"
+													th:value="${findKeywordDTO!=null && findKeywordDTO.buildingExpectedValueTo!=null && findKeywordDTO.buildingExpectedValueTo!=''}? ${findKeywordDTO.buildingExpectedValueTo}:''">
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="modal fade" id="modal-brand-search" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">事業会社・屋号</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+						<div class="building-basic-info j-dropdown" th:each="company : ${listIShopCompany}">
+							<header class="building-basic-info-header j-dropdown-header">
+								<label class="j-dropdown-cancel-collapse" style="font-weight:normal">
+									<input class="project-search-company" th:id="${'company-' + company.id}" type="checkbox" th:value="${company.id}" onchange="modalCheckChange(this)">
+									<span th:text="${company.name}"></span>
+								</label>
+							</header>
+							<div class="building-basic-info-body j-dropdown-body" style="padding-left: 20px">
+								<div class="j-dropdown-body-inner">
+									<div class="basic-list">
+										<div style="padding-left: 0px" class="basic-list-item" th:each="brand : ${company.listBrand}">
+											<label>
+												<input class="project-search-brand" type="checkbox" th:id="${'brand-' + brand.id}" th:value="${brand.id}" th:parent="${'company-' + company.id}" onchange="modalCheckChange(this)">
+												<span th:for="${'brand-' + brand.id}" th:text="${brand.name}"></span>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal"
+							id="btn-select-brand">選択する</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="modal-block-search" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">エリア・ブロック・都道府県</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+						<div class="building-basic-info j-dropdown" th:each="area : ${locality.listArea}">
+							<header class="building-basic-info-header j-dropdown-header">
+								<label class="j-dropdown-cancel-collapse" style="font-weight:normal">
+									<input class="project-search-area" type="checkbox" th:id="${'area-' + area.id}" th:value="${area.id}" onchange="modalCheckChange(this)">
+									<span th:text="${area.name}"></span>
+								</label>
+							</header>
+							<div class="building-basic-info-body j-dropdown-body" style="padding-left: 20px">
+								<div class="j-dropdown-body-inner">
+									<div class="building-basic-info j-dropdown" th:each="prefectures : ${area.listPrefectures}">
+										<header class="building-basic-info-header j-dropdown-header">
+											<label class="j-dropdown-cancel-collapse" style="font-weight:normal">
+												<input class="project-search-prefectures" type="checkbox" th:id="${'prefectures-' + prefectures.labelId}" th:value="${prefectures.id}" th:parent="${'area-' + area.id}" onchange="modalCheckChange(this)">
+												<span th:text="${prefectures.name}"></span>
+											</label>
+										</header>
+										<div class="building-basic-info-body j-dropdown-body" style="padding-left: 20px">
+											<div class="j-dropdown-body-inner">
+												<div class="basic-list">
+													<div style="padding-left: 0px" class="basic-list-item" th:each="block : ${prefectures.listBlock}">
+														<label>
+															<input class="project-search-block" type="checkbox" th:id="${'block-' + block.labelId}" th:value="${block.id}" th:parent="${'prefectures-' + prefectures.labelId}" onchange="modalCheckChange(this)">
+															<span th:for="${'block-' + block.labelId}" th:text="${block.name}"></span>
+														</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal"
+							id="btn-select-block">選択する</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	let findKeywordDTO = /*[[${findKeywordDTO}]]*/'';
+
+	let otherAccountStoreData = JSON.parse(findKeywordDTO.jsonCurrentOtherAccountStore);
+	let otherAccountStoreIds = findKeywordDTO.otherAccountStoreIds;
+	let suggestOtherAccountStore = createSuggest('#project-search-other-account-store', otherAccountStoreData, otherAccountStoreIds, false);
+
+	let iShopCompanieIds = findKeywordDTO.iShopCompanieIds;
+	let iBrandIds = findKeywordDTO.iBrandIds;
+	let iAreaIds = findKeywordDTO.iAreaIds;
+	let iPrefectureIds = findKeywordDTO.iPrefectureIds;
+	let iBlockIds = findKeywordDTO.iBlockIds;
+
+	$('#modal-brand-search').find('input[class=project-search-company]').each(function(){
+		let value = parseInt($(this).val(), 10);
+		if(iShopCompanieIds.indexOf(value) !== -1){
+			$(this).prop("checked", true);
+		}
+	});
+
+	$('#modal-brand-search').find('input[class=project-search-brand]').each(function(){
+		let value = parseInt($(this).val(), 10);
+		if(iBrandIds.indexOf(value) !== -1){
+			$(this).prop("checked", true);
+		}
+	});
+
+	getBrandLabel();
+
+	$('#modal-block-search').find('input[class=project-search-area]').each(function(){
+		let value = parseInt($(this).val(), 10);
+		if(iAreaIds.indexOf(value) !== -1){
+			$(this).prop("checked", true);
+		}
+	});
+
+	$('#modal-block-search').find('input[class=project-search-prefectures]').each(function(){
+		let value = parseInt($(this).val(), 10);
+		if(iPrefectureIds.indexOf(value) !== -1){
+			$(this).prop("checked", true);
+		}
+	});
+
+	$('#modal-block-search').find('input[class=project-search-block]').each(function(){
+		let value = parseInt($(this).val(), 10);
+		if(iBlockIds.indexOf(value) !== -1){
+			$(this).prop("checked", true);
+		}
+	});
+
+	getBlockLabel();
+	/*]]>*/
+</script>

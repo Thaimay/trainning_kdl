@@ -1,0 +1,34 @@
+.comment-area {
+  margin-top: 20px;
+}
+
+.comment-add-button {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.comment-delete-button {
+  margin-left: 80%;
+  margin-bottom: 10px;
+}
+
+.commment-list .list-group-item {
+  /* override */
+  border: none;
+  + .list-group-item {
+    border-top: 1px solid #cccccc;
+  }
+  &.has-trash {
+    position: relative;
+    padding-right: 2%;
+    .trash {
+      position: absolute;
+      right: 2%;
+      top: 50%;
+      margin-top: -12px;
+      font-size: 18px;
+      color: #991616;
+    }
+  }
+}

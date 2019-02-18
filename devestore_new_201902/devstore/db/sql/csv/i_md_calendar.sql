@@ -1,0 +1,4 @@
+\c store_development_dev;
+
+\COPY I_MD_CALENDAR(status,data_division_1,data_division_2,seqno,calendar_date,sales_md_year,sales_md_month,sales_md_weekly,backup_k,public_holiday_k,appropriating_year_month,closing_fg,registration_date,registration_tm,update_date,update_tm,last_calendar_date,last_sales_md_year,last_sales_md_month,last_sales_md_weekly,last_backup_k)FROM 'db/csv/MDCALMST.csv' WITH CSV;
+
