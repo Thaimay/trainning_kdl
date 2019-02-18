@@ -132,14 +132,15 @@ public class ProjectDocumentController {
 	}
 	
 	
-	@RequestMapping(value="/api")
-//	@ResponseBody
-	public String apiRestful(Model model) {
+//	@RequestMapping(value="/api")
+	@ResponseBody
+	public List<ProjectDocument> apiRestful(Model model) {
 		
-//		List<ProjectDocument> list = project.getProjectList();
+		List<ProjectDocument> list = project.getProjectList();
 		
 		
-		return BASE_DIR + "API";
+		//return BASE_DIR + "API";
+		return list;
 	}
 	
 	

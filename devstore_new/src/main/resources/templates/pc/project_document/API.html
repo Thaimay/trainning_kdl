@@ -21,11 +21,17 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 $(function() {
 	  $('.suggest-tag').magicSuggest({
-	           // data: [{"Id": 1, "Name": "hello"}, {"Id": 2, "Name": "world"}, {"Id": 3, "Name": "no"}],
-	           data:
+	           	data: [{"Id": 1, "Name": "hello"}, {"Id": 2, "Name": "world"}, {"Id": 3, "Name": "no"}],
 	            valueField: 'Id',
 	            displayField: 'Name'
 	  });
+	  
+	  $('.suggest-tag-db').magicSuggest({
+         //	data: 'jp.co.world.storedevelopment.pc.controller/ProjectDocumentController',
+          valueField: 'Id',
+          displayField: 'Name'
+});
+	  
 	    
 	});
 </script>
@@ -36,6 +42,11 @@ $(function() {
     <div class="form-group">
         <label>Tags</label>
         <div class="suggest-tag"></div>
+    </div>
+    
+    <div class="form-group">
+        <label>Tags-DB</label>
+        <div class="suggest-tag-db"></div>
     </div>
 
 </form>
