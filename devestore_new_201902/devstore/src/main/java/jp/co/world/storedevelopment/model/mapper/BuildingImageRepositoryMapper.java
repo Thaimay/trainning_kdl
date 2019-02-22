@@ -15,4 +15,9 @@ public interface BuildingImageRepositoryMapper extends BuildingRelatedRepository
 	
 	@Select("select * from file where building_id = '${buildingId}' and is_deleted is false order by update_datetime desc")
 	List<BuildingImage> findBuildingImageRelatedProject(@Param("buildingId") Long buildingId);
+	
+	//Add by QuyenLS
+	@Select("select * from file where project_id = '${projectId}' and is_deleted is false order by update_datetime desc")
+	List<BuildingImage> findProjectDocImageRelatedProject(@Param("projectId") Long projectId);
+	
 }

@@ -39,7 +39,7 @@ public abstract class ActiveModel<T> extends com.tierline.mybatis.activemodel.Ac
 	}
 
 	public Long getId() {
-		return id;
+ 		return id;
 	}
 
 	public LocalDateTime getCreatedDatetime() {

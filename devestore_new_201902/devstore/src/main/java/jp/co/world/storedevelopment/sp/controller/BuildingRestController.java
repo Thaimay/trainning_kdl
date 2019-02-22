@@ -116,6 +116,7 @@ public class BuildingRestController extends CommonBuildingController {
 				}
 			}
 			
+			
 			new BuildingService().updateAll(dto, getAccount());
 			logEndMethod("updateBuilding");
 		} catch (Exception ex) {

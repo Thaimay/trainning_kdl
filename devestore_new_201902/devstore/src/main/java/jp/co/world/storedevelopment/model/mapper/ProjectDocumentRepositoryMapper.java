@@ -11,7 +11,7 @@ import jp.co.world.storedevelopment.model.ProjectDocument;
 
 public interface ProjectDocumentRepositoryMapper extends RepositoryMapper<ProjectDocument>{
 	
-	@Select("SELECT * FROM project_document WHERE is_deleted = false ORDER BY name")
+	@Select("SELECT * FROM project_document pd WHERE is_deleted = false ORDER BY update_datetime desc")
 	List<ProjectDocument> getProjectList();
 	
 	@Select("select * from project_document where id = '${id}'")

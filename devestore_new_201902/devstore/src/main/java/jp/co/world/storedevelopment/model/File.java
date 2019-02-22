@@ -73,6 +73,15 @@ public abstract class File<T> extends ActiveModel<T> {
 		setType(filetype(file));
 		setFile(file);
 	}
+	
+	// Insert by QuyenLS
+	public File(MultipartFile file) {
+		setDisplayName(Paths.get(file.getOriginalFilename()).getFileName().toString());
+		originFileName = file.getOriginalFilename();
+		setSize(file.getSize());
+		setType(filetype(file));
+		setFile(file);
+	}
 
 	public String urlPath() {
 		return "";

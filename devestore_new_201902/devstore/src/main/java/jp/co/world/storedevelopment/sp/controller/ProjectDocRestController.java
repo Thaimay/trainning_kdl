@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,35 +17,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import jp.co.world.storedevelopment.model.BuildingFile;
+import jp.co.world.storedevelopment.common.controller.CommonBuildingController;
+import jp.co.world.storedevelopment.model.Building;
 import jp.co.world.storedevelopment.model.BuildingImage;
-import jp.co.world.storedevelopment.model.Project;
+import jp.co.world.storedevelopment.model.ProjectDocImage;
 import jp.co.world.storedevelopment.model.ProjectDocument;
-import jp.co.world.storedevelopment.model.ProjectOpinion;
 import jp.co.world.storedevelopment.model.mapper.repository.BuildingRepository;
 import jp.co.world.storedevelopment.model.mapper.repository.ProjectDocumentRepository;
-import jp.co.world.storedevelopment.model.service.BuildingService;
 import jp.co.world.storedevelopment.model.service.ProjectDocService;
-import jp.co.world.storedevelopment.sp.controller.dto.BuildingFindFormDTO;
-import jp.co.world.storedevelopment.sp.controller.dto.BuildingListDTO;
-import jp.co.world.storedevelopment.sp.controller.dto.BuildingUpdateDTO;
-import jp.co.world.storedevelopment.sp.controller.dto.ProjectCreateDTO;
+import jp.co.world.storedevelopment.sp.controller.dto.BuildingDetailDTO;
 import jp.co.world.storedevelopment.sp.controller.dto.ProjectDocCreateDTO;
+import jp.co.world.storedevelopment.sp.controller.dto.ProjectDocDetailDTO;
 import jp.co.world.storedevelopment.sp.controller.dto.ProjectDocUpdateDTO;
 import jp.co.world.storedevelopment.sp.controller.dto.ProjectDocUpdateDTO2;
-import jp.co.world.storedevelopment.sp.controller.dto.ProjectUpdateDTO;
 
 
 @RestController
 @RequestMapping("/sp/projectdoc")
-public class ProjectDocRestController {
+public class ProjectDocRestController extends CommonBuildingController{
 	ProjectDocService projectDocS = new ProjectDocService();
 	
 	@CrossOrigin
 	@GetMapping("/list")
 	public List<ProjectDocument> getBuildingList() {
 		try {
-			List<ProjectDocument> listDTO = new ProjectDocumentRepository().findAll();
+			List<ProjectDocument> listDTO = new ProjectDocumentRepository().getProjectList();
 			
 			return listDTO;
 		} catch (Exception ex) {
@@ -59,11 +54,30 @@ public class ProjectDocRestController {
 	public ProjectDocument detail(@PathVariable Long id) {
 		try {
 			ProjectDocument dto = new ProjectDocumentRepository().findProjectById(id);
+			//ProjectDocDetailDTO dto2 = new ProjectDocDetailDTO(dto, getAccount()); 
 			return dto;
 		} catch (Exception ex) {
 			return null;
 		}
 	}
+	
+	
+//	@CrossOrigin
+//	@RequestMapping("/detail/{id}")
+//	public ProjectDocument detail(@PathVariable Long id) {
+//		try {
+//			ProjectDocument projectDoc = new ProjectDocumentRepository().findById(id).orElseThrow(() -> {
+//				throw new IllegalArgumentException("存在しないIDです");
+//			});
+//
+//			BuildingDetailDTO dto = new BuildingDetailDTO(building, getAccount());
+//			
+//			return dto;
+//		} catch (Exception ex) {
+//			
+//			return null;
+//		}
+//	}
 
 	
 	@CrossOrigin
@@ -90,6 +104,7 @@ public class ProjectDocRestController {
 
 			ProjectDocUpdateDTO2 dto = ProjectDocUpdateDTO2.toDTO(json);
 			refactorObject(dto);
+			int fileIndex = 0;
 //			int fileOpinionIndex = 0;
 //
 //			for (ProjectOpinion po : dto.getProjectOpinionDto()) {
@@ -98,8 +113,19 @@ public class ProjectDocRestController {
 //					fileOpinionIndex++;
 //				}
 //			}
-//			dto.setMultipartFiles(docs);
-			Long id = projectDocS.updateAll(dto);
+////			dto.setMultipartFiles(docs);
+//			
+			for (BuildingImage bi : dto.getProjectDocImages()) {
+
+				if (bi.getId() == 0) {
+					bi.setFile(imgs.get(fileIndex));
+					fileIndex++;
+				}
+			}
+			
+			
+			
+			Long id = projectDocS.updateAll(dto, getAccount());
 
 //			logEndMethod("updateProject");
 			return id;

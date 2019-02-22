@@ -6,35 +6,30 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tierline.mybatis.activemodel.ModelMapper;
 
-import jp.co.world.storedevelopment.model.mapper.BuildingImageModelMapper;
+import jp.co.world.storedevelopment.model.mapper.ProjectDocImageModelMapper;
 import jp.co.world.storedevelopment.model.value.FileExtention;
 
 @JsonIgnoreProperties({ "tableName" })
-public class BuildingImage extends File<BuildingImage> {
-
+public class ProjectDocImage extends File<ProjectDocImage>{
+	
 	private Boolean isDefaultImage;
-
-	public BuildingImage() {
+	
+	public ProjectDocImage() {
 	}
 
-	public BuildingImage(MultipartFile file, Building building, Account account) {
-		super(file, account);
-		setBuildingId(building.getId());
+	public ProjectDocImage(MultipartFile file, ProjectDocument projectDoc) {
+		super(file);
+		setProjectId(projectDoc.getId());
+	}
+
+	public ProjectDocImage(MultipartFile file, Long projectId) {
+		super(file);
+		setProjectId(projectId);
 	}
 	
-	public BuildingImage(MultipartFile file, ProjectDocument building, Account account) {
-		super(file, account);
-		setProjectId(building.getId());
-	}
-
-	public BuildingImage(MultipartFile file, Long buildingId, Account account) {
-		super(file, account);
-		setBuildingId(buildingId);
-	}
-
 	@Override
 	public String filePrefix() {
-		return "building_";
+		return "projectdoc_";
 	}
 
 	@Override
@@ -48,8 +43,8 @@ public class BuildingImage extends File<BuildingImage> {
 	}
 
 	@Override
-	protected ModelMapper<BuildingImage> modelMapper(SqlSession session) {
-		return session.getMapper(BuildingImageModelMapper.class);
+	protected ModelMapper<ProjectDocImage> modelMapper(SqlSession session) {
+		return session.getMapper(ProjectDocImageModelMapper.class);
 	}
 
 	@Override

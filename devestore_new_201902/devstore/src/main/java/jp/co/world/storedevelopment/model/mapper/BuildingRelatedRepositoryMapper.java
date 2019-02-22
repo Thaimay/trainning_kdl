@@ -15,6 +15,11 @@ public interface BuildingRelatedRepositoryMapper<T> extends RepositoryMapper<T> 
 
 	@Select("select * from ${table} where building_id = #{buildingId} and is_deleted is false order by update_datetime desc")
 	List<T> findByBuildingId(@Param("table") String table, @Param("buildingId") Long buildingId);
+	
+	
+	//Add by QuyenLS
+	@Select("select * from ${table} where project_id = #{projectId} and is_deleted is false order by update_datetime desc")
+	List<T> findByProjectId(@Param("table") String table, @Param("projectId") Long projectId);
 
 	@Select("select * from ${table} where building_cd = '${buildingCd}' and is_deleted is false order by update_datetime desc")
 	List<T> findByBuildingCd(@Param("table") String table, @Param("buildingCd") String buildingCd);

@@ -20,6 +20,12 @@ public abstract class BuildingRelatedRepository<T, M extends BuildingRelatedRepo
 			return mapper.findByBuildingId(tableName(), buildingId);
 		});
 	}
+	//Add by QuyenLS
+	public List<T> findByProjectId(Long buildingId) {
+		return execute(mapper -> {
+			return mapper.findByProjectId(tableName(), buildingId);
+		});
+	}
 
 	public List<T> findByBuildingCd(String buildingCd) {
 		return execute(mapper -> {

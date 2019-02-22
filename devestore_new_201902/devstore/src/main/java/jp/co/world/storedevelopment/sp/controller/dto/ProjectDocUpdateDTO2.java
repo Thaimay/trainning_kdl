@@ -1,10 +1,13 @@
 package jp.co.world.storedevelopment.sp.controller.dto;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import jp.co.world.storedevelopment.model.BuildingImage;
+import jp.co.world.storedevelopment.model.ProjectDocImage;
 import jp.co.world.storedevelopment.model.ProjectDocument;
 
 public class ProjectDocUpdateDTO2 implements DTO<ProjectDocument> {
@@ -17,6 +20,9 @@ public class ProjectDocUpdateDTO2 implements DTO<ProjectDocument> {
 	private int projectDocumentCoversheetClassification;
 	private String meetingPoint;
 	private String outputStatus;
+	private String imagePath;
+	private List<BuildingImage> projectDocImages;
+	
 	
 	public ProjectDocUpdateDTO2(ProjectDocument project) {
 		this.copyProperties(this, project);
@@ -96,8 +102,25 @@ public class ProjectDocUpdateDTO2 implements DTO<ProjectDocument> {
 	public void setOutputStatus(String outputStatus) {
 		this.outputStatus = outputStatus;
 	}
-	
-	
-	
 
+	public List<BuildingImage> getProjectDocImages() {
+		return projectDocImages;
+	}
+
+	public void setProjectDocImages(List<BuildingImage> projectDocImages) {
+		this.projectDocImages = projectDocImages;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+	
+	
+	
+	
+	
 }

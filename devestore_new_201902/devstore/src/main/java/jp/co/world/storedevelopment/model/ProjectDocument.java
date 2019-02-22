@@ -1,12 +1,21 @@
 package jp.co.world.storedevelopment.model;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.SqlSession;
 
 import com.tierline.mybatis.activemodel.ModelMapper;
 
-import jp.co.world.storedevelopment.model.mapper.ProjectDocumentModelMapper; 
+import jp.co.world.storedevelopment.model.mapper.ProjectDocumentModelMapper;
+import jp.co.world.storedevelopment.model.mapper.repository.BuildingImageRepository;
+import jp.co.world.storedevelopment.model.mapper.repository.ProjectDocImageRepository;
+import jp.co.world.storedevelopment.sp.controller.dto.BuildingImageRelationBuildingDetailDTO;
+import jp.co.world.storedevelopment.sp.controller.dto.DTO;
+import jp.co.world.storedevelopment.sp.controller.dto.NegotiationListDTO;
+import jp.co.world.storedevelopment.sp.controller.dto.ProjectDocImageRelationProjectDocDetailDTO; 
 
 public class ProjectDocument extends ActiveModel<ProjectDocument>{
 	
@@ -19,7 +28,10 @@ public class ProjectDocument extends ActiveModel<ProjectDocument>{
 	private int projectDocumentCoversheetClassification;
 	private String meetingPoint;
 	private String outputStatus;
+	private String imagePath;
 	
+	
+
 	private String[] ignoreFields = new String[] {};
 	
 	@Override
@@ -107,5 +119,26 @@ public class ProjectDocument extends ActiveModel<ProjectDocument>{
 	}
 	
 	
+	public String getImagePath() {
+		return imagePath;
+	}
 
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+	
+	public List<BuildingImageRelationBuildingDetailDTO> getProjectDocImages() {
+		List<BuildingImageRelationBuildingDetailDTO> dtos = new ArrayList<>(); 
+
+		if (getId() == null) {
+			return dtos;
+		}
+
+		List<BuildingImage> projectDocImages = new BuildingImageRepository().findByProjectId(getId());
+		return projectDocImages != null && projectDocImages.size() > 0 ? projectDocImages.stream()
+				.map(x -> new BuildingImageRelationBuildingDetailDTO(x)).collect(Collectors.toList()) : dtos;
+	}
+	
+	
+	
 }

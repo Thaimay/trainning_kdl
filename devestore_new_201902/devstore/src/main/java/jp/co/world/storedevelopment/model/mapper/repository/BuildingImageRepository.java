@@ -32,10 +32,28 @@ public class BuildingImageRepository extends BuildingRelatedRepository<BuildingI
 					.collect(Collectors.toList());
 		});
 	}
+	
+	
+	//Add by QuyenLS
+	@Override
+	public List<BuildingImage> findByProjectId(Long projectId) {
+		return execute(mapper -> {
+			return mapper.findByProjectId(tableName(), projectId).stream().filter(x -> x.isImage())
+					.collect(Collectors.toList());
+		});
+	}
 
 	public List<BuildingImage> findBuildingImageRelatedProject(Long buildingId) {
 		return execute(mapper -> {
 			return mapper.findBuildingImageRelatedProject(buildingId).stream().filter(x -> x.isImage())
+					.collect(Collectors.toList());
+		});
+	}
+	
+	//Add buy QuyenLS
+	public List<BuildingImage> findProjectImageRelatedProject(Long projectId) {
+		return execute(mapper -> {
+			return mapper.findProjectDocImageRelatedProject(projectId).stream().filter(x -> x.isImage())
 					.collect(Collectors.toList());
 		});
 	}

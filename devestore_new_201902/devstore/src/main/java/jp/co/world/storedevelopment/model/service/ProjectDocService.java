@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jp.co.world.storedevelopment.Application;
 import jp.co.world.storedevelopment.model.Account;
 import jp.co.world.storedevelopment.model.Building;
+import jp.co.world.storedevelopment.model.BuildingImage;
 import jp.co.world.storedevelopment.model.IRentContract;
 import jp.co.world.storedevelopment.model.IShop;
 import jp.co.world.storedevelopment.model.Mail;
@@ -29,6 +30,7 @@ import jp.co.world.storedevelopment.model.OtherProjectAccount;
 import jp.co.world.storedevelopment.model.OtherProjectTeam;
 import jp.co.world.storedevelopment.model.Project;
 import jp.co.world.storedevelopment.model.ProjectContractProgress;
+import jp.co.world.storedevelopment.model.ProjectDocImage;
 import jp.co.world.storedevelopment.model.ProjectDocument;
 import jp.co.world.storedevelopment.model.ProjectFile;
 import jp.co.world.storedevelopment.model.ProjectImage;
@@ -40,10 +42,12 @@ import jp.co.world.storedevelopment.model.ProjectTask;
 import jp.co.world.storedevelopment.model.ProjectTaskAccount;
 import jp.co.world.storedevelopment.model.ProjectVideo;
 import jp.co.world.storedevelopment.model.Shop;
+import jp.co.world.storedevelopment.model.mapper.repository.BuildingImageRepository;
 import jp.co.world.storedevelopment.model.mapper.repository.IRentContractRepository;
 import jp.co.world.storedevelopment.model.mapper.repository.OtherProjectAccountRepository;
 import jp.co.world.storedevelopment.model.mapper.repository.OtherProjectTeamRepository;
 import jp.co.world.storedevelopment.model.mapper.repository.ProjectContractProgressRepository;
+import jp.co.world.storedevelopment.model.mapper.repository.ProjectDocImageRepository;
 import jp.co.world.storedevelopment.model.mapper.repository.ProjectDocumentRepository;
 import jp.co.world.storedevelopment.model.mapper.repository.ProjectFileRepository;
 import jp.co.world.storedevelopment.model.mapper.repository.ProjectImageRepository;
@@ -64,6 +68,8 @@ import jp.co.world.storedevelopment.sp.controller.dto.ProjectUpdateDTO;
 
 public class ProjectDocService {
 	ProjectDocumentRepository projectDocRp = new ProjectDocumentRepository();
+	
+	
 	
 	
 	public ProjectDocument createAll(ProjectDocCreateDTO dto) {
@@ -103,7 +109,7 @@ public class ProjectDocService {
 //			}
 			
 			ProjectDocument newProjectDocument = new ProjectDocument();
-			newProjectDocument.setIgnoreFields(new String[] {"id", "corporationGroup", "isDeleted" });
+			newProjectDocument.setIgnoreFields(new String[] {"id", "corporationGroup", "isDeleted", "imagePath" });
 			
 			newProjectDocument.setProjectId(p.getProjectId()); 
 			newProjectDocument.setFileId(p.getFileId());		   
@@ -122,7 +128,7 @@ public class ProjectDocService {
 			//return p.create();
 		}
 		
-		public Long updateAll(ProjectDocUpdateDTO2 dto) {
+		public Long updateAll(ProjectDocUpdateDTO2 dto, Account acc) {
 			ProjectDocument p = dto.toModel();
 //			ProjectSectionProgress psp = new ProjectSectionProgress();
 //			Iterator<ProjectSectionProgress> iter = dto.getProjectSectionProgressDto().iterator();
@@ -140,7 +146,9 @@ public class ProjectDocService {
 //
 //			updateProjectHistory(p);
 //
-			updateProject(p);
+			updateProject(p, acc);
+			
+			updateAllRelatedImage(p, dto.getProjectDocImages(), acc);
 
 //			updateRelatedModels(p, dto, a);
 //
@@ -152,18 +160,81 @@ public class ProjectDocService {
 
 			return p.getId();
 		}
+	
 		
 		
-		private void updateProject(ProjectDocument p) {
+		
+		private void updateProject(ProjectDocument p, Account account) {
 			ProjectDocument newProjectDocument = new ProjectDocument();
 			newProjectDocument.setIgnoreFields(new String[] {"corporationGroup", "isDeleted", "projectId", "fileId",
-					"createdDatetime", "createdAccountCode", "updateAccountCode", "updateDatetime"});
+					"createdDatetime", "projectDocImages"});
 			newProjectDocument.setId(p.getId());
 			newProjectDocument.setName(p.getName()); 
 			newProjectDocument.setProjectDocumentCoversheetClassification(p.getProjectDocumentCoversheetClassification());
 			newProjectDocument.setMeetingPoint(p.getMeetingPoint()); 
 			newProjectDocument.setOutputStatus(p.getOutputStatus());
+			newProjectDocument.setCreatedAccountCode("99001597");
+			newProjectDocument.setCreatedDatetime(p.getCreatedDatetime());
+			newProjectDocument.setUpdateDatetime(p.getUpdateDatetime());
+			newProjectDocument.setUpdateAccountCode("99001597");
+
 			
 			newProjectDocument.update();
 		}
+		
+		private void updateAllRelatedImage(ProjectDocument b, List<BuildingImage> images, Account a) {
+			images.forEach(bi -> updateRelatedImage(b, bi, a));
+		}
+
+		private void updateRelatedImage(ProjectDocument b, BuildingImage bi, Account a) {
+			if (bi.getId().equals(Long.valueOf(0))) {
+				createBuildingImage(b, bi, a);
+			} else if (bi.getIsDeleted()) {
+				bi.delete();
+			} else {
+				updateBuildingImage(b, bi, a);
+			}
+		}
+
+		private void createBuildingImage(ProjectDocument b, BuildingImage bi, Account a) {
+			// create Building image
+			BuildingImage biCreated = new BuildingImage(bi.getFile(), b, a);
+			biCreated.setProjectId(b.getId());
+			biCreated.setComment(bi.getComment());
+			biCreated.setDivision(bi.getDivision());
+			biCreated.create();
+
+			// update default image
+			if (bi.getIsDefaultImage()) {
+				updateImagePath(b, biCreated);
+			}
+		}
+
+		private void updateBuildingImage(ProjectDocument b, BuildingImage bi, Account a) {
+			// update Building image
+			BuildingImage biUpdate = new BuildingImageRepository().findById(bi.getId()).orElseGet(() -> {
+				throw new IllegalArgumentException("存在しないファイルです");
+			});
+
+			// compare information
+			if (!biUpdate.getComment().equals(bi.getComment()) || !biUpdate.getDivision().equals(bi.getDivision())) {
+				biUpdate.setUpdateAccount(a);
+				biUpdate.setComment(bi.getComment());
+				biUpdate.setDivision(bi.getDivision());
+				biUpdate.update();
+			}
+
+			// update default image
+//			if (bi.getIsDefaultImage()) {
+			if (true) {
+				updateImagePath(b, biUpdate);
+			}
+		}
+
+		private void updateImagePath(ProjectDocument b, BuildingImage bi) {
+			b.setImagePath(bi.urlPath() + bi.getName());
+			b.setIgnoreFields(new String[] {"projectDocImages"});
+			b.update();
+		}
+		
 }
